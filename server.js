@@ -1,3 +1,5 @@
+//Run this file with the command "node server.js" in your terminal
+//starts application server on port 3000
 const express = require("express");
 const app = express();
 
