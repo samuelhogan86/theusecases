@@ -1,14 +1,17 @@
 const express = require("express");
 const app = express();
 const { connectDB } = require("./config/db.js");
+const { initSchema } = require("./config/initSchema.js");
 require("dotenv").config();
 
 app.use(express.static("public"));
 
 let db;
 
-connectDB().then(database => {
+connectDB().then(async database => {
     db = database;
+
+    await initSchema(db);
     
     app.get("/users", async (req, res) => {
         const users = await db.collection("users").find().toArray();
