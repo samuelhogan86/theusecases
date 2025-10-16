@@ -54,6 +54,9 @@ main {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
+}
+
+.dashboard-top-btn {
     margin-top: 15px;
 }
 
