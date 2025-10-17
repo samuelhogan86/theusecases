@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="dashboard-header">
+        <div class="dashboard-header-left">
+            <h1>Admin Dashboard</h1>
+            <p>Manage Users and Appointments</p>
+        </div>
+        <div class="dashboard-header-right">
+            <button class="dashboard-btn dashboard-top-btn">Change Password</button>
+            <button class="dashboard-btn dashboard-top-btn">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        <div class="dashboard-tab-container">
+            <button class="dashboard-tab active" onclick="switchTab('appointments')">Appointments</button>
+            <button class="dashboard-tab" onclick="switchTab('users')">Users</button>
+        </div>
+
+        <div id="appointments" class="dashboard-content active">
+            <div class="dashboard-controls-bar">
+                <input type="text" class="dashboard-search-box" placeholder="Search by name...">
+                <div class="dashboard-filter-group">
+                    <select class="dashboard-filter-select">
+                        <option>Search by Patient</option>
+                        <option>Search by Doctor</option>
+                    </select>
+                    <button class="dashboard-btn dashboard-btn-primary">+ New Appointment</button>
+                </div>
+            </div>
+
+            <div class="dashboard-table-container">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Start time</th>
+                            <th>End time</th>
+                            <th>Doctor</th>
+                            <th>Patient</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>09:00</td>
+                            <td>09:30</td>
+                            <td>Dr. Lucy Chen</td>
+                            <td>Jane Smith</td>
+                        </tr>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>10:30</td>
+                            <td>11:00</td>
+                            <td>Dr. Lucy Chen</td>
+                            <td>Adam Johnson</td>
+                        </tr>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>11:00</td>
+                            <td>12:00</td>
+                            <td>Dr. Michael Smith</td>
+                            <td>Amy Tran</td>
+                        </tr>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>11:30</td>
+                            <td>12:00</td>
+                            <td>Dr. Lucy Chen</td>
+                            <td>Steve Jones</td>
+                        </tr>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>13:00</td>
+                            <td>13:30</td>
+                            <td>Dr. Maria Gonzalez</td>
+                            <td>Laura White</td>
+                        </tr>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>14:00</td>
+                            <td>14:30</td>
+                            <td>Dr. James Thompson</td>
+                            <td>David Green</td>
+                        </tr>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>15:00</td>
+                            <td>15:30</td>
+                            <td>Dr. Priya Patel</td>
+                            <td>Emily Carter</td>
+                        </tr>
+                        <tr>
+                            <td>9/26/2025</td>
+                            <td>15:30</td>
+                            <td>18:30</td>
+                            <td>Dr. William Johnson</td>
+                            <td>Robert Brown</td>
+                        </tr>
+                        <tr>
+                            <td>9/27/2025</td>
+                            <td>09:00</td>
+                            <td>09:45</td>
+                            <td>Dr. Michael Smith</td>
+                            <td>Susan Taylor</td>
+                        </tr>
+                        <tr>
+                            <td>9/27/2025</td>
+                            <td>10:00</td>
+                            <td>10:30</td>
+                            <td>Dr. Sarah Kim</td>
+                            <td>Brian Wilson</td>
+                        </tr>
+                        <tr>
+                            <td>9/27/2025</td>
+                            <td>11:00</td>
+                            <td>11:30</td>
+                            <td>Dr. Lucy Chen</td>
+                            <td>Olivia Harris</td>
+                        </tr>
+                        <tr>
+                            <td>9/27/2025</td>
+                            <td>13:00</td>
+                            <td>13:30</td>
+                            <td>Dr. Ahmed Hassan</td>
+                            <td>Kevin Davis</td>
+                        </tr>
+                        <tr>
+                            <td>9/27/2025</td>
+                            <td>14:00</td>
+                            <td>14:45</td>
+                            <td>Dr. Maria Gonzalez</td>
+                            <td>Sophia Martinez</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="dashboard-pagination">
+                    <button class="dashboard-btn">Prev</button>
+                    <div class="dashboard-page-info">
+                        Page <input type="number" class="dashboard-page-input" value="1" min="1" max="3"> of 3
+                    </div>
+                    <button class="dashboard-btn">Next</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="users" class="dashboard-content">
+            <div class="dashboard-controls-bar">
+                <input type="text" class="dashboard-search-box" placeholder="Search users...">
+                <button class="dashboard-btn dashboard-btn-primary">+ Add User</button>
+            </div>
+
+            <div class="dashboard-table-container">
+                <table class="dashboard-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Dr. Lucy Chen</td>
+                            <td>lucy.chen@hospital.com</td>
+                            <td>Doctor</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Jane Smith</td>
+                            <td>jane.smith@email.com</td>
+                            <td>Patient</td>
+                            <td>Active</td>
+                        </tr>
+                        <tr>
+                            <td>Dr. Michael Smith</td>
+                            <td>michael.smith@hospital.com</td>
+                            <td>Doctor</td>
+                            <td>Active</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="dashboard-pagination">
+                    <button class="dashboard-btn">Prev</button>
+                    <div class="dashboard-page-info">
+                        Page <input type="number" class="dashboard-page-input" value="1" min="1" max="1"> of 1
+                    </div>
+                    <button class="dashboard-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.dashboard-tab');
+            const contents = document.querySelectorAll('.dashboard-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+    </script>
+</body>
+
+</html>
