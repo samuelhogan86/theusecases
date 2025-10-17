@@ -1,5 +1,5 @@
 //Login Authentication Endpoints
-
+const authController = require('../controllers/authController');
 //Importing express
 const express = require('express');
 const router = express.Router();
