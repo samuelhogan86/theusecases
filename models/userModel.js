@@ -2,16 +2,16 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
-    id: {
+    _id: {
         type: String, 
         required: true,
         unique: true
     },
-    fname: {
+    firstName: {
         type: String,
         required: [true, 'Enter the first name']
     },
-    lname: {
+    LastName: {
         type: String,
         required: [true, 'Enter the last name']
     },
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Enter a username'],
         unique: true
     },
-    password: {
+    passwordHash: {
         type: String, 
         required: [true, 'Enter a password'],
         minLength: [6, 'Minimum password length is 6 characters']
@@ -31,10 +31,10 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         enum: ['admin', 'doctor', 'patient']
     },
-    lastlogin: {
+    lastLogin: {
         type: Date
     },
-    lastpasswordchange: {
+    lastPasswordChange: {
         type: Date
     },
 });
@@ -42,9 +42,10 @@ const userSchema = new mongoose.Schema({
 //static methond to login user
 userSchema.statics.login = async function(username, password){
     const user = await this.findOne({ username });
+    console.log('running login');
     if (user) {
         //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
-        const auth = (password === user.password);
+        const auth = (password === user.passwordHash);
         if (auth){
             return user;
         }
