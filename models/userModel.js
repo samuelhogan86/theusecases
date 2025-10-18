@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     id: {
@@ -8,25 +9,27 @@ const userSchema = new mongoose.Schema({
     },
     fname: {
         type: String,
-        required: true
+        required: [true, 'Enter the first name']
     },
     lname: {
         type: String,
-        required: true
+        required: [true, 'Enter the last name']
     },
     username: {
         type: String,
-        required: true,
+        required: [true, 'Enter a username'],
         unique: true
     },
     password: {
         type: String, 
-        required: true,
-        minLength: 6
+        required: [true, 'Enter a password'],
+        minLength: [6, 'Minimum password length is 6 characters']
     },
     role:{
         type: String, 
-        required: true
+        required: [true, 'Enter one of the three roles: admin, doctor, patient'],
+        lowercase: true,
+        enum: ['admin', 'doctor', 'patient']
     },
     lastlogin: {
         type: Date
@@ -36,6 +39,20 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-const User = mongoose.model('user', userSchema)
+//static methond to login user
+userSchema.statics.login = async function(username, password){
+    const user = await this.findOne({ username });
+    if (user) {
+        //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
+        const auth = (password === user.password);
+        if (auth){
+            return user;
+        }
+        throw Error('incorrect username')
+    }
+    throw Error('incorrect username')
+}
+
+const User = mongoose.model('user', userSchema);
 
 module.exports = User;
