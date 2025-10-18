@@ -17,7 +17,7 @@
                 <p>Sign in to your account</p>
             </div>
 
-            <form action="/login">
+            <form>
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" required>
@@ -35,8 +35,8 @@
             </form>
         </div>
     </main>
-
     <script>
+        console.log("Script reached");
         const form = document.querySelector('form');
         const usernameError = document.querySelector('.username.error');
         const passwordError = document.querySelector('.password.error');
@@ -51,6 +51,8 @@
             // get values
             const username = form.username.value;
             const password = form.password.value;
+
+            console.log("Username is", username);
 
             try {
                 const res = await fetch('/login', {
@@ -75,3 +77,5 @@
         });
     </script>
 </body>
+
+</html>

@@ -4,8 +4,6 @@ const authController = require('../controllers/authController');
 const express = require('express');
 const router = express.Router();
 
-
-
 //Importing controllers, handles logic for routes (business logic)
 const { loginUser, registerUser } = require('../controllers/authController');
 
