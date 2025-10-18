@@ -11,6 +11,9 @@ app.use(express.static("public"));
 
 let db;
 
+// connect to routes
+app.use(authRoute);
+
 connectDB().then(async database => {
     db = database;
 
@@ -30,5 +33,3 @@ connectDB().then(async database => {
     app.listen(PORT, () => 
         console.log(`Server is running on port ${PORT}`));
     });
-
-app.use(authRoute);
