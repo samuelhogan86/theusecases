@@ -2,6 +2,7 @@
 //starts application server on port 3000
 const express = require("express");
 const app = express();
+const authRoute = require('./routes/authRoute.js');
 const { connectDB } = require("./config/db.js");
 const { initSchema } = require("./config/initSchema.js");
 require("dotenv").config();
@@ -29,3 +30,5 @@ connectDB().then(async database => {
     app.listen(PORT, () => 
         console.log(`Server is running on port ${PORT}`));
     });
+
+app.use(authRoute);
