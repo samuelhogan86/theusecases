@@ -7,14 +7,13 @@ async function initSchema(db) {
             validator: {
                 $jsonSchema: {
                     bsonType: "object",
-                    required: ["id", "firstName", "lastName", "username", "passwordHash", "role"],
+                    required: ["firstName", "lastName", "username", "passwordHash", "role"],
                     properties: {
-                        id: { bsonType: "int" },
                         firstName: { bsonType: "string" },
                         lastName: { bsonType: "string" },
                         username: { bsonType: "string" },
                         passwordHash: { bsonType: "string" },
-                        role: { bsonType: "string" },
+                        role: { bsonType: "string", enum: ["admin", "doctor", "patient"] },
                         lastLogin: { bsonType: "timestamp" },
                         lastPasswordChange: { bsonType: "timestamp" }
                     }
@@ -29,14 +28,13 @@ async function initSchema(db) {
             validator: {
                 $jsonSchema: {
                     bsonType: "object",
-                    required: ["id",  "date", "startTime", "endTime", "patientId", "doctorId"],
+                    required: ["date", "startTime", "endTime", "patientId", "doctorId"],
                     properties: {
-                        id: { bsonType: "int" },
                         date: { bsonType: "date" },
                         startTime: { bsonType: "string" },
                         endTime: { bsonType: "string" },
-                        patientId: { bsonType: "int" },
-                        doctorId: { bsonType: "int" },
+                        patientId: { bsonType: "objectId" },
+                        doctorId: { bsonType: "objectId" },
                         lastUpdated: { bsonType: "timestamp" }
                     }
                 }
