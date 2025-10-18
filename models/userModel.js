@@ -41,15 +41,15 @@ const userSchema = new mongoose.Schema({
 
 //static methond to login user
 userSchema.statics.login = async function(username, password){
-    const user = await this.findOne({ username });
     console.log('running login');
+    const user = await this.findOne({ username });
     if (user) {
         //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
         const auth = (password === user.passwordHash);
         if (auth){
             return user;
         }
-        throw Error('incorrect username')
+        throw Error('incorrect password')
     }
     throw Error('incorrect username')
 }

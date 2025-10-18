@@ -2,6 +2,7 @@
 //starts application server on port 3000
 const express = require("express");
 const app = express();
+const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoute.js');
 const { connectDB } = require("./config/db.js");
 const { initSchema } = require("./config/initSchema.js");
@@ -9,16 +10,16 @@ require("dotenv").config();
 
 app.use(express.static("public"));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 let db;
-
-// connect to routes
-app.use(authRoute);
 
 connectDB().then(async database => {
     db = database;
 
     await initSchema(db);
+
+    app.use(authRoute);
     
     app.get("/users", async (req, res) => {
         const users = await db.collection("users").find().toArray();
@@ -34,3 +35,5 @@ connectDB().then(async database => {
     app.listen(PORT, () => 
         console.log(`Server is running on port ${PORT}`));
     });
+
+

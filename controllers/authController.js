@@ -3,7 +3,20 @@ const jwt = require('jsonwebtoken');
 
 //handle errors
 const handleErrors = (err) => {
-
+    console.log('Error:', err.message);
+    let errors = { username: '', password: '' };
+    
+    // incorrect username
+    if (err.message === 'incorrect username') {
+        errors.username = 'That username is not registered';
+    }
+    
+    // incorrect password
+    if (err.message === 'incorrect password') {
+        errors.password = 'That password is incorrect';
+    }
+    
+    return errors;
 }
 
 // create json web token
@@ -21,6 +34,7 @@ module.exports.loginUser = async (req, res) => {
     console.log("Password is ", password);
 
     try {
+        console.log("Trying to await User.login");
         const user = await User.login(username, password);
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
