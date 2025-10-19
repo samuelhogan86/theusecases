@@ -11,7 +11,7 @@ const { loginUser, registerUser } = require('../controllers/authController');
 
 
 //Login Route, post request, hash pass, check db, return token
-router.post('/login', loginUser);
+router.post('/login', authController.loginUser);
 
 //Register Route, post request, hash pass, store in db, return token
 router.post('/register', registerUser);

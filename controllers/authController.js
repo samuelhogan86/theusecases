@@ -7,12 +7,12 @@ const handleErrors = (err) => {
     let errors = { username: '', password: '' };
     
     // incorrect username
-    if (err.message === 'incorrect username') {
+    if (err.message === 'incorrect username') { //user wasnt found by query
         errors.username = 'That username is not registered';
     }
     
     // incorrect password
-    if (err.message === 'incorrect password') {
+    if (err.message === 'incorrect password') { //wrong pass
         errors.password = 'That password is incorrect';
     }
     
