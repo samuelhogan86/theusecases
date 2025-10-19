@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
 
 const userSchema = new mongoose.Schema({
-    _id: {
+    id: {
         type: String, 
         required: true,
         unique: true
@@ -42,18 +42,19 @@ const userSchema = new mongoose.Schema({
 //static methond to login user
 userSchema.statics.login = async function(username, password){
     console.log('running login');
-    const user = await this.findOne({ username });
+    const user = await this.findOne({ username }); //searching db for username
     if (user) {
         //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
         const auth = (password === user.passwordHash);
         if (auth){
+            console.log("Found User: ", user)
             return user;
         }
         throw Error('incorrect password')
     }
-    throw Error('incorrect username')
+    throw Error('incorrect username') //User not found
 }
 
-const User = mongoose.model('user', userSchema);
 
+const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;

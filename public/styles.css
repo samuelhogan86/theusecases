@@ -44,8 +44,8 @@ main {
 
 .login-header p {
     font-size: 14px;
-    color: #4285f4;
-    cursor: pointer;
+    color: #42f44b;
+    /* cursor: pointer; */
 }
 
 .form-group {

@@ -10,8 +10,10 @@ const router = express.Router();
 //middleware can go here
 
 
-//Login Route, post request, hash pass, check db, return token. Register is handled by Admin.
-router.post('/login', loginUser);
+//Login Route, post request, hash pass, check db, return token
+router.post('/login', authController.loginUser);
 
+//Register Route, post request, hash pass, store in db, return token
+router.post('/admin/register', authController.registerUser);
 
 module.exports = router;
