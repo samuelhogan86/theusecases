@@ -1,19 +1,17 @@
 //Login Authentication Endpoints
-const authController = require('../controllers/authController');
-//Importing express
-const express = require('express');
-const router = express.Router();
-
 //Importing controllers, handles logic for routes (business logic)
 const { loginUser, registerUser } = require('../controllers/authController');
+//Importing express
+const express = require('express');
 
+
+
+const router = express.Router();
 //middleware can go here
 
 
-//Login Route, post request, hash pass, check db, return token
+//Login Route, post request, hash pass, check db, return token. Register is handled by Admin.
 router.post('/login', loginUser);
 
-//Register Route, post request, hash pass, store in db, return token
-router.post('/register', registerUser);
 
 module.exports = router;
