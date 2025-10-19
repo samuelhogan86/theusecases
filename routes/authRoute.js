@@ -14,6 +14,6 @@ const { loginUser, registerUser } = require('../controllers/authController');
 router.post('/login', authController.loginUser);
 
 //Register Route, post request, hash pass, store in db, return token
-router.post('/register', registerUser);
+router.post('/admin/register', authController.registerUser);
 
 module.exports = router;

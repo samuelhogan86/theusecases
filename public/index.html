@@ -64,8 +64,17 @@
                     usernameError.textContent = data.errors.username;
                     passwordError.textContent = data.errors.password;
                 }
-                if (data.user) {
-                    location.assign('/');
+                if (data.user.role == 'patient') {
+                    console.log(data.user.role);
+                    location.assign('dashboardPatient.html'); //temporary
+                }
+                else if (data.user.role == 'doctor') {
+                    console.log(data.user.role);
+                    location.assign('dashboardDoctor.html'); 
+                }
+                else if (data.user.role == 'admin') {
+                    console.log(data.user.role);
+                    location.assign('dashboardAdmin.html'); 
                 }
 
             }

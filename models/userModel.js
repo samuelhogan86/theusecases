@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
 
 const userSchema = new mongoose.Schema({
     id: {
@@ -55,6 +55,6 @@ userSchema.statics.login = async function(username, password){
     throw Error('incorrect username') //User not found
 }
 
-const User = mongoose.model('user', userSchema);
 
+const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;

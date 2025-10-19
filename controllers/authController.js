@@ -19,13 +19,13 @@ const handleErrors = (err) => {
     return errors;
 }
 
-// create json web token
+// create json web token, stores authentication, WORK IN PROG
 const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-    return jwt.sign({ id }, 'use cases secret', {
-        expiresIn: maxAge
-    });
-};
+// const createToken = (id) => {
+//     return jwt.sign({ id }, 'use cases secret', {
+//         expiresIn: maxAge
+//     });
+// };
 
 module.exports.loginUser = async (req, res) => {
     const { username, password } = req.body;
@@ -36,9 +36,10 @@ module.exports.loginUser = async (req, res) => {
     try {
         console.log("Trying to await User.login");
         const user = await User.login(username, password);
-        const token = createToken(user._id);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(200).json({ user: user._id });
+        res.json({user:user});
+        // const token = createToken(user._id);
+        // res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+        // res.status(200).json({ user: user._id });
     }
     catch (err) {
         const errors = handleErrors(err);
@@ -47,6 +48,6 @@ module.exports.loginUser = async (req, res) => {
 
 }
 
-module.exports.registerUser = (req, res) => {
+module.exports.registerUser = (req, res) => { 
 
 }
