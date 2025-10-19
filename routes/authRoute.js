@@ -11,9 +11,9 @@ const router = express.Router();
 
 
 //Login Route, post request, hash pass, check db, return token
-router.post('/login', authController.loginUser);
+router.post('/login', loginUser);
 
 //Register Route, post request, hash pass, store in db, return token
-router.post('/admin/register', authController.registerUser);
+router.post('/admin/register', registerUser);
 
 module.exports = router;
