@@ -3,13 +3,13 @@
 const express = require("express");
 const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoute.js');
-const { connectDB } = require("./config/db.js");
-const { initSchema } = require("./config/initSchema.js");
+const { connectDB } = require("../config/db.js");
+const { initSchema } = require("../config/initSchema.js");
 require("dotenv").config();
 
 
 const app = express();
-app.use(express.static("public"));
+app.use(express.static("../client/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
