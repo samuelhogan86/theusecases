@@ -59,22 +59,30 @@
                     headers: { 'Content-Type': 'application/json' }
                 });
                 const data = await res.json();
-                console.log(data);
+                if (res.ok) {
+                    // Save token to localStorage
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userId', data.user._id);
+                    console.log('Login successful!');
+                    if (data.user.role == 'patient') {
+                        console.log(data.user.role);
+                        location.assign('dashboardPatient.html'); //temporary
+                    }
+                    else if (data.user.role == 'doctor') {
+                        console.log(data.user.role);
+                        location.assign('dashboardDoctor.html');
+                    }
+                    else if (data.user.role == 'admin') {
+                        console.log(data.user.role);
+                        location.assign('dashboardAdmin.html');
+                    }
+                } else {
+                    console.error('Login failed:', data.errors);
+                }
+
                 if (data.errors) {
                     usernameError.textContent = data.errors.username;
                     passwordError.textContent = data.errors.password;
-                }
-                if (data.user.role == 'patient') {
-                    console.log(data.user.role);
-                    location.assign('dashboardPatient.html'); //temporary
-                }
-                else if (data.user.role == 'doctor') {
-                    console.log(data.user.role);
-                    location.assign('dashboardDoctor.html'); 
-                }
-                else if (data.user.role == 'admin') {
-                    console.log(data.user.role);
-                    location.assign('dashboardAdmin.html'); 
                 }
 
             }
