@@ -30,9 +30,6 @@ const createToken = (id) => {
 module.exports.loginUser = async (req, res) => {
     const { username, password } = req.body;
 
-    console.log("Username is ", username);
-    console.log("Password is ", password);
-
     try {
         const user = await User.login(username, password);
         const token = createToken(user._id);
