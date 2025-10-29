@@ -1,5 +1,6 @@
 //Run this file with the command "node server.js" in your terminal
 //starts application server on port 3000
+const cors = require("cors");
 const express = require("express");
 const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoute.js');
@@ -9,7 +10,12 @@ require("dotenv").config();
 
 
 const app = express();
-app.use(express.static("../client/public"));
+// app.use(express.static("../client/public"));
+app.use(cors({
+  origin: "http://localhost:5173", // Vite frontend
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -21,7 +27,7 @@ connectDB().then(async database => {
     await initSchema(db);
 
     app.use(authRoute);
-    
+
     app.get("/users", async (req, res) => {
         const users = await db.collection("users").find().toArray();
         res.json(users);
@@ -33,8 +39,8 @@ connectDB().then(async database => {
     });
 
     const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => 
+    app.listen(PORT, () =>
         console.log(`Server is running on port ${PORT}`));
-    });
+});
 
 

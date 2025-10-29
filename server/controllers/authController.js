@@ -28,6 +28,10 @@ const createToken = (id) => {
 };
 
 module.exports.loginUser = async (req, res) => {
+        console.log("=== LOGIN REQUEST RECEIVED ===");
+    console.log("Request body:", req.body);
+    console.log("Username:", req.body.username);
+    console.log("Password:", req.body.password);
     const { username, password } = req.body;
 
     try {
