@@ -12,7 +12,8 @@ require("dotenv").config();
 const app = express();
 // app.use(express.static("../client/public"));
 app.use(cors({
-  origin: "http://localhost:5173", // Vite frontend
+  origin: "http://localhost:5173",
+  methods: ['GET', 'PUT', 'POST', 'DELETE'],
   credentials: true
 }));
 
