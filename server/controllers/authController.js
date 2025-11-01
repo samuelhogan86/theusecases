@@ -47,6 +47,3 @@ module.exports.loginUser = async (req, res) => {
 
 }
 
-module.exports.registerUser = (req, res) => { 
-
-}
