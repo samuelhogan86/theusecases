@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
 
+const hasNumber = (str) => {
+    const regex = /\d/; //matches any digit
+    return regex.test(str);
+}
+
 const userSchema = new mongoose.Schema({
     id: {
         type: String, 
@@ -22,7 +27,6 @@ const userSchema = new mongoose.Schema({
     passwordHash: {
         type: String, 
         required: [true, 'Enter a password'],
-        minLength: [6, 'Minimum password length is 6 characters']
     },
     role:{
         type: String, 
@@ -55,11 +59,50 @@ userSchema.statics.login = async function(username, password){
 }
 
 //static method to register user
-userSchema.statics.register = async function(userData){
-    const { firstName, lastName, username, password, role } = userData;
+userSchema.statics.register = async function(firstName, lastName, username, password, role){
+    
+    //need to add checks for firstName, lastName, username, password, and role
+    //checking if there are numbers
+    if (hasNumber(firstName) || hasNumber(lastName)){
+        throw Error('name has a number')
+    }
+    if (hasNumber(role)){
+        throw Error('role has a number')
+    }
+    //cleaning the names and role
+    firstName = firstName.trim();
+    lastName = lastName.trim();
+    role = role.trim();
+    firstName = firstName.toLowerCase();
+    lastName = lastName.toLowerCase();
+    role = role.toLowerCase();
+
+
+    const existingUsername = await mongoose.model('user').findOne({ username: username });
+    if (existingUsername){
+        throw Error('existing username')
+    }
+
+    if (password.length < 7){
+        throw Error('password length')
+    }
+
+    if (!(role === 'doctor') && !(role) === 'admin' && !(role) === 'patient'){
+        throw Error('incorrect role')
+    }
+
+    //debug code
+    console.log(`
+    firstName: ${firstName},
+    lastName: ${lastName},
+    username: ${username},
+    password: ${password},
+    role: ${role}`);
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
+
+    console.log(`passwordhash: ${passwordHash}`);
 
     let flag = true;
     while(flag){
@@ -83,9 +126,9 @@ userSchema.statics.register = async function(userData){
         console.log(id);
         
         //check if ID already exists
-        const existingUser = await mongoose.model('user').findOne({ id: id });
+        const existingUserID = await mongoose.model('user').findOne({ id: id });
         
-        if (!existingUser){
+        if (!existingUserID){
             flag = false;
         }
     }
