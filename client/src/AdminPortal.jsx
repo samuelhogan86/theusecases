@@ -1,10 +1,38 @@
 import './styles.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from 'antd';
 
 function AdminPortal() {
+    const [appointments, setAppointments] = useState([]);
+    const [users, setUsers] = useState([]);
     const [activeTab, setActiveTab] = useState('appointments');
     const [openAdd, setOpenAdd] = useState(false);
+
+    // Retrieve all appointments from database
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/appointments");
+                const data = await response.json();
+                setAppointments(data);
+            } catch (err) {
+                console.log("Error fetching appointments");
+            }
+        }
+
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch("http://localhost:3000/users");
+                const data = await response.json();
+                setUsers(data);
+            } catch (err) {
+                console.log("Error fetching users");
+            }
+        }
+
+        fetchAppointments();
+        fetchUsers();
+    }, []);
 
     const handleAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
@@ -67,20 +95,23 @@ function AdminPortal() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>9/26/2025</td>
-                                        <td>09:00</td>
-                                        <td>09:30</td>
-                                        <td>Dr. Lucy Chen</td>
-                                        <td>Jane Smith</td>
-                                    </tr>
-                                    <tr>
-                                        <td>9/26/2025</td>
-                                        <td>10:30</td>
-                                        <td>11:00</td>
-                                        <td>Dr. Lucy Chen</td>
-                                        <td>Adam Johnson</td>
-                                    </tr>
+                                    {appointments && appointments.length > 0 ? (
+                                        appointments.map((appointment) => (
+                                            <tr key={appointment._id}>
+                                                <td>{new Date(appointment.date).toLocaleDateString()}</td>
+                                                <td>{appointment.startTime}</td>
+                                                <td>{appointment.endTime}</td>
+                                                <td>{appointment.doctorId}</td>
+                                                <td>{appointment.patientId}</td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="4" style={{ textAlign: "center" }}>
+                                                No appointments found.
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
 
@@ -112,30 +143,28 @@ function AdminPortal() {
                                     <thead>
                                         <tr>
                                             <th>Name</th>
-                                            <th>Email</th>
+                                            <th>Username</th>
                                             <th>Role</th>
                                             <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Dr. Lucy Chen</td>
-                                            <td>lucy.chen@hospital.com</td>
-                                            <td>Doctor</td>
-                                            <td>Active</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jane Smith</td>
-                                            <td>jane.smith@email.com</td>
-                                            <td>Patient</td>
-                                            <td>Active</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dr. Michael Smith</td>
-                                            <td>michael.smith@hospital.com</td>
-                                            <td>Doctor</td>
-                                            <td>Active</td>
-                                        </tr>
+                                        {users && users.length > 0 ? (
+                                            users.map((user) => (
+                                                <tr key={user._id || user.username}>
+                                                    <td>{user.firstName} {user.lastName}</td>
+                                                    <td>{user.username}</td>
+                                                    <td>{user.role}</td>
+                                                    <td>{user.status || "Active"}</td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="4" style={{ textAlign: "center" }}>
+                                                    No users found.
+                                                </td>
+                                            </tr>
+                                        )}
                                     </tbody>
                                 </table>
                                 <div className="dashboard-pagination">
