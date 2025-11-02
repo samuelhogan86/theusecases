@@ -4,14 +4,13 @@ const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
 const userSchema = new mongoose.Schema({
     id: {
         type: String, 
-        required: true,
         unique: true
     },
     firstName: {
         type: String,
         required: [true, 'Enter the first name']
     },
-    LastName: {
+    lastName: {
         type: String,
         required: [true, 'Enter the last name']
     },
@@ -53,6 +52,54 @@ userSchema.statics.login = async function(username, password){
         throw Error('incorrect password')
     }
     throw Error('incorrect username') //User not found
+}
+
+//static method to register user
+userSchema.statics.register = async function(userData){
+    const { firstName, lastName, username, password, role } = userData;
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    let flag = true;
+    while(flag){
+
+        const randomNum = Math.floor(100000 + Math.random() * 900000);
+
+        let prefix = 'U';
+        switch(role){
+            case('doctor'):
+                prefix = 'D';
+                break;
+            case('admin'):
+                prefix = 'A';
+                break;
+            case('patient'):
+                prefix = 'P';
+                break;
+        }
+        
+        id = `${prefix}${randomNum}`;
+        console.log(id);
+        
+        //check if ID already exists
+        const existingUser = await mongoose.model('user').findOne({ id: id });
+        
+        if (!existingUser){
+            flag = false;
+        }
+    }
+
+    const user = await this.create({
+        id,
+        firstName,
+        lastName,
+        username,
+        passwordHash,
+        role
+    });
+    
+    return user;
 }
 
 
