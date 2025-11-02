@@ -11,6 +11,21 @@ const handleErrors = (err) => {
     if (err.message === 'name has a number'){
         errors.name = 'Names can\'t have any digits in them';
     }
+    if (err.message === 'role has a number'){
+        error.role = 'Role must be: doctor, admin, or patient'
+    }
+    if (err.message === 'existing username'){
+        errors.username = 'Username is already taken'
+    }
+    if (err.message === 'password length'){
+        errors.password = 'Password is too short (min 7)'
+    }
+    if (err.message === 'incorrect role'){
+        errors.role = 'Role must be: doctor, admin, or patient'
+    }
+    if (err.message === 'All fields must be filled'){
+        error.name = 'All fields are required'
+    }
 
     return errors;
 }

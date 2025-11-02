@@ -62,6 +62,9 @@ userSchema.statics.login = async function(username, password){
 userSchema.statics.register = async function(firstName, lastName, username, password, role){
     
     //need to add checks for firstName, lastName, username, password, and role
+    if(!firstName || !lastName || !username || !password || !role){
+        throw Error('All fields must be filled')
+    }
     //checking if there are numbers
     if (hasNumber(firstName) || hasNumber(lastName)){
         throw Error('name has a number')
@@ -73,8 +76,8 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
     firstName = firstName.trim();
     lastName = lastName.trim();
     role = role.trim();
-    firstName = firstName.toLowerCase();
-    lastName = lastName.toLowerCase();
+    firstName = capitalize(firstName);
+    lastName = capitalize(lastName);
     role = role.toLowerCase();
 
 
@@ -87,7 +90,8 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
         throw Error('password length')
     }
 
-    if (!(role === 'doctor') && !(role) === 'admin' && !(role) === 'patient'){
+    const validRoles =['doctor', 'admin', 'patient'];
+    if (!validRoles.includes(role)){
         throw Error('incorrect role')
     }
 
@@ -104,8 +108,10 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
 
     console.log(`passwordhash: ${passwordHash}`);
 
-    let flag = true;
-    while(flag){
+    let isUnique = false;
+    let attempts = 0;
+    const maxAttemps = 10;
+    while(!isUnique && attempts < maxAttemps){
 
         const randomNum = Math.floor(100000 + Math.random() * 900000);
 
@@ -129,8 +135,10 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
         const existingUserID = await mongoose.model('user').findOne({ id: id });
         
         if (!existingUserID){
-            flag = false;
+            isUnique = true;
         }
+        
+        attempts++
     }
 
     const user = await this.create({
