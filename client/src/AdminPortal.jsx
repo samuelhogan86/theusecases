@@ -8,7 +8,7 @@ function AdminPortal() {
     const [activeTab, setActiveTab] = useState('appointments');
     const [openAdd, setOpenAdd] = useState(false);
 
-    // Retrieve all appointments from database
+    // Retrieve all appointments and users from database
     useEffect(() => {
         const fetchAppointments = async () => {
             try {
@@ -33,6 +33,12 @@ function AdminPortal() {
         fetchAppointments();
         fetchUsers();
     }, []);
+
+    // Find and return user's full name given their id
+    const findUserName = (userId) => {
+        const user = users.find(user => user._id === userId);
+        return user ? `${user.firstName} ${user.lastName}` : "Unknown";
+    }
 
     const handleAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
@@ -101,8 +107,8 @@ function AdminPortal() {
                                                 <td>{new Date(appointment.date).toLocaleDateString()}</td>
                                                 <td>{appointment.startTime}</td>
                                                 <td>{appointment.endTime}</td>
-                                                <td>{appointment.doctorId}</td>
-                                                <td>{appointment.patientId}</td>
+                                                <td>{findUserName(appointment.doctorId)}</td>
+                                                <td>{findUserName(appointment.patientId)}</td>
                                             </tr>
                                         ))
                                     ) : (
@@ -180,6 +186,7 @@ function AdminPortal() {
                 </div>
             </div>
 
+            {/* Popup form for registering new user / scheduling new appointment */}
             <Modal
                 title={activeTab === 'users' ? "Register New User" : "Schedule New Appointment"}
                 open={openAdd}
