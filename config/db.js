@@ -21,17 +21,4 @@ async function connectDB(){
 }
 
 
-//# Native MongoDB connection, error trying to query from mongoose connection since models setup on mongoose
-// async function connectDB() {
-//   try {
-//     await client.connect();
-//     console.log("Connected to MongoDB");
-//     return client.db("HealthPortal"); 
-//   } 
-//   catch (error) {
-//     console.error("Error connecting to MongoDB:", error);
-//     throw error;
-//   }
-// }
-
 module.exports = { connectDB };
