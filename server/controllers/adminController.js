@@ -43,17 +43,12 @@ module.exports.registerUser = async (req, res) => {
         const user = await User.register(firstName, lastName, username, password, role);
         const token = createToken(user._id);
 
-<<<<<<< Updated upstream
         const userResponse = user.toObject();
         delete userResponse.passwordHash;
 
         res.status(201).json({
             message: 'User registered successfully',
             user: userResponse,
-=======
-        res.status(200).json({
-            user: user,
->>>>>>> Stashed changes
             token: token
         });
     }
