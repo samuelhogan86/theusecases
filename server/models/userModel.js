@@ -187,6 +187,7 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
     const updateData = { firstName, lastName, username, password, role };
     console.log('Update data:', updateData);
 
+<<<<<<< Updated upstream
     const updates = {};
 
     const existingUser = this.findOne(id);
@@ -290,5 +291,11 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
 }
 
+=======
+userSchema.statics.deleteUserById = async function(id){
+    const deletedUser = await this.findByIDAndDelete(id);
+    return deletedUser
+}
+>>>>>>> Stashed changes
 const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;
