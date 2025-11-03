@@ -1,9 +1,14 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
+const { Timestamp } = require('bson');
 
 const hasNumber = (str) => {
     const regex = /\d/; //matches any digit
     return regex.test(str);
+}
+
+const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 const userSchema = new mongoose.Schema({
@@ -44,44 +49,53 @@ const userSchema = new mongoose.Schema({
 
 //static methond to login user
 userSchema.statics.login = async function(username, password){
-    console.log('running login');
+    console.log('Attempting login for usernamer:', username);
+
     const user = await this.findOne({ username }); //searching db for username
-    if (user) {
-        //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
-        const auth = (password === user.passwordHash);
-        if (auth){
-            console.log("Found User: ", user)
-            return user;
-        }
-        throw Error('incorrect password')
+
+    if (!user) {
+        throw Error('incorrect username') //User not found
     }
-    throw Error('incorrect username') //User not found
+    
+    //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
+    const auth = (password === user.passwordHash);
+
+    if (!auth){
+        throw Error('incorrect password')    
+    }
+    
+    console.log('User authenticated successfully:', user.username);
+    return user;
 }
 
 //static method to register user
 userSchema.statics.register = async function(firstName, lastName, username, password, role){
     
-    //need to add checks for firstName, lastName, username, password, and role
+    
     if(!firstName || !lastName || !username || !password || !role){
         throw Error('All fields must be filled')
     }
+
+    //trim whitespace
+    firstName = firstName.trim();
+    lastName = lastName.trim();
+    username = username.trim();
+    role = role.trim().toLowerCase();
+
     //checking if there are numbers
     if (hasNumber(firstName) || hasNumber(lastName)){
         throw Error('name has a number')
     }
+
+    firstName = capitalize(firstName);
+    lastName = capitalize(lastName);
+
     if (hasNumber(role)){
         throw Error('role has a number')
     }
-    //cleaning the names and role
-    firstName = firstName.trim();
-    lastName = lastName.trim();
-    role = role.trim();
-    firstName = capitalize(firstName);
-    lastName = capitalize(lastName);
-    role = role.toLowerCase();
+    
+    const existingUsername = await this.findOne({ username });
 
-
-    const existingUsername = await mongoose.model('user').findOne({ username: username });
     if (existingUsername){
         throw Error('existing username')
     }
@@ -96,17 +110,16 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
     }
 
     //debug code
-    console.log(`
-    firstName: ${firstName},
-    lastName: ${lastName},
-    username: ${username},
-    password: ${password},
-    role: ${role}`);
+    // console.log(`
+    // firstName: ${firstName},
+    // lastName: ${lastName},
+    // username: ${username},
+    // password: ${password},
+    // role: ${role}`);
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
-
-    console.log(`passwordhash: ${passwordHash}`);
+    
 
     let isUnique = false;
     let attempts = 0;
@@ -114,25 +127,20 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
     while(!isUnique && attempts < maxAttemps){
 
         const randomNum = Math.floor(100000 + Math.random() * 900000);
-
-        let prefix = 'U';
-        switch(role){
-            case('doctor'):
-                prefix = 'D';
-                break;
-            case('admin'):
-                prefix = 'A';
-                break;
-            case('patient'):
-                prefix = 'P';
-                break;
-        }
         
+        const prefixMap = {
+            'doctor': 'D',
+            'admin': 'A',
+            'patient': 'P'
+        };
+
+        const prefix = prefixMap[role] || 'U';
+       
         id = `${prefix}${randomNum}`;
         console.log(id);
         
         //check if ID already exists
-        const existingUserID = await mongoose.model('user').findOne({ id: id });
+        const existingUserID = await this.findOne({ id });
         
         if (!existingUserID){
             isUnique = true;
@@ -141,16 +149,37 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
         attempts++
     }
 
-    const user = await this.create({
+    console.log('Creating user with ID:', id);
+
+    const userData = {
         id,
         firstName,
         lastName,
         username,
         passwordHash,
         role
+    };
+
+    console.log('User data to be created:', JSON.stringify(userData, null, 2));
+    console.log('Data types:', {
+        id: typeof id,
+        firstName: typeof firstName,
+        lastName: typeof lastName,
+        username: typeof username,
+        passwordHash: typeof passwordHash,
+        role: typeof role
     });
-    
-    return user;
+
+    try {
+        const user = await this.create(userData);
+        console.log('User created successfully:', user.username, user.id);
+        return user;
+    }
+    catch(createError) {
+        console.error('CREATE ERROR DETAILS:', createError);
+        console.error('Validation errors:', createError.errors);
+        throw createError;
+    }
 }
 
 

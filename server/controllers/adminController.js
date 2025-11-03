@@ -37,7 +37,7 @@ module.exports.registerUser = async (req, res) => {
         const user = await User.register(firstName, lastName, username, password, role);
         const token = createToken(user._id);
 
-        res.status(200).json({
+        res.status(201).json({
             user: user,
             token: token
         });
