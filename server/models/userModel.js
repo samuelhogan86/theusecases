@@ -181,7 +181,114 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
         throw createError;
     }
 }
+//static method to update user
+userSchema.statics.update = async function update(id, firstName, lastName, username, password, role){
+    console.log('User ID:', id);
+    const updateData = { firstName, lastName, username, password, role };
+    console.log('Update data:', updateData);
 
+    const updates = {};
+
+    const existingUser = this.findOne(id);
+    if(!existingUser){
+        throw Error('User doesn\'t exists');
+    }
+
+    if(firstName !== undefined){
+        console.log('Updating first name...');
+        const trimmedFirstName = firstName.trim();
+
+        if (!trimmedFirstName){
+            throw Error('First name cannot be empty');
+        }
+
+        if(hasNumber(trimmedFirstName)){
+            throw Error('name has a number');
+        }
+        updates.firstname = capitalize(trimmedFirstName);
+        console.log('First name updated to:', updates.firstName);
+
+    }
+    if(lastName !== undefined){
+        console.log('Updating last name...');
+        const trimmedLastName = lastName.trim();
+
+        if (!trimmedLastName) {
+            throw Error('Last name cannot be empty');
+        }
+
+        if (hasNumber(trimmedLastName)) {
+            throw Error('name has a number')
+        }
+        
+        updates.lastName = capitalize(trimmedLastName);
+        console.log('Last name update to:', updates.lastName);
+    }
+    if(username !== undefined){
+        console.log('Updating username...');
+        const trimmedUsername = username.trim();
+
+        if(!trimmedUsername) {
+            throw Error('Username cannot be empty');
+        }
+
+        const checkUsername = await this.findOne({
+            username: trimmedUsername,
+            id: {$ne: id}
+        });
+
+        if (checkUsername) {
+            throw Error('existing username')
+        }
+
+        updates.username = trimmedUsername;
+        console.log('Username updated to:', updates.username);
+    }
+    if(password !== undefined){
+        console.log('Updating password...');
+
+        if(password.length < 7) {
+            throw Error('password length')
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        updates.passwordHash = await bcrypt.hash(password, salt);
+        updates.lastPasswordChange = new Date();
+
+        console.log('Password hash and ready to update');
+    }
+    if(role !== undefined){
+        console.log('Updating role...');
+        const trimmedRole = role.trim().toLowerCase();
+
+        const validRoles = ['admin', 'doctor', 'patient'];
+        if(!validRoles.includes(trimmedRole)){
+            throw Error('incorrect role')
+        }
+
+        updates.role = trimmedRole;
+        console.log('Role updated to:', updates.role);
+    }
+
+    if (Object.keys(updates).length === 0) {
+        throw Error('no valid fields')
+    }
+
+    console.log('Final updates to be applied:', updates);
+
+    const updatedUser = await this.findByIdAndUpdate(
+        id,
+        updates,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+
+    console.log('User updated successfully:', updatedUser.id);
+    return updatedUser;
+
+}
 
 const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;

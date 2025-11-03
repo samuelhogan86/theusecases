@@ -30,6 +30,12 @@ const handleErrors = (err) => {
     return errors;
 }
 
+const maxAge = 3 * 24 * 60 * 60;
+const createToken = (id) => {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: maxAge
+    });
+};
 
 module.exports.registerUser = async (req, res) => {
     const { firstName, lastName, username, password, role } = req.body;
@@ -37,8 +43,12 @@ module.exports.registerUser = async (req, res) => {
         const user = await User.register(firstName, lastName, username, password, role);
         const token = createToken(user._id);
 
+        const userResponse = user.toObject();
+        delete userResponse.passwordHash;
+
         res.status(201).json({
-            user: user,
+            message: 'User registered successfully',
+            user: userResponse,
             token: token
         });
     }
@@ -50,8 +60,22 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.updateUser = async (req, res) => {
+    const {id, firstName, lastName, username, password, role } = req.body;
+    try {
+        const user = await User.update(id, firstName, lastName, username, password, role);
 
+        const userResponse = user.toObject();
+        delete userResponse.passwordHash;
 
+        res.status(201).json({
+            message: 'User updated successfully',
+            user: userResponse
+        });
+    }
+    catch (err){
+        const errors = handleErrors(err);
+        res.status(400).json({ errors });
+    }
 }
 
 
