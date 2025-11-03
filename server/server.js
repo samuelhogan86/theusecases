@@ -5,7 +5,6 @@ const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoutes.js');
 const adminRoute = require('./routes/adminRoutes.js');
 const { connectDB } = require("../config/db.js");
-const { initSchema } = require("../config/initSchema.js");
 require("dotenv").config();
 
 
@@ -18,8 +17,6 @@ let db;
 
 connectDB().then(async database => {
     db = database;
-
-    await initSchema(db);
 
     //debug code
     app.use((req, res, next) => {
