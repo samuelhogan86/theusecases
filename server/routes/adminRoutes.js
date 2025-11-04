@@ -9,11 +9,13 @@ const { registerUser, updateUser, deleteUser } = require('../controllers/adminCo
 
 
 //Define routes. 
-router.post('/user', tokenValidator, registerUser);
+router.get('/dashboard')
 
-router.put('/user/:id', tokenValidator, updateUser);
+router.post('/users', tokenValidator, registerUser);
 
-router.delete('/user/:id', tokenValidator, deleteUser);
+router.put('/users/:id', tokenValidator, updateUser);
+
+router.delete('/users/:id', tokenValidator, deleteUser);
 
 
 

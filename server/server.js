@@ -27,7 +27,7 @@ connectDB().then(async database => {
 
 
     app.use(authRoute);
-    app.use(adminRoute);
+    app.use(adminRoute, require('/api/admin'));
     
     app.get("/users", async (req, res) => {
         const users = await db.collection("users").find().toArray();
