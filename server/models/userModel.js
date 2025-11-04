@@ -56,12 +56,24 @@ userSchema.statics.login = async function(username, password){
         throw Error('incorrect username') //User not found
     }
     
-    //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
-    const auth = (password === user.passwordHash);
+    const auth = await bcrypt.compare(password, user.password) //for when we hash the password
 
     if (!auth){
         throw Error('incorrect password')    
     }
+
+    timeUpdate = {};
+    timeUpdate.lastLogin = new Date();
+
+    const updatedUser = await this.findByIdAndUpdate(
+        user.id,
+        timeUpdate,
+        {
+            new: true,
+            runValidators: true
+        }
+    );
+
     
     console.log('User authenticated successfully:', user.username);
     return user;
@@ -70,10 +82,6 @@ userSchema.statics.login = async function(username, password){
 //static method to register user
 userSchema.statics.register = async function(firstName, lastName, username, password, role){
 
-    if (req.user.role !== "admin") {
-        throw Error("Only admins can create new users");
-    }
-    
     if(!firstName || !lastName || !username || !password || !role){
         throw Error('All fields must be filled')
     }
@@ -189,10 +197,6 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
     const updateData = { firstName, lastName, username, password, role };
     console.log('Update data:', updateData);
 
-     if (req.user.role !== "admin") {
-        throw Error("Only admins can update users");
-    }
-
     const updates = {};
 
     const existingUser = this.findOne(id);
@@ -299,7 +303,6 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 userSchema.statics.deleteUserById= async function(id){
     const user = await this.findOneAndDelete({id});
     return user;
-
 }
 userSchema.statics.getAllUsers = async function(){
     
