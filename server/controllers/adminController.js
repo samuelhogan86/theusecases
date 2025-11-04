@@ -99,3 +99,8 @@ module.exports.deleteUser = async (req, res) => {
 
 }
 
+module.exports.dashboard = async(req, res) =>{
+
+    
+}
+
