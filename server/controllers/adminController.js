@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 //handle errors
 const handleErrors = (err) => {
     console.log('Error:', err.message);
-    let errors = {name: '', username: '', password: '', role: ''};
+    let errors = {};
 
     if (err.message === 'name has a number'){
         errors.name = 'Names can\'t have any digits in them';
@@ -24,7 +24,7 @@ const handleErrors = (err) => {
         errors.role = 'Role must be: doctor, admin, or patient'
     }
     if (err.message === 'All fields must be filled'){
-        error.name = 'All fields are required'
+        error.general = 'All fields are required'
     }
 
     return errors;

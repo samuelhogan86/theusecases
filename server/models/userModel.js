@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
-const { Timestamp } = require('bson');
 
 const hasNumber = (str) => {
     const regex = /\d/; //matches any digit
@@ -70,7 +69,10 @@ userSchema.statics.login = async function(username, password){
 
 //static method to register user
 userSchema.statics.register = async function(firstName, lastName, username, password, role){
-    
+
+    if (req.user.role !== "admin") {
+        throw Error("Only admins can create new users");
+    }
     
     if(!firstName || !lastName || !username || !password || !role){
         throw Error('All fields must be filled')
@@ -187,7 +189,10 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
     const updateData = { firstName, lastName, username, password, role };
     console.log('Update data:', updateData);
 
-<<<<<<< Updated upstream
+     if (req.user.role !== "admin") {
+        throw Error("Only admins can update users");
+    }
+
     const updates = {};
 
     const existingUser = this.findOne(id);
@@ -291,11 +296,5 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
 }
 
-=======
-userSchema.statics.deleteUserById = async function(id){
-    const deletedUser = await this.findByIDAndDelete(id);
-    return deletedUser
-}
->>>>>>> Stashed changes
 const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;
