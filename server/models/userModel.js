@@ -55,8 +55,9 @@ userSchema.statics.login = async function(username, password){
     if (!user) {
         throw Error('incorrect username') //User not found
     }
-    
-    const auth = await bcrypt.compare(password, user.password) //for when we hash the password
+    console.log('User found:', user.username);
+    console.log('Comparing password for user:', password, user.passwordHash);
+    const auth = await bcrypt.compare(password, user.passwordHash) //for when we hash the password
 
     if (!auth){
         throw Error('incorrect password')    
