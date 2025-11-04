@@ -3,7 +3,7 @@
 //import express, and route controllers
 const express = require('express');
 const router = express.Router();
-const { tokenValidator } = require("../middleware/authMiddleware");
+const { tokenValidator , checkIfAdmin} = require("../middleware/authMiddleware");
 const { dashboard, registerUser, updateUser, deleteUser } = require('../controllers/adminController.js');
 
 
@@ -12,14 +12,14 @@ const { dashboard, registerUser, updateUser, deleteUser } = require('../controll
 router.get('/dashboard', dashboard)
 
 //register user
-router.post('/users', tokenValidator, registerUser);
+router.post('/users', tokenValidator,checkIfAdmin, registerUser);
 
 //update user by id
-router.put('/users/:id', tokenValidator, updateUser);
+router.put('/users/:id', tokenValidator,checkIfAdmin, updateUser);
 
 
 //delete user by id
-router.delete('/users/:id', tokenValidator, deleteUser);
+router.delete('/users/:id', tokenValidator,checkIfAdmin,deleteUser);
 
 
 
