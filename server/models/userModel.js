@@ -296,5 +296,11 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
 }
 
+userSchema.statics.deleteUserById= async function(id){
+    const user = await this.findOneAndDelete({id});
+    return user;
+
+}
+
 const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;
