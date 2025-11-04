@@ -47,5 +47,17 @@ const tokenValidator = (req, res, next) => {
     }
 };
 
+const checkIfAdmin = (req, res, next) => {
+    try{
+        if (req.user.role !== "admin") {
+            return res.status(401).json({ error: "Admin only function" })
+        }
+        next();
+    }
+    catch (err) {
+        return res.status(401).json({ error: "Invalid Role" });
+    }
+};
 
-module.exports = { requireAuth, tokenValidator };
+
+module.exports = { requireAuth, tokenValidator, checkIfAdmin };
