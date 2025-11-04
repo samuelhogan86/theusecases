@@ -9,17 +9,17 @@ const { dashboard, registerUser, updateUser, deleteUser } = require('../controll
 
 
 //Define routes. 
-router.get('/dashboard', dashboard)
+router.get('/dashboard',checkIfAdmin,tokenValidator, dashboard)
 
 //register user
-router.post('/users', checkIfAdmin, registerUser);
+router.post('/users', checkIfAdmin, tokenValidator, registerUser);
 
 //update user by id
-router.put('/users/:id', checkIfAdmin, updateUser);
+router.put('/users/:id', checkIfAdmin, tokenValidator, updateUser);
 
 
 //delete user by id
-router.delete('/users/:id', checkIfAdmin, deleteUser);
+router.delete('/users/:id', checkIfAdmin, tokenValidator, deleteUser);
 
 
 
