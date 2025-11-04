@@ -87,7 +87,7 @@ module.exports.deleteUser = async (req, res) => {
             res.status(404).json({message:"User Not Found"});
         }
         const userResponse = user.toObject();
-        res.status(200).json({
+        res.status(204).json({
             message: "User Successfully Deleted",
             user: user
         })
@@ -104,7 +104,7 @@ module.exports.dashboard = async(req, res) =>{
         const users = await User.dashboard();
         res.status(200).json({
             message: "dashboard data sent",
-            user: user
+            user: users
         })
 
     }catch(err){
