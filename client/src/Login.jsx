@@ -26,8 +26,6 @@ function Login() {
                 localStorage.setItem("token", data.token);
                 localStorage.setItem("userId", data.user._id);
 
-                const role = data.user.role;
-
                 // Handle navigation using react-router-dom
                 // Routes can be viewed under App.jsx
                 if (data.user.role === "patient") {

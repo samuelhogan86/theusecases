@@ -12,7 +12,7 @@ async function connectDB(){
   try{
     const connection = await mongoose.connect(process.env.MONGODB_URI);
     console.log("Connected to MongoDB");
-    return client.db("HealthPortal"); 
+    return client.db("theusecases"); 
     
   }catch(error){
     console.error("Error connecting to MongoDB:", error);

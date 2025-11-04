@@ -1,12 +1,14 @@
 import './styles.css';
 import { useState, useEffect } from 'react';
 import { Modal } from 'antd';
+import RegisterUserForm from './RegisterUserForm';
 
 function AdminPortal() {
     const [appointments, setAppointments] = useState([]);
     const [users, setUsers] = useState([]);
     const [activeTab, setActiveTab] = useState('appointments');
     const [openAdd, setOpenAdd] = useState(false);
+    const [currentUserName, setCurrentUserName] = useState("Unknown");
 
     // Retrieve all appointments and users from database
     useEffect(() => {
@@ -34,8 +36,17 @@ function AdminPortal() {
         fetchUsers();
     }, []);
 
+    // Set current username when users are retrieved from database
+    // useEffect(() => {
+    //     console.log(users);
+    //     const userId = localStorage.getItem("userId");
+    //     console.log("userId:", userId);
+    //     const currentUser = users.find(user => user._id == userId);
+    //     setCurrentUserName(currentUser.username);
+    // }, [users])
+
     // Find and return user's full name given their id
-    const findUserName = (userId) => {
+    const getUserName = (userId) => {
         const user = users.find(user => user._id === userId);
         return user ? `${user.firstName} ${user.lastName}` : "Unknown";
     }
@@ -107,8 +118,8 @@ function AdminPortal() {
                                                 <td>{new Date(appointment.date).toLocaleDateString()}</td>
                                                 <td>{appointment.startTime}</td>
                                                 <td>{appointment.endTime}</td>
-                                                <td>{findUserName(appointment.doctorId)}</td>
-                                                <td>{findUserName(appointment.patientId)}</td>
+                                                <td>{getUserName(appointment.doctorId)}</td>
+                                                <td>{getUserName(appointment.patientId)}</td>
                                             </tr>
                                         ))
                                     ) : (
@@ -192,8 +203,10 @@ function AdminPortal() {
                 open={openAdd}
                 onCancel={handleCloseAdd}
                 onOk={handleCloseAdd}
-                okText="Save"
+                footer={null}
+                centered
             >
+                <RegisterUserForm />
             </Modal>
         </>
     );
