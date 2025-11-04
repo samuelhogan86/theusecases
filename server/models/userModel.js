@@ -305,7 +305,8 @@ userSchema.statics.deleteUserById= async function(id){
     return user;
 }
 userSchema.statics.getAllUsers = async function(){
-    
+    const users  = await this.find();
+    return users
 }
 const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;

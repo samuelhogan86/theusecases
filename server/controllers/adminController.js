@@ -100,7 +100,15 @@ module.exports.deleteUser = async (req, res) => {
 }
 
 module.exports.dashboard = async(req, res) =>{
+    try{
+        const users = await User.dashboard();
+        res.status(200).json({
+            message: "dashboard data sent",
+            user: user
+        })
 
+    }catch(err){
+        res.status(500).json({message:err.message});
     
+    }   
 }
-
