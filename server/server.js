@@ -4,8 +4,8 @@ const cors = require("cors");
 const express = require("express");
 const mongoose = require('mongoose');
 const authRoute = require('./routes/authRoute.js');
-const { connectDB } = require("../config/db.js");
-const { initSchema } = require("../config/initSchema.js");
+const { connectDB } = require("./config/db.js");
+const { initSchema } = require("./config/initSchema.js");
 require("dotenv").config();
 
 
