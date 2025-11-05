@@ -13,7 +13,8 @@ const capitalize = (str) => {
 const userSchema = new mongoose.Schema({
     id: {
         type: String, 
-        unique: true
+        unique: true,
+        require: [true]
     },
     firstName: {
         type: String,
