@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function RegisterUserForm() {
+function RegisterUserForm(props) {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState("");
@@ -10,12 +10,13 @@ function RegisterUserForm() {
         { firstName: "", lastName: "", username: "", password: "", role: "" }
     );
 
+    // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({ firstName: "", lastName: "", username: "", password: "", role: "" });
 
         try {
-            const res = await fetch("http://localhost:3000/user", {
+            const res = await fetch("http://localhost:3000/users", {
                 method: "POST",
                 body: JSON.stringify({ firstName, lastName, username, password, role }),
                 headers: { "Content-Type": "application/json" },
@@ -24,7 +25,9 @@ function RegisterUserForm() {
             const data = await res.json();
 
             if (res.ok) {
-                console.log("User successfully registered!");
+                console.log("User successfully updated!");
+                // Close modal
+                if (props.closeModal) props.closeModal();
             } else {
                 setErrors({
                     firstName: data.errors?.firstName || "",
@@ -35,7 +38,7 @@ function RegisterUserForm() {
                 });
             }
         } catch (err) {
-            console.log("Register user error", err);
+            console.log("Update user error", err);
         }
     }
 

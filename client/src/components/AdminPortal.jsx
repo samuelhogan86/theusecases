@@ -1,14 +1,17 @@
-import './styles.css';
+import '../styles.css';
 import { useState, useEffect } from 'react';
-import { Modal } from 'antd';
+import { Modal, Button } from 'antd';
 import RegisterUserForm from './RegisterUserForm';
+import UserInformation from './UserInformation';
 
 function AdminPortal() {
     const [appointments, setAppointments] = useState([]);
     const [users, setUsers] = useState([]);
     const [activeTab, setActiveTab] = useState('appointments');
     const [openAdd, setOpenAdd] = useState(false);
-    const [currentUserName, setCurrentUserName] = useState("Unknown");
+    const [openviewUserInfo, setOpenviewUserInfo] = useState(false);
+    const [currentUser, setCurrentUser] = useState(null);
+    // const [currentUserName, setCurrentUserName] = useState("Unknown");
 
     // Retrieve all appointments and users from database
     useEffect(() => {
@@ -51,8 +54,16 @@ function AdminPortal() {
         return user ? `${user.firstName} ${user.lastName}` : "Unknown";
     }
 
+    // Handle opening and closing add popup
     const handleAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
+
+    // Handle opening and closing user info popup (entrypoint for update/delete user)
+    const handleviewUserInfo = (user) => {
+        setCurrentUser(user);
+        setOpenviewUserInfo(true);
+    };
+    const handleCloseviewUserInfo = () => setOpenviewUserInfo(false);
 
     return (
         <>
@@ -95,7 +106,7 @@ function AdminPortal() {
                                 <option>Search by Patient</option>
                                 <option>Search by Doctor</option>
                             </select>
-                            <button className="dashboard-btn dashboard-btn-primary" onClick={handleAdd}>+ New Appointment</button>
+                            <button className="dashboard-btn dashboard-btn-primary">+ New Appointment</button>
                         </div>
                     </div>
 
@@ -163,6 +174,7 @@ function AdminPortal() {
                                             <th>Username</th>
                                             <th>Role</th>
                                             <th>Status</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -171,8 +183,9 @@ function AdminPortal() {
                                                 <tr key={user._id || user.username}>
                                                     <td>{user.firstName} {user.lastName}</td>
                                                     <td>{user.username}</td>
-                                                    <td>{user.role}</td>
+                                                    <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
                                                     <td>{user.status || "Active"}</td>
+                                                    <td><Button type="primary" onClick={() => handleviewUserInfo(user)}>View Information</Button></td>
                                                 </tr>
                                             ))
                                         ) : (
@@ -197,16 +210,28 @@ function AdminPortal() {
                 </div>
             </div>
 
-            {/* Popup form for registering new user / scheduling new appointment */}
+            {/* Popup form for registering new user */}
             <Modal
-                title={activeTab === 'users' ? "Register New User" : "Schedule New Appointment"}
+                title="Register New User"
                 open={openAdd}
                 onCancel={handleCloseAdd}
-                onOk={handleCloseAdd}
                 footer={null}
                 centered
             >
-                <RegisterUserForm />
+                <RegisterUserForm closeModal={handleCloseAdd} />
+            </Modal>
+
+            {/* Popup for viewing user info */}
+            <Modal
+                title="User Information"
+                open={openviewUserInfo}
+                onCancel={handleCloseviewUserInfo}
+                footer={null}
+                centered
+            >
+                {currentUser && 
+                    <UserInformation user={currentUser} />
+                }
             </Modal>
         </>
     );

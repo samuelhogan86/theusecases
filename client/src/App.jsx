@@ -1,10 +1,10 @@
 import './styles.css'
 import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
-import Login from './Login';
-import PatientPortal from './PatientPortal';
-import DoctorPortal from './DoctorPortal';
-import AdminPortal from './AdminPortal';
+import Login from './components/Login';
+import PatientPortal from './components/PatientPortal';
+import DoctorPortal from './components/DoctorPortal';
+import AdminPortal from './components/AdminPortal';
 
 function App() {
   return (
