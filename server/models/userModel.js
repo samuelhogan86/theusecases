@@ -302,11 +302,14 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
 }
 
+
 userSchema.statics.deleteUserById= async function(id){
     const user = await this.findOneAndDelete({id});
     return user;
 }
-userSchema.statics.getAllUsers = async function(){
+
+//update this to retrieve all information for admin dashboard
+userSchema.statics.getAdminDash = async function(){
     const users  = await this.find();
     return users
 }

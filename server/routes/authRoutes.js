@@ -1,6 +1,7 @@
 //Login Authentication Endpoints
 //Importing controllers, handles logic for routes (business logic)
-const { loginUser } = require('../controllers/authController');
+const { loginUser, logoutUser, changeUserPass } = require('../controllers/authController');
+const {tokenValidator} = require('../middleware/authMiddleware')
 //Importing express
 const express = require('express');
 const router = express.Router();
@@ -9,8 +10,10 @@ const router = express.Router();
 
 
 //Login Route, post request, hash pass, check db, return token
-router.post('/login', loginUser);
+router.post('/login', tokenValidator, loginUser);
 
+router.post('/logout', tokenValidator, logoutUser);
 
+router.post('/change-password', tokenValidator, changeUserPass)
 
 module.exports = router;

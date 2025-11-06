@@ -47,3 +47,28 @@ module.exports.loginUser = async (req, res) => {
 
 }
 
+module.exports.logoutUser = async (req, res)=>{
+    try{
+        res.status(200).json({message:"Logout is done client side, removing JWT from session."})
+    }catch(err){
+        res.status(500).json({error:"Logout Failed for some reason."})
+    }
+}
+
+module.exports.changeUserPass = async(req, res)=>{
+    try{
+        //get user password check, they must send current pass, and new pass
+        const {currentPass, newPass} = req.body;
+        //retrieve user document from database
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({error:"Invalid User!"});
+
+        //compare currentPass and retrieved pass.
+
+    }catch(err){
+        res.status(500).json({error:"Failed to change pass"})
+    }
+
+
+}
+
