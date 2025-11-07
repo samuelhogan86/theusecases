@@ -1,3 +1,5 @@
 server/node_modules/*
 .env
 design/
+client/node_modules/*
+client/.vite/
