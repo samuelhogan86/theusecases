@@ -66,7 +66,7 @@ function Login() {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
-                            <div className="username error">{errors.username}</div>
+                            <div className="username_error">{errors.username}</div>
                         </div>
 
                         <div className="form-group">
@@ -79,7 +79,7 @@ function Login() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                            <div className="password error">{errors.password}</div>
+                            <div className="password_error">{errors.password}</div>
                         </div>
 
                         <button type="submit" className="sign-in-btn">
