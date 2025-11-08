@@ -28,7 +28,7 @@ const createToken = (id) => {
 };
 
 module.exports.loginUser = async (req, res) => {
-        console.log("=== LOGIN REQUEST RECEIVED ===");
+    console.log("=== LOGIN REQUEST RECEIVED ===");
     console.log("Request body:", req.body);
     console.log("Username:", req.body.username);
     console.log("Password:", req.body.password);
@@ -38,9 +38,20 @@ module.exports.loginUser = async (req, res) => {
         const user = await User.login(username, password);
         const token = createToken(user._id);
         
+        user.lastLogin = new Date();
+        await user.save();
+
         // Send token in response body instead of cookie
         res.status(200).json({ 
-            user: user,
+            user: {
+                _id: user._id,
+                username: user.username,
+                firstName: user.firstName, 
+                lastName: user.lastName,
+                role: user.role,
+                lastLogin: user.lastLogin, 
+                lastPasswordChange: user.lastPasswordChange
+            },
             token: token  
         });
     }
@@ -51,6 +62,35 @@ module.exports.loginUser = async (req, res) => {
 
 }
 
-module.exports.registerUser = (req, res) => { 
+module.exports.registerUser = async (req, res) => {
+    console.log("=== REGISTER REQUEST RECEIVED ===");
+    const{ username, firstName, lastName, password, role } = req.body;
 
+    try{
+        const user = await User.create({
+            firstName,
+            lastName,
+            username,
+            passwordHash: password,
+            role,
+            lastPasswordChange: new Date()
+        });
+
+        const token = createToken(user._id);
+        res.status(201).json({
+            user: {
+                _id: user._id,
+                username: user.username,
+                firstName: user.firstName, 
+                lastName: user.lastName,
+                role: user.role,
+                lastPasswordChange: user.lastPasswordChange,
+                lastLogin: user.lastLogin || null
+            },
+            token: token  
+        });
+    } catch (err){
+        const errors = handleErrors(err);
+        res.status(400).json({ errors });
+    }
 }

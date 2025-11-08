@@ -3,9 +3,11 @@
 const cors = require("cors");
 const express = require("express");
 const mongoose = require('mongoose');
+const requireAuth = require('./middleware/authMiddleware.js');
 const authRoute = require('./routes/authRoute.js');
 const { connectDB } = require("./config/db.js");
-const { initSchema } = require("./config/initSchema.js");
+const User = require('./models/userModel.js');
+const Appointment = require("./models/appointmentModel.js");
 require("dotenv").config();
 
 
@@ -20,28 +22,33 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-let db;
-
-connectDB().then(async database => {
-    db = database;
-
-    await initSchema(db);
+connectDB().then(async () => {
 
     app.use(authRoute);
 
-    app.get("/users", async (req, res) => {
-        const users = await db.collection("users").find().toArray();
-        res.json(users);
+    app.get("/users", requireAuth, async (req, res) => {
+        try{
+            const users = await User.find();
+            res.json(users);
+        } catch (error){
+            res.status(500).json({ error: error.message });
+        }
     });
 
-    app.get("/appointments", async (req, res) => {
-        const appointments = await db.collection("appointments").find().toArray();
-        res.json(appointments);
+    app.get("/appointments", requireAuth, async (req, res) => {
+        try{
+            const appointments = await Appointment.find();
+            res.json(appointments);
+        } catch (error){
+            res.status(500).json({ error: error.message });
+        }
     });
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () =>
         console.log(`Server is running on port ${PORT}`));
+}).catch(error => {
+    console.error("Failed to connect to db:", error);
 });
 
 

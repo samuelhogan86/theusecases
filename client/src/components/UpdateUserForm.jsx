@@ -2,12 +2,12 @@ import { useState } from "react";
 
 // Same as register, but fields are not required
 function UpdateUserForm(props) {
-    const userId = props.user.id;
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [username, setUsername] = useState("");
+    const userId = props.user._id;
+    const [firstName, setFirstName] = useState(props.user.firstName || "");
+    const [lastName, setLastName] = useState(props.user.lastName || "");
+    const [username, setUsername] = useState(props.user.username || "");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState(props.user.role || "patient");
     const [errors, setErrors] = useState(
         { firstName: "", lastName: "", username: "", password: "", role: "" }
     );
@@ -18,16 +18,21 @@ function UpdateUserForm(props) {
         setErrors({ firstName: "", lastName: "", username: "", password: "", role: "" });
 
         try {
+            const token = localStorage.getItem('token');
             const res = await fetch(`http://localhost:3000/users/${userId}`, {
                 method: "PUT",
                 body: JSON.stringify({ firstName, lastName, username, password, role }),
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json" ,
+                    'Authorization': `Bearer ${token}` 
+                }
             });
 
             const data = await res.json();
 
             if (res.ok) {
                 console.log("User successfully updated!");
+                window.location.reload();
                 // Close modal
                 if (props.closeModal) props.closeModal();
             } else {
@@ -97,7 +102,7 @@ function UpdateUserForm(props) {
 
                 <div className="form-group">
                     <label htmlFor="role">Role</label>
-                    <select name="role" id ="role">
+                    <select name="role" id ="role" value = {role} onChange={(e) => setRole(e.target.value)}>
                         <option value="patient">Patient</option>
                         <option value="doctor">Doctor</option>
                         <option value="admin">Admin</option>

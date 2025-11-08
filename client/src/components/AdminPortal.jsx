@@ -17,7 +17,12 @@ function AdminPortal() {
     useEffect(() => {
         const fetchAppointments = async () => {
             try {
-                const response = await fetch("http://localhost:3000/appointments");
+                const token = localStorage.getItem('token');
+                const response = await fetch("http://localhost:3000/appointments", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
                 setAppointments(data);
             } catch (err) {
@@ -27,7 +32,12 @@ function AdminPortal() {
 
         const fetchUsers = async () => {
             try {
-                const response = await fetch("http://localhost:3000/users");
+                const token = localStorage.getItem('token');    
+                const response = await fetch("http://localhost:3000/users",  {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
                 setUsers(data);
             } catch (err) {
@@ -65,6 +75,22 @@ function AdminPortal() {
     };
     const handleCloseviewUserInfo = () => setOpenviewUserInfo(false);
 
+    const handleLogout = async () => {
+        try{
+            await fetch("http://localhost:3000/logout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
+
+            window.location.href = "/";
+        } catch (err) {
+            console.log("Logout error", err);
+        }
+    };
+
     return (
         <>
             <div className="dashboard-header">
@@ -74,7 +100,7 @@ function AdminPortal() {
                 </div>
                 <div className="dashboard-header-right">
                     <button className="dashboard-btn dashboard-top-btn">Change Password</button>
-                    <button className="dashboard-btn dashboard-top-btn">Logout</button>
+                    <button className="dashboard-btn dashboard-top-btn" onClick = {handleLogout}>Logout</button>
                 </div>
             </div>
 
