@@ -26,6 +26,10 @@ connectDB().then(async database => {
         next();
     })
 
+    //Entry point test
+    app.get('/', (req, res) => {
+      res.send('Server Running');
+    });
 
     app.use(authRoute);
     app.use('/api/admin', adminRoute);

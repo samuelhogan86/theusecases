@@ -17,10 +17,9 @@ router.post('/users', checkIfAdmin, tokenValidator, registerUser);
 //update user by id
 router.put('/users/:id', checkIfAdmin, tokenValidator, updateUser);
 
-
 //delete user by id
 router.delete('/users/:id', checkIfAdmin, tokenValidator, deleteUser);
 
-
+//get user by id (allow for search get request from front end.)
 
 module.exports = router;
