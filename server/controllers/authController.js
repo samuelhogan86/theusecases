@@ -19,10 +19,14 @@ const handleErrors = (err) => {
     return errors;
 }
 
-// create json web token, stores authentication, WORK IN PROG
+// create json web token, stores authentication,
 const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+const generateToken = (user) => {
+    return jwt.sign({ 
+        id: user._id,
+        role: user.role
+     }, 
+     process.env.JWT_SECRET, {
         expiresIn: maxAge
     });
 };
@@ -32,7 +36,7 @@ module.exports.loginUser = async (req, res) => {
 
     try {
         const user = await User.login(username, password);
-        const token = createToken(user._id);
+        const token = generateToken(user); //was passing user._id
         
         // Send token in response body instead of cookie
         res.status(200).json({ 
@@ -56,6 +60,7 @@ module.exports.changeUserPass = async(req, res)=>{
         if (!user) return res.status(404).json({error:"Invalid User!"});
 
         //compare currentPass and retrieved pass.
+
 
     }catch(err){
         res.status(500).json({error:"Failed to change pass"})

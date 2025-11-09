@@ -68,7 +68,7 @@ userSchema.statics.login = async function(username, password){
     timeUpdate.lastLogin = new Date();
 
     const updatedUser = await this.findByIdAndUpdate(
-        user.id,
+        user._id, //currently only works with mongo ID
         timeUpdate,
         {
             new: true,
@@ -121,13 +121,6 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
         throw Error('incorrect role')
     }
 
-    //debug code
-    // console.log(`
-    // firstName: ${firstName},
-    // lastName: ${lastName},
-    // username: ${username},
-    // password: ${password},
-    // role: ${role}`);
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
@@ -299,7 +292,6 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
     console.log('User updated successfully:', updatedUser.id);
     return updatedUser;
-
 }
 
 

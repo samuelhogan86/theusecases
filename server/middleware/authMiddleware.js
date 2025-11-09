@@ -25,21 +25,20 @@ const tokenValidator = (req, res, next) => {
     try{
 
         const authHeader = req.headers.authorization;
-
+        console.log("Auth Header Recieved: ", authHeader) //DEBUGGING ONLY
         if (!authHeader){
             return res.status(401).json({ error: "Access denied. No token provided." });
         }
 
-        const token = authHeader.split(" ")[1];
-
+        const token = authHeader.split(" ")[1]; //split token from Bearer
+        console.log("token Recieved: ", token) //DEBUGGING ONLY
         if(!token){
             return res.status(401).json({ error: "Invalid format for token" });
         }
-
+ 
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+        console.log("Decoded Token:", decoded)
         req.user = decoded;
-
         next();
     }
     catch (err) {
@@ -47,17 +46,14 @@ const tokenValidator = (req, res, next) => {
     }
 };
 
-const checkIfAdmin = (req, res, next) => {
-    try{
-        if (req.user.role !== "admin") {
-            return res.status(401).json({ error: "Admin only function" })
+
+const requireRole = (role)=>{
+    return(req, res, next)=>{
+        console.log(req.user.role);
+        if(req.user.role != role){
+            return res.status(403).json({ error: "Invalid Role" });
         }
         next();
-    }
-    catch (err) {
-        return res.status(401).json({ error: "Invalid Role" });
-    }
+    };
 };
-
-
-module.exports = { requireAuth, tokenValidator, checkIfAdmin };
+module.exports = { requireAuth, tokenValidator, checkIfAdmin , requireRole};

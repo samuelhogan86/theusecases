@@ -31,7 +31,7 @@ connectDB().then(async database => {
       res.send('Server Running');
     });
 
-    app.use(authRoute);
+    app.use('/api/auth', authRoute);
     app.use('/api/admin', adminRoute);
     
     // app.get("/users", async (req, res) => {

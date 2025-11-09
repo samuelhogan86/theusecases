@@ -10,7 +10,7 @@ const router = express.Router();
 
 
 //Login Route, post request, hash pass, check db, return token
-router.post('/login', tokenValidator, loginUser);
+router.post('/login', loginUser);
 
 
 
