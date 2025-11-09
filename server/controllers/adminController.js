@@ -59,9 +59,10 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.updateUser = async (req, res) => {
-    const {id, firstName, lastName, username, password, role } = req.body;
+    let {id} = req.params;
+    const {firstName, lastName, username, password, role } = req.body;
     try {
-        const user = await User.update(id, firstName, lastName, username, password, role);
+        const user = await User.updateUserById(id, firstName, lastName, username, password, role);
 
         const userResponse = user.toObject();
         delete userResponse.passwordHash;
@@ -81,7 +82,7 @@ module.exports.updateUser = async (req, res) => {
 module.exports.deleteUser = async (req, res) => {
     try{
         let { id } = req.params;
-        const user = await User.deleteUserByID(id);
+        const user = await User.deleteUserById(id);
         if(!user){
             res.status(404).json({message:"User Not Found"});
         }

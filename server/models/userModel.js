@@ -187,7 +187,7 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
     }
 }
 //static method to update user
-userSchema.statics.update = async function update(id, firstName, lastName, username, password, role){
+userSchema.statics.updateUserById = async function(id, firstName, lastName, username, password, role){
     console.log('User ID:', id);
     const updateData = { firstName, lastName, username, password, role };
     console.log('Update data:', updateData);

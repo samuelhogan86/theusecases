@@ -23,7 +23,6 @@ const requireAuth = (req, res, next) => {
 
 const tokenValidator = (req, res, next) => {
     try{
-
         const authHeader = req.headers.authorization;
         console.log("Auth Header Recieved: ", authHeader) //DEBUGGING ONLY
         if (!authHeader){
