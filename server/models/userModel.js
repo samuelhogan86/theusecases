@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     id: {
         type: String, 
         unique: true,
-        require: [true]
+        required: true
     },
     firstName: {
         type: String,
@@ -47,10 +47,9 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-//static methond to login user
-userSchema.statics.login = async function(username, password){
+//static method to login user
+userSchema.statics.login = async function(username, password) {
     console.log('Attempting login for usernamer:', username);
-
     const user = await this.findOne({ username }); //searching db for username
 
     if (!user) {
@@ -68,7 +67,7 @@ userSchema.statics.login = async function(username, password){
     timeUpdate.lastLogin = new Date();
 
     const updatedUser = await this.findByIdAndUpdate(
-        user.id,
+        user._id,
         timeUpdate,
         {
             new: true,
@@ -201,7 +200,7 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
     const updates = {};
 
-    const existingUser = this.findOne(id);
+    const existingUser = await this.findById(id);
     if(!existingUser){
         throw Error('User doesn\'t exists');
     }
@@ -217,7 +216,7 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
         if(hasNumber(trimmedFirstName)){
             throw Error('name has a number');
         }
-        updates.firstname = capitalize(trimmedFirstName);
+        updates.firstName = capitalize(trimmedFirstName);
         console.log('First name updated to:', updates.firstName);
 
     }
@@ -302,9 +301,8 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
 }
 
-
 userSchema.statics.deleteUserById= async function(id){
-    const user = await this.findOneAndDelete({id});
+    const user = await this.findByIdAndDelete(id);
     return user;
 }
 

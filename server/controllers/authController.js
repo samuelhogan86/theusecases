@@ -19,24 +19,31 @@ const handleErrors = (err) => {
     return errors;
 }
 
-// create json web token, stores authentication, WORK IN PROG
 const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
+const createToken = (user) => {
+    return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
         expiresIn: maxAge
     });
 };
 
 module.exports.loginUser = async (req, res) => {
+    console.log("=== LOGIN REQUEST RECEIVED ===");
     const { username, password } = req.body;
 
     try {
         const user = await User.login(username, password);
-        const token = createToken(user._id);
+        const token = createToken(user);
         
         // Send token in response body instead of cookie
         res.status(200).json({ 
-            user: user,
+            user: {
+                _id: user._id,
+                id: user.id,
+                username: user.username,
+                firstName: user.firstName, 
+                lastName: user.lastName,
+                role: user.role,
+            },
             token: token  
         });
     }
@@ -47,7 +54,7 @@ module.exports.loginUser = async (req, res) => {
 
 }
 
-module.exports.logoutUser = async (req, res)=>{
+module.exports.logoutUser = (req, res)=>{
     try{
         res.status(200).json({message:"Logout is done client side, removing JWT from session."})
     }catch(err){
@@ -68,7 +75,5 @@ module.exports.changeUserPass = async(req, res)=>{
     }catch(err){
         res.status(500).json({error:"Failed to change pass"})
     }
-
-
 }
 

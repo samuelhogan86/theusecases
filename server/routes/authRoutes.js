@@ -9,11 +9,11 @@ const router = express.Router();
 
 
 
-//Login Route, post request, hash pass, check db, return token
-router.post('/login', tokenValidator, loginUser);
+//public routes
+router.post('/login', loginUser);
 
+//protected routes
 router.post('/logout', tokenValidator, logoutUser);
-
 router.post('/change-password', tokenValidator, changeUserPass)
 
 module.exports = router;
