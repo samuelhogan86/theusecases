@@ -24,4 +24,6 @@ router.delete('/users/:id', tokenValidator,requireRole('admin'), deleteUser);
 
 
 //get appointments and admin cruds
+
+
 module.exports = router;

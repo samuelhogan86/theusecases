@@ -30,26 +30,25 @@ const handleErrors = (err) => {
     return errors;
 }
 
-const maxAge = 3 * 24 * 60 * 60;
-const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, {
-        expiresIn: maxAge
-    });
-};
+// const maxAge = 3 * 24 * 60 * 60;
+// const createToken = (id) => {
+//     return jwt.sign({ id }, process.env.JWT_SECRET, {
+//         expiresIn: maxAge
+//     });
+// };
 
 module.exports.registerUser = async (req, res) => {
     const { firstName, lastName, username, password, role } = req.body;
+    console.log(firstName, lastName, username, password, role);
     try {
         const user = await User.register(firstName, lastName, username, password, role);
-        const token = createToken(user._id);
-
+        // const token = createToken(user._id); //Created User gets token when they login
         const userResponse = user.toObject();
         delete userResponse.passwordHash;
 
         res.status(201).json({
             message: 'User registered successfully',
             user: userResponse,
-            token: token
         });
     }
     catch (err) {
@@ -101,9 +100,9 @@ module.exports.deleteUser = async (req, res) => {
 
 module.exports.getUsers = async(req, res) =>{
     try{
-        const users = await User.getAdminDash();
+        const users = await User.getAllUsers();
         res.status(200).json({
-            message: "dashboard data sent",
+            message: "User data sent",
             user: users
         })
 

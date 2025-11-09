@@ -31,7 +31,6 @@ const tokenValidator = (req, res, next) => {
         }
 
         const token = authHeader.split(" ")[1]; //split token from Bearer
-        console.log("token Recieved: ", token) //DEBUGGING ONLY
         if(!token){
             return res.status(401).json({ error: "Invalid format for token" });
         }
@@ -49,11 +48,10 @@ const tokenValidator = (req, res, next) => {
 
 const requireRole = (role)=>{
     return(req, res, next)=>{
-        console.log(req.user.role);
         if(req.user.role != role){
             return res.status(403).json({ error: "Invalid Role" });
         }
         next();
     };
 };
-module.exports = { requireAuth, tokenValidator, checkIfAdmin , requireRole};
+module.exports = { requireAuth, tokenValidator , requireRole};

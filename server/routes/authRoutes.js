@@ -12,8 +12,6 @@ const router = express.Router();
 //Login Route, post request, hash pass, check db, return token
 router.post('/login', loginUser);
 
-
-
 router.post('/change-password', tokenValidator, changeUserPass)
 
 module.exports = router;
