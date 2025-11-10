@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 //handle errors
 const handleErrors = (err) => {
@@ -54,26 +55,49 @@ module.exports.loginUser = async (req, res) => {
 
 }
 
+module.exports.changePassword = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { currentPassword, newPassword } = req.body;
+
+        if (!newPassword || newPassword.length < 6) {
+            return res.status(400).json({ message: 'New password must be at least 6 characters.' });
+        }
+
+        // Find user by _id or by custom id field
+        const user = await User.findOne({ $or: [{ _id: userId }, { id: userId }] });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        // Verify current password. Support both hashed (bcrypt) and legacy plain-text comparisons.
+        let match = false;
+        try {
+            match = await bcrypt.compare(currentPassword, user.passwordHash);
+        } catch (err) {
+            match = false;
+        }
+        if (!match && user.passwordHash === currentPassword) {
+            match = true; // legacy plain text match
+        }
+
+        if (!match) return res.status(401).json({ message: 'Current password incorrect' });
+
+        const hashed = await bcrypt.hash(newPassword, 10);
+        user.passwordHash = hashed;
+        user.lastPasswordChange = new Date();
+        await user.save();
+
+        return res.status(200).json({ message: 'Password changed' });
+    } catch (err) {
+        console.error('changePassword error', err);
+        return res.status(500).json({ message: 'Server error' });
+    }
+}
+
 module.exports.logoutUser = (req, res)=>{
     try{
         res.status(200).json({message:"Logout is done client side, removing JWT from session."})
     }catch(err){
         res.status(500).json({error:"Logout Failed for some reason."})
-    }
-}
-
-module.exports.changeUserPass = async(req, res)=>{
-    try{
-        //get user password check, they must send current pass, and new pass
-        const {currentPass, newPass} = req.body;
-        //retrieve user document from database
-        const user = await User.findById(req.user.id);
-        if (!user) return res.status(404).json({error:"Invalid User!"});
-
-        //compare currentPass and retrieved pass.
-
-    }catch(err){
-        res.status(500).json({error:"Failed to change pass"})
     }
 }
 

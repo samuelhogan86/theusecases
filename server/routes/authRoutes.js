@@ -1,19 +1,22 @@
 //Login Authentication Endpoints
 //Importing controllers, handles logic for routes (business logic)
-const { loginUser, logoutUser, changeUserPass } = require('../controllers/authController');
-const {tokenValidator} = require('../middleware/authMiddleware')
+const { loginUser, registerUser, changePassword } = require('../controllers/authController');
 //Importing express
 const express = require('express');
+
+
+
 const router = express.Router();
+//middleware can go here
 
 
-
-
-//public routes
+//Login Route, post request, hash pass, check db, return token
 router.post('/login', loginUser);
 
-//protected routes
-router.post('/logout', tokenValidator, logoutUser);
-router.post('/change-password', tokenValidator, changeUserPass)
+//Register Route, post request, hash pass, store in db, return token
+router.post('/admin/register', registerUser);
+
+// Change password for a user (expects { currentPassword, newPassword })
+router.post('/users/:id/change-password', changePassword);
 
 module.exports = router;
