@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 //handle errors
 const handleErrors = (err) => {
@@ -37,7 +38,7 @@ module.exports.loginUser = async (req, res) => {
     try {
         const user = await User.login(username, password);
         const token = createToken(user._id);
-        
+
         // Send token in response body instead of cookie
         res.status(200).json({ 
             user: user,
@@ -49,6 +50,44 @@ module.exports.loginUser = async (req, res) => {
         res.status(400).json({ errors });
     }
 
+}
+
+module.exports.changePassword = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const { currentPassword, newPassword } = req.body;
+
+        if (!newPassword || newPassword.length < 6) {
+            return res.status(400).json({ message: 'New password must be at least 6 characters.' });
+        }
+
+        // Find user by _id or by custom id field
+        const user = await User.findOne({ $or: [{ _id: userId }, { id: userId }] });
+        if (!user) return res.status(404).json({ message: 'User not found' });
+
+        // Verify current password. Support both hashed (bcrypt) and legacy plain-text comparisons.
+        let match = false;
+        try {
+            match = await bcrypt.compare(currentPassword, user.passwordHash);
+        } catch (err) {
+            match = false;
+        }
+        if (!match && user.passwordHash === currentPassword) {
+            match = true; // legacy plain text match
+        }
+
+        if (!match) return res.status(401).json({ message: 'Current password incorrect' });
+
+        const hashed = await bcrypt.hash(newPassword, 10);
+        user.passwordHash = hashed;
+        user.lastPasswordChange = new Date();
+        await user.save();
+
+        return res.status(200).json({ message: 'Password changed' });
+    } catch (err) {
+        console.error('changePassword error', err);
+        return res.status(500).json({ message: 'Server error' });
+    }
 }
 
 module.exports.registerUser = (req, res) => { 

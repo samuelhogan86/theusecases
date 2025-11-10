@@ -44,9 +44,17 @@ userSchema.statics.login = async function(username, password){
     console.log('running login');
     const user = await this.findOne({ username }); //searching db for username
     if (user) {
-        //const auth = await bcrypt.compare(password, user.password) //for when we hash the password
-        const auth = (password === user.passwordHash);
-        if (auth){
+        // Try bcrypt comparison first (hashed passwords)
+        let auth = false;
+        try {
+            auth = await bcrypt.compare(password, user.passwordHash);
+        } catch (e) {
+            auth = false;
+        }
+        // Fallback for legacy plain-text stored passwords
+        if (!auth && user.passwordHash === password) auth = true;
+
+        if (auth) {
             console.log("Found User: ", user)
             return user;
         }

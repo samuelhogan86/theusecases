@@ -1,6 +1,14 @@
 import '../styles.css'
+import { useState } from 'react'
+import { Modal } from 'antd'
+import ChangePassword from './ChangePassword'
 
 function PatientPortal() {
+    const [openChangePassword, setOpenChangePassword] = useState(false);
+
+    const handleOpenChange = () => setOpenChangePassword(true);
+    const handleCloseChange = () => setOpenChangePassword(false);
+
     return (
         <>
             <div className="dashboard-header">
@@ -9,10 +17,20 @@ function PatientPortal() {
                     <p>Welcome, John Doe</p>
                 </div>
                 <div className="dashboard-header-right">
-                    <button className="dashboard-btn dashboard-top-btn">Change Password</button>
+                    <button className="dashboard-btn dashboard-top-btn" onClick={handleOpenChange}>Change Password</button>
                     <button className="dashboard-btn dashboard-top-btn">Logout</button>
                 </div>
             </div>
+
+            <Modal
+                title="Change Password"
+                open={openChangePassword}
+                onCancel={handleCloseChange}
+                footer={null}
+                centered
+            >
+                <ChangePassword userId={localStorage.getItem('userId')} closeModal={handleCloseChange} />
+            </Modal>
 
             <div className="dashboard-section">
                 <div className="dashboard-section-header">

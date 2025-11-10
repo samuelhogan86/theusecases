@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Modal, Button } from 'antd';
 import RegisterUserForm from './RegisterUserForm';
 import UserInformation from './UserInformation';
+import ChangePassword from './ChangePassword';
 
 function AdminPortal() {
     const [appointments, setAppointments] = useState([]);
@@ -11,6 +12,7 @@ function AdminPortal() {
     const [openAdd, setOpenAdd] = useState(false);
     const [openviewUserInfo, setOpenviewUserInfo] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [openChangePassword, setOpenChangePassword] = useState(false);
     // const [currentUserName, setCurrentUserName] = useState("Unknown");
 
     // Retrieve all appointments and users from database
@@ -73,10 +75,26 @@ function AdminPortal() {
                     <p>Manage Users and Appointments</p>
                 </div>
                 <div className="dashboard-header-right">
-                    <button className="dashboard-btn dashboard-top-btn">Change Password</button>
+                    <button className="dashboard-btn dashboard-top-btn" onClick={() => setOpenChangePassword(true)}>Change Password</button>
                     <button className="dashboard-btn dashboard-top-btn">Logout</button>
                 </div>
             </div>
+
+            {/* Change Password Modal for logged-in admin */}
+            <Modal
+                title="Change Password"
+                open={openChangePassword}
+                onCancel={() => setOpenChangePassword(false)}
+                footer={null}
+                centered
+            >
+                {/* Find currently logged in user by id if present */}
+                <ChangePassword
+                    user={users.find(u => u._id === localStorage.getItem('userId'))}
+                    userId={localStorage.getItem('userId')}
+                    closeModal={() => setOpenChangePassword(false)}
+                />
+            </Modal>
 
             <div className="dashboard-section">
                 <div className="dashboard-tab-container">

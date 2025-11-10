@@ -1,6 +1,6 @@
 //Login Authentication Endpoints
 //Importing controllers, handles logic for routes (business logic)
-const { loginUser, registerUser } = require('../controllers/authController');
+const { loginUser, registerUser, changePassword } = require('../controllers/authController');
 //Importing express
 const express = require('express');
 
@@ -15,5 +15,8 @@ router.post('/login', loginUser);
 
 //Register Route, post request, hash pass, store in db, return token
 router.post('/admin/register', registerUser);
+
+// Change password for a user (expects { currentPassword, newPassword })
+router.post('/users/:id/change-password', changePassword);
 
 module.exports = router;
