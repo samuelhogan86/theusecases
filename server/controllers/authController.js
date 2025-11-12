@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const { use } = require('react');
 
 //handle errors
 const handleErrors = (err) => {
@@ -84,6 +85,9 @@ module.exports.changePassword = async (req, res) => {
         const hashed = await bcrypt.hash(newPassword, 10);
         user.passwordHash = hashed;
         user.lastPasswordChange = new Date();
+        if(!user.id){
+            user.id = user._id.toString();
+        }
         await user.save();
 
         return res.status(200).json({ message: 'Password changed' });
