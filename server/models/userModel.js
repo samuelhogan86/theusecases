@@ -210,7 +210,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
         if(hasNumber(trimmedFirstName)){
             throw Error('name has a number');
         }
-        updates.firstname = capitalize(trimmedFirstName);
+        updates.firstName = capitalize(trimmedFirstName);
         console.log('First name updated to:', updates.firstName);
 
     }
