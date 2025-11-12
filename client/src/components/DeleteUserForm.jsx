@@ -1,19 +1,24 @@
 function DeleteUserForm(props) {
     const user = props.user;
-    const userId = user.id;
+    const userId = user._id;
     // Handle delete
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await fetch(`http://localhost:3000/users/${userId}`, {
-                method: "DELETE"
+            const token = localStorage.getItem('token');
+            const res = await fetch(`http://localhost:3000/admin/users/${userId}`, {
+                method: "DELETE",
+                headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
             });
 
             const data = await res.json();
 
             if (res.ok) {
                 console.log("User successfully deleted!");
+                window.location.reload();
                 // Close modal
                 if (props.closeModal) props.closeModal();
             }

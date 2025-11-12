@@ -13,7 +13,7 @@ function Login() {
         setErrors({ username: "", password: "" });
 
         try {
-            const res = await fetch("http://localhost:3000/login", {
+            const res = await fetch("http://localhost:3000/auth/login", {
                 method: "POST",
                 body: JSON.stringify({ username, password }),
                 headers: { "Content-Type": "application/json" },

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Modal, Button } from 'antd';
 import RegisterUserForm from './RegisterUserForm';
 import UserInformation from './UserInformation';
+import ChangePassword from './ChangePassword';
 
 function AdminPortal() {
     const [appointments, setAppointments] = useState([]);
@@ -11,15 +12,21 @@ function AdminPortal() {
     const [openAdd, setOpenAdd] = useState(false);
     const [openviewUserInfo, setOpenviewUserInfo] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
+    const [openChangePassword, setOpenChangePassword] = useState(false);
     // const [currentUserName, setCurrentUserName] = useState("Unknown");
 
     // Retrieve all appointments and users from database
     useEffect(() => {
         const fetchAppointments = async () => {
             try {
-                const response = await fetch("http://localhost:3000/appointments");
+                const token = localStorage.getItem('token');
+                const response = await fetch("http://localhost:3000/admin/dashboard", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
-                setAppointments(data);
+                setAppointments(data.appointments);
             } catch (err) {
                 console.log("Error fetching appointments");
             }
@@ -27,9 +34,14 @@ function AdminPortal() {
 
         const fetchUsers = async () => {
             try {
-                const response = await fetch("http://localhost:3000/users");
+                const token = localStorage.getItem('token');    
+                const response = await fetch("http://localhost:3000/admin/dashboard",  {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
                 const data = await response.json();
-                setUsers(data);
+                setUsers(data.users);
             } catch (err) {
                 console.log("Error fetching users");
             }
@@ -48,12 +60,6 @@ function AdminPortal() {
     //     setCurrentUserName(currentUser.username);
     // }, [users])
 
-    // Find and return user's full name given their id
-    const getUserName = (userId) => {
-        const user = users.find(user => user._id === userId);
-        return user ? `${user.firstName} ${user.lastName}` : "Unknown";
-    }
-
     // Handle opening and closing add popup
     const handleAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
@@ -65,6 +71,22 @@ function AdminPortal() {
     };
     const handleCloseviewUserInfo = () => setOpenviewUserInfo(false);
 
+    const handleLogout = async () => {
+        try{
+            await fetch("http://localhost:3000/logout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("userId");
+
+            window.location.href = "/";
+        } catch (err) {
+            console.log("Logout error", err);
+        }
+    };
+
     return (
         <>
             <div className="dashboard-header">
@@ -73,10 +95,26 @@ function AdminPortal() {
                     <p>Manage Users and Appointments</p>
                 </div>
                 <div className="dashboard-header-right">
-                    <button className="dashboard-btn dashboard-top-btn">Change Password</button>
-                    <button className="dashboard-btn dashboard-top-btn">Logout</button>
+                    <button className="dashboard-btn dashboard-top-btn" onClick={() => setOpenChangePassword(true)}>Change Password</button>
+                    <button className="dashboard-btn dashboard-top-btn" onClick = {handleLogout}>Logout</button>
                 </div>
             </div>
+
+            {/* Change Password Modal for logged-in admin */}
+            <Modal
+                title="Change Password"
+                open={openChangePassword}
+                onCancel={() => setOpenChangePassword(false)}
+                footer={null}
+                centered
+            >
+                {/* Find currently logged in user by id if present */}
+                <ChangePassword
+                    user={users.find(u => u._id === localStorage.getItem('userId'))}
+                    userId={localStorage.getItem('userId')}
+                    closeModal={() => setOpenChangePassword(false)}
+                />
+            </Modal>
 
             <div className="dashboard-section">
                 <div className="dashboard-tab-container">
@@ -129,8 +167,16 @@ function AdminPortal() {
                                                 <td>{new Date(appointment.date).toLocaleDateString()}</td>
                                                 <td>{appointment.startTime}</td>
                                                 <td>{appointment.endTime}</td>
-                                                <td>{getUserName(appointment.doctorId)}</td>
-                                                <td>{getUserName(appointment.patientId)}</td>
+                                                <td>
+                                                    {appointment.doctorId
+                                                    ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
+                                                    : "Unknown"}
+                                                </td>
+                                                <td>
+                                                    {appointment.patientId
+                                                    ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
+                                                    : "Unknown"}
+                                                </td>
                                             </tr>
                                         ))
                                     ) : (

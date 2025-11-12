@@ -5,7 +5,7 @@ function RegisterUserForm(props) {
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [role, setRole] = useState("");
+    const [role, setRole] = useState("patient");
     const [errors, setErrors] = useState(
         { firstName: "", lastName: "", username: "", password: "", role: "" }
     );
@@ -16,10 +16,14 @@ function RegisterUserForm(props) {
         setErrors({ firstName: "", lastName: "", username: "", password: "", role: "" });
 
         try {
-            const res = await fetch("http://localhost:3000/users", {
+            const token = localStorage.getItem("token");
+            const res = await fetch("http://localhost:3000/admin/users", {
                 method: "POST",
                 body: JSON.stringify({ firstName, lastName, username, password, role }),
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
             });
 
             const data = await res.json();
@@ -99,7 +103,7 @@ function RegisterUserForm(props) {
 
                 <div className="form-group">
                     <label htmlFor="role">Role</label>
-                    <select name="role" id ="role" required>
+                    <select name="role" id ="role" required value ={role} onChange={(e) => setRole(e.target.value)}>
                         <option value="patient">Patient</option>
                         <option value="doctor">Doctor</option>
                         <option value="admin">Admin</option>
