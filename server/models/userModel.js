@@ -202,7 +202,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
     if(firstName !== undefined){
         console.log('Updating first name...');
         const trimmedFirstName = firstName.trim();
-
+        console.log('Trimmed first name:', trimmedFirstName);
         if (!trimmedFirstName){
             throw Error('First name cannot be empty');
         }
