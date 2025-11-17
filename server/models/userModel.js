@@ -281,6 +281,8 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 
     console.log('Final updates to be applied:', updates);
 
+    //gotta to use mongo _id for findByIdAndUpdate
+    //need to make our own findbyIdAndUpdate function that uses id field
     const updatedUser = await this.findByIdAndUpdate(
         id,
         updates,
