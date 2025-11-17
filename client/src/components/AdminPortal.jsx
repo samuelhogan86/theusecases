@@ -4,6 +4,7 @@ import { Modal, Button } from 'antd';
 import RegisterUserForm from './RegisterUserForm';
 import UserInformation from './UserInformation';
 import ChangePassword from './ChangePassword';
+import { handleLogout } from '../utils/logout';
 
 function AdminPortal() {
     const [appointments, setAppointments] = useState([]);
@@ -13,7 +14,6 @@ function AdminPortal() {
     const [openviewUserInfo, setOpenviewUserInfo] = useState(false);
     const [currentUser, setCurrentUser] = useState(null);
     const [openChangePassword, setOpenChangePassword] = useState(false);
-    // const [currentUserName, setCurrentUserName] = useState("Unknown");
 
     // Retrieve all appointments and users from database
     useEffect(() => {
@@ -51,15 +51,6 @@ function AdminPortal() {
         fetchUsers();
     }, []);
 
-    // Set current username when users are retrieved from database
-    // useEffect(() => {
-    //     console.log(users);
-    //     const userId = localStorage.getItem("userId");
-    //     console.log("userId:", userId);
-    //     const currentUser = users.find(user => user._id == userId);
-    //     setCurrentUserName(currentUser.username);
-    // }, [users])
-
     // Handle opening and closing add popup
     const handleAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
@@ -70,22 +61,6 @@ function AdminPortal() {
         setOpenviewUserInfo(true);
     };
     const handleCloseviewUserInfo = () => setOpenviewUserInfo(false);
-
-    const handleLogout = async () => {
-        try{
-            await fetch("http://localhost:3000/logout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-            });
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("userId");
-
-            window.location.href = "/";
-        } catch (err) {
-            console.log("Logout error", err);
-        }
-    };
 
     return (
         <>
