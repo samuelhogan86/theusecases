@@ -3,7 +3,8 @@ const jwt = require('jsonwebtoken');
 const requireAuth = (req, res, next) => {
     // Get token from Authorization header
     const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
+    const token = authHeader && authHeader.startsWith('Bearer ')
+        ? authHeader.split(' ')[1] : null;
 
     if (token) {
         jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
@@ -24,18 +25,16 @@ const requireAuth = (req, res, next) => {
 const tokenValidator = (req, res, next) => {
     try{
         const authHeader = req.headers.authorization;
-        console.log("Auth Header Recieved: ", authHeader) //DEBUGGING ONLY
         if (!authHeader){
             return res.status(401).json({ error: "Access denied. No token provided." });
         }
 
-        const token = authHeader.split(" ")[1]; //split token from Bearer
+        const token = authHeader.split(" ")[1];
         if(!token){
             return res.status(401).json({ error: "Invalid format for token" });
         }
  
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        console.log("Decoded Token:", decoded)
         req.user = decoded;
         next();
     }

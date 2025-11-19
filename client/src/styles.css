@@ -10,7 +10,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    margin: 5px 10px;
+    padding: 20px 0px;
 }
 
 main {
@@ -69,6 +69,7 @@ input[type="password"] {
     font-size: 14px;
     outline: none;
     transition: background-color 0.2s;
+    color: black;
 }
 
 input[type="text"]:focus,
@@ -98,6 +99,8 @@ input[type="password"]:focus {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
+    padding: 0px 20px;
+    min-width: 90vw;
 }
 
 .dashboard-header-left h1 {
@@ -105,6 +108,7 @@ input[type="password"]:focus {
     font-weight: 700;
     margin-bottom: 5px;
     padding-left: 20px;
+    color: black;
 }
 
 .dashboard-header-left p {
@@ -127,6 +131,7 @@ input[type="password"]:focus {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s;
+    color: black;
 }
 
 .dashboard-top-btn {
@@ -171,6 +176,7 @@ input[type="password"]:focus {
 
 .dashboard-tab.active {
     background-color: white;
+    color: black;
 }
 
 .dashboard-controls-bar {
@@ -202,6 +208,7 @@ input[type="password"]:focus {
     border-radius: 4px;
     font-size: 14px;
     background-color: white;
+    color:black;
 }
 
 .dashboard-table-container {
@@ -279,7 +286,8 @@ input[type="password"]:focus {
     background: white;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
-    padding: 30px;
+    padding: 20px;
+    min-width: 90vw;
     margin-bottom: 30px;
 }
 
@@ -293,6 +301,7 @@ input[type="password"]:focus {
 .dashboard-section-header h2 {
     font-size: 28px;
     font-weight: 600;
+    color: black;
 }
 
 .dashboard-section-controls {
@@ -312,6 +321,7 @@ input[type="password"]:focus {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 15px center;
+    color: black;
 }
 
 .appointment-card {
@@ -335,6 +345,7 @@ input[type="password"]:focus {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 8px;
+    color: black;
 }
 
 .appointment-detail {
@@ -354,6 +365,7 @@ input[type="password"]:focus {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 25px;
+    color: black;
 }
 
 .dashboard-info-row {
@@ -364,6 +376,7 @@ input[type="password"]:focus {
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 5px;
+    color: black;
 }
 
 .dashboard-info-value {
@@ -404,4 +417,8 @@ input[type="password"]:focus {
 
 .content.active {
     display: block;
+}
+
+.username_error, .password_error {
+    color: black;
 }

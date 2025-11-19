@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     id: {
         type: String, 
         unique: true,
-        require: [true]
+        required: true
     },
     firstName: {
         type: String,
@@ -47,10 +47,9 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-//static methond to login user
-userSchema.statics.login = async function(username, password){
+//static method to login user
+userSchema.statics.login = async function(username, password) {
     console.log('Attempting login for usernamer:', username);
-
     const user = await this.findOne({ username }); //searching db for username
 
     if (!user) {
@@ -68,7 +67,7 @@ userSchema.statics.login = async function(username, password){
     timeUpdate.lastLogin = new Date();
 
     const updatedUser = await this.findByIdAndUpdate(
-        user._id, //currently only works with mongo ID
+        user._id,
         timeUpdate,
         {
             new: true,
@@ -194,7 +193,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 
     const updates = {};
 
-    const existingUser = this.findOne(id);
+    const existingUser = await this.findById(id);
     if(!existingUser){
         throw Error('User doesn\'t exists');
     }
@@ -296,9 +295,8 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
     return updatedUser;
 }
 
-
 userSchema.statics.deleteUserById= async function(id){
-    const user = await this.findOneAndDelete({id});
+    const user = await this.findByIdAndDelete(id);
     return user;
 }
 

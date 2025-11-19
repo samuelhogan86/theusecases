@@ -1,6 +1,8 @@
 //requires user model. 
 const User = require('../models/userModel');
+const Appointment = require('../models/appointmentModel');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 //handle errors
@@ -12,7 +14,7 @@ const handleErrors = (err) => {
         errors.name = 'Names can\'t have any digits in them';
     }
     if (err.message === 'role has a number'){
-        error.role = 'Role must be: doctor, admin, or patient'
+        errors.role = 'Role must be: doctor, admin, or patient'
     }
     if (err.message === 'existing username'){
         errors.username = 'Username is already taken'
@@ -24,25 +26,25 @@ const handleErrors = (err) => {
         errors.role = 'Role must be: doctor, admin, or patient'
     }
     if (err.message === 'All fields must be filled'){
-        error.general = 'All fields are required'
+        errors.general = 'All fields are required'
     }
 
     return errors;
 }
 
-// const maxAge = 3 * 24 * 60 * 60;
-// const createToken = (id) => {
-//     return jwt.sign({ id }, process.env.JWT_SECRET, {
-//         expiresIn: maxAge
-//     });
-// };
+const maxAge = 3 * 24 * 60 * 60;
+const createToken = (user) => {
+    return jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+        expiresIn: maxAge
+    });
+};
 
 module.exports.registerUser = async (req, res) => {
     const { firstName, lastName, username, password, role } = req.body;
     console.log(firstName, lastName, username, password, role);
     try {
         const user = await User.register(firstName, lastName, username, password, role);
-        // const token = createToken(user._id); //Created User gets token when they login
+        const token = createToken(user);
         const userResponse = user.toObject();
         delete userResponse.passwordHash;
 
@@ -59,8 +61,8 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.updateUser = async (req, res) => {
-    let {id} = req.params;
-    const {firstName, lastName, username, password, role } = req.body;
+    const { id } = req.params;
+    const { firstName, lastName, username, password, role } = req.body;
     try {
         const user = await User.updateUserById(id, firstName, lastName, username, password, role);
 
@@ -84,10 +86,9 @@ module.exports.deleteUser = async (req, res) => {
         let { id } = req.params;
         const user = await User.deleteUserById(id);
         if(!user){
-            res.status(404).json({message:"User Not Found"});
+            return res.status(404).json({message:"User Not Found"});
         }
-        const userResponse = user.toObject();
-        res.status(204).json({
+        res.status(200).json({
             message: "User Successfully Deleted",
             user: user
         })
@@ -95,20 +96,20 @@ module.exports.deleteUser = async (req, res) => {
         res.status(500).json({message:err.message});
 
     }
-    //delete user
-
 }
 
 module.exports.getUsers = async(req, res) =>{
     try{
-        const users = await User.getAllUsers();
+        const [users, appointments] = await Promise.all([
+            User.getAdminDash(),
+            Appointment.getAdminDash()
+        ]);
         res.status(200).json({
-            message: "User data sent",
-            user: users
-        })
-
+            message: "dashboard data sent",
+            users: users,
+            appointments: appointments
+        });
     }catch(err){
         res.status(500).json({message:err.message});
-    
     }   
 }
