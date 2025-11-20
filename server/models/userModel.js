@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
 
 //static method to login user
 userSchema.statics.login = async function(username, password) {
-    console.log('Attempting login for usernamer:', username);
+    console.log('Attempting login for username:', username);
     const user = await this.findOne({ username }); //searching db for username
 
     if (!user) {

@@ -78,7 +78,6 @@ input[type="password"]:focus {
 }
 
 .sign-in-btn {
-    width: 100%;
     padding: 12px;
     background-color: #2c2c2c;
     color: white;
@@ -421,4 +420,14 @@ input[type="password"]:focus {
 
 .username_error, .password_error {
     color: black;
+}
+
+h3 {
+    color: black;
+    text-align: center;
+}
+
+p {
+    color: grey;
+    text-align: center;
 }

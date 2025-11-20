@@ -1,6 +1,7 @@
-import '../styles.css'
+import { Container, Card, Form, Button } from "react-bootstrap";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles.css'
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -47,49 +48,63 @@ function Login() {
     };
 
     return (
-        <>
-            <main>
-                <div className="login-card">
-                    <div className="login-header">
-                        <h1>Patient Portal</h1>
-                        <p>Sign in to your account</p>
-                    </div>
+        <Container 
+            className="d-flex justify-content-center align-items-center"
+            style={{ minHeight: "100vh"}}
+        >
+            <Card className="p-4 shadow-sm" style={{ width: "420px", borderRadius: "14px", border: "2px solid #dcdcdc", background: "#ffffff", padding: "10px 15px 30px" }}>
+                
+                <div className="text-center mb-4">
+                    <h3 className="mb-1 text-center">Patient Portal</h3>
+                    <p className="text-muted text-center">Sign in to your account</p>
+                </div><br/>
 
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="username">Username</label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                required
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                            />
-                            <div className="username_error">{errors.username}</div>
-                        </div>
+                <Form onSubmit={handleSubmit}>
+                    {/* Username */}
+                    <Form.Group className="mb-3" controlId="username">
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                            className="py-2"
+                            isInvalid={!!errors.username}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.username}
+                        </Form.Control.Feedback>
+                    </Form.Group><br/>
 
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input
-                                type="password"
-                                id="password"
-                                name="password"
-                                required
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                            <div className="password_error">{errors.password}</div>
-                        </div>
+                    {/* Password */}
+                    <Form.Group className="mb-4" controlId="password">
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="py-2"
+                            isInvalid={!!errors.password}
+                        />
+                        <Form.Control.Feedback type="invalid">
+                            {errors.password}
+                        </Form.Control.Feedback>
+                    </Form.Group><br/>
 
-                        <button type="submit" className="sign-in-btn">
-                            Sign in
-                        </button>
-                    </form>
-                </div>
-            </main>
-        </>
-    )
+                    {/* Submit button */}
+                    <Button 
+                        type="submit" 
+                        variant="dark" 
+                        className="w-100 py-2"
+                    >
+                        Sign in
+                    </Button>
+                </Form>
+            </Card>
+        </Container>
+    );
 }
+
 
 export default Login
