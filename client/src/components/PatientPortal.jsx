@@ -1,11 +1,35 @@
 import '../styles.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Modal } from 'antd'
 import ChangePassword from './ChangePassword'
 import { handleLogout } from '../utils/logout'
+import AccountInformation from './AccountInformation'
 
 function PatientPortal() {
     const [openChangePassword, setOpenChangePassword] = useState(false);
+    const [appointments, setAppointments] = useState([]);
+    const [user, setUser] = useState([]);
+
+    // Fetch patient appointment data for dashboard
+    useEffect(() => {
+        const fetchPatientData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch("http://localhost:3000/user/patient/dashboard", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                setAppointments(data.appointments);
+                setUser(data.user);
+            } catch (err) {
+                console.log("Error fetching patient data:", err);
+            }
+        };
+
+        fetchPatientData();
+    }, []);
 
     const handleOpenChange = () => setOpenChangePassword(true);
     const handleCloseChange = () => setOpenChangePassword(false);
@@ -15,11 +39,11 @@ function PatientPortal() {
             <div className="dashboard-header">
                 <div className="dashboard-header-left">
                     <h1>Patient Dashboard</h1>
-                    <p>Welcome, John Doe</p>
+                    <p>Welcome, {user ? `${user.firstName} ${user.lastName}` : "Patient"}</p>
                 </div>
                 <div className="dashboard-header-right">
                     <button className="dashboard-btn dashboard-top-btn" onClick={handleOpenChange}>Change Password</button>
-                    <button className="dashboard-btn dashboard-top-btn" onClick = {handleLogout}>Logout</button>
+                    <button className="dashboard-btn dashboard-top-btn" onClick={handleLogout}>Logout</button>
                 </div>
             </div>
 
@@ -41,34 +65,28 @@ function PatientPortal() {
                     </div>
                 </div>
                 <div className="appointment-box">
-                    <div className="appointment-card">
-                        <div className="appointment-time">1/1/2025 at 09:00</div>
-                        <div className="appointment-detail">with Dr. Michael Brown</div>
-                        <div className="appointment-detail">Duration: 09:00-09:30</div>
-                        <div className="appointment-cancel">
-                            <button className="dashboard-btn">Cancel</button>
+                    {appointments && appointments.length > 0 ? (
+                        appointments.map((appointment) => (
+                            <div className="appointment-card" key={appointment._id}>
+                                <div className="appointment-time">{new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}</div>
+                                <div className="appointment-detail">
+                                    with {appointment.doctorId
+                                        ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
+                                        : "Unknown"}
+                                </div>
+                                <div className="appointment-detail">Duration: {appointment.startTime}-{appointment.endTime}</div>
+                                <div className="appointment-cancel">
+                                    <button className="dashboard-btn">Cancel</button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div colSpan="4" style={{ textAlign: "center" }}>
+                            No appointments found.
                         </div>
-                    </div>
-                    <div className="appointment-card">
-                        <div className="appointment-time">3/23/2025 at 10:30</div>
-                        <div className="appointment-detail">with Dr. Lucy Chen</div>
-                        <div className="appointment-detail">Duration: 10:30-11:00</div>
-                        <div className="appointment-cancel">
-                            <button className="dashboard-btn">Cancel</button>
-                        </div>
-                    </div>
+                    )}
                 </div>
-                <div className="dashboard-account-info">
-                    <h2>Account Information</h2>
-                    <div className="dashboard-info-row">
-                        <div className="dashboard-info-label">Name</div>
-                        <div className="dashboard-info-value">John Doe</div>
-                    </div>
-                    <div className="dashboard-info-row">
-                        <div className="dashboard-info-label">Last login</div>
-                        <div className="dashboard-info-value">10/16/2025, 18:39:47</div>
-                    </div>
-                </div>
+                {user && <AccountInformation user={user} />}
             </div>
         </>
     )
