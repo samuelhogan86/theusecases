@@ -1,11 +1,35 @@
 import '../styles.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Modal } from 'antd'
 import ChangePassword from './ChangePassword'
 import { handleLogout } from '../utils/logout'
+import AccountInformation from './AccountInformation'
 
 function DoctorPortal() {
     const [openChangePassword, setOpenChangePassword] = useState(false);
+    const [appointments, setAppointments] = useState([]);
+    const [user, setUser] = useState([]);
+
+    // Fetch doctor appointment data for dashboard
+    useEffect(() => {
+        const fetchDoctorData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch("http://localhost:3000/user/doctor/dashboard", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                setAppointments(data.appointments);
+                setUser(data.user);
+            } catch (err) {
+                console.log("Error fetching doctor data:", err);
+            }
+        };
+
+        fetchDoctorData();
+    }, []);
 
     const handleOpenChange = () => setOpenChangePassword(true);
     const handleCloseChange = () => setOpenChangePassword(false);
@@ -15,11 +39,11 @@ function DoctorPortal() {
             <div className="dashboard-header">
                 <div className="dashboard-header-left">
                     <h1>Doctor Dashboard</h1>
-                    <p>Welcome, Dr.Lucy Chen</p>
+                    <p>Welcome, {user ? `${user.firstName} ${user.lastName}` : "Patient"}</p>
                 </div>
                 <div className="dashboard-header-right">
                     <button className="dashboard-btn dashboard-top-btn" onClick={handleOpenChange}>Change Password</button>
-                    <button className="dashboard-btn dashboard-top-btn" onClick = {handleLogout}>Logout</button>
+                    <button className="dashboard-btn dashboard-top-btn" onClick={handleLogout}>Logout</button>
                 </div>
             </div>
 
@@ -46,28 +70,28 @@ function DoctorPortal() {
                     </div>
                 </div>
                 <div className="appointment-box">
-                    <div className="appointment-card">
-                        <div className="appointment-time">10/31/2025</div>
-                        <div className="appointment-detail">Patient: Jane Smith</div>
-                        <div className="appointment-detail">Duration: 09:00-09:30</div>
-                    </div>
-                    <div className="appointment-card">
-                        <div className="appointment-time">11/1/2025</div>
-                        <div className="appointment-detail">Patient: John Adams</div>
-                        <div className="appointment-detail">Duration: 12:00-12:00</div>
-                    </div>
+                    {appointments && appointments.length > 0 ? (
+                        appointments.map((appointment) => (
+                            <div className="appointment-card" key={appointment._id}>
+                                <div className="appointment-time">{new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}</div>
+                                <div className="appointment-detail">
+                                    with {appointment.patientId
+                                        ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
+                                        : "Unknown"}
+                                </div>
+                                <div className="appointment-detail">Duration: {appointment.startTime}-{appointment.endTime}</div>
+                                <div className="appointment-cancel">
+                                    <button className="dashboard-btn">Cancel</button>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div colSpan="4" style={{ textAlign: "center" }}>
+                            No appointments found.
+                        </div>
+                    )}
                 </div>
-                <div className="dashboard-account-info">
-                    <h2>Account Information</h2>
-                    <div className="dashboard-info-row">
-                        <div className="dashboard-info-label">Name</div>
-                        <div className="dashboard-info-value">Lucy Chen</div>
-                    </div>
-                    <div className="dashboard-info-row">
-                        <div className="dashboard-info-label"></div>
-                        <div className="dashboard-info-value">10/16/2025, 18:39:47</div>
-                    </div>
-                </div>
+                {user && <AccountInformation user={user} />}
             </div>
         </>
     )
