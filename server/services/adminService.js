@@ -43,7 +43,7 @@ async function generateUniqueId(role){
 
 }
 //Service Method for Register. COMPLETED
-async function register(firstName, lastName, username, password, role){
+async function registerUser(firstName, lastName, username, password, role){
     if(!firstName || !lastName || !username || !password || !role){
         throw Error('All fields must be filled')
     }
@@ -235,4 +235,4 @@ async function getAdminDash(){
 }
 
 
-module.exports = {register, getAdminDash, deleteUserById, updateUserById}
+module.exports = {registerUser, getAdminDash, deleteUserById, updateUserById}
