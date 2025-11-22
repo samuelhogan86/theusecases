@@ -9,7 +9,7 @@ async function connectDB(){
   try{
     const connection = await mongoose.connect(process.env.MONGODB_URI, {dbName: "theusecases"});
     console.log("Connected to MongoDB with Mongoose");
-
+    return connection
   }catch(error){
     console.error("Error connecting to MongoDB wtih Mongoose:", error);
     throw error;
