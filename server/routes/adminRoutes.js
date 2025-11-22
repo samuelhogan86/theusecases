@@ -12,7 +12,7 @@ const { getUsers, registerUser, updateUser, deleteUser } = require('../controlle
 router.get('/users',tokenValidator,requireRole('admin'), getUsers)
 
 //register user
-router.post('/users', tokenValidator,requireRole('admin'), registerUser);
+router.post('/users',tokenValidator,requireRole('admin'), registerUser); 
 
 //update user by id
 router.put('/users/:id', tokenValidator,requireRole('admin'), updateUser);
