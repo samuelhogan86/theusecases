@@ -2,26 +2,22 @@
 const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
 const User = require('../models/userModel');
 
-//static method to login user
+
 async function login(username, password) {
     console.log('Attempting login for username:', username);
-    const user = await this.findOne({ username }); //searching db for username
-
+    const user = await User.findOne({ username }); //searching db for username
     if (!user) {
         throw Error('incorrect username') //User not found
     }
     console.log('User found:', user.username);
     console.log('Comparing password for user:', password, user.passwordHash);
     const auth = await bcrypt.compare(password, user.passwordHash) //for when we hash the password
-
     if (!auth){
         throw Error('incorrect password')    
     }
-
     timeUpdate = {};
     timeUpdate.lastLogin = new Date();
-
-    const updatedUser = await this.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
         user._id,
         timeUpdate,
         {
@@ -29,8 +25,6 @@ async function login(username, password) {
             runValidators: true
         }
     );
-
-    
     console.log('User authenticated successfully:', user.username);
     return user;
 }
