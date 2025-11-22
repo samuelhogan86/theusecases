@@ -1,92 +1,85 @@
 
 const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
 const User = require('../models/userModel');
-
+//KEEP THE LOGIC BELOW
+// 🚫 formatting
+// 🚫 capitalization
+// 🚫 password length check
+// 🚫 business rule validation
+// 🚫 generating IDs
+// 🚫 console logging
 
 const hasNumber = (str) => {
     const regex = /\d/; //matches any digit
     return regex.test(str);
 }
-
 const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
+async function generateUniqueId(role){
+    let isUnique = false;
+    let attempts = 0;
+    const maxAttemps = 10;
+    while(!isUnique && attempts < maxAttemps){
+        const randomNum = Math.floor(100000 + Math.random() * 900000);
+        const prefixMap = {
+            'doctor': 'D',
+            'admin': 'A',
+            'patient': 'P'
+        };
+        const prefix = prefixMap[role] || 'U';
+        let id = `${prefix}${randomNum}`;
+        console.log(id);
+        //check if ID already exists
+        const existingUserID = await User.findOne({ id });
+        if (!existingUserID){
+            isUnique = true;
+            return id
+        }
+        attempts++
+    }
+    throw Error("Failed to generate unique ID")
 
-//static method to register user
+
+}
+//Service Method for Register. COMPLETED
 async function register(firstName, lastName, username, password, role){
-
     if(!firstName || !lastName || !username || !password || !role){
         throw Error('All fields must be filled')
     }
-
     //trim whitespace
     firstName = firstName.trim();
     lastName = lastName.trim();
     username = username.trim();
     role = role.trim().toLowerCase();
 
+
     //checking if there are numbers
     if (hasNumber(firstName) || hasNumber(lastName)){
         throw Error('name has a number')
     }
-
     firstName = capitalize(firstName);
     lastName = capitalize(lastName);
-
     if (hasNumber(role)){
         throw Error('role has a number')
     }
-    
-    const existingUsername = await User.findOne({ username });
-
+    const existingUsername = await User.findOne({ username });  //Static function for User model
     if (existingUsername){
         throw Error('existing username')
     }
-
     if (password.length < 7){
         throw Error('password length')
     }
-
     const validRoles =['doctor', 'admin', 'patient'];
     if (!validRoles.includes(role)){
         throw Error('incorrect role')
     }
-
-
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
-    
-
-    let isUnique = false;
-    let attempts = 0;
-    const maxAttemps = 10;
-    while(!isUnique && attempts < maxAttemps){
-
-        const randomNum = Math.floor(100000 + Math.random() * 900000);
-        
-        const prefixMap = {
-            'doctor': 'D',
-            'admin': 'A',
-            'patient': 'P'
-        };
-
-        const prefix = prefixMap[role] || 'U';
-       
-        id = `${prefix}${randomNum}`;
-        console.log(id);
-        
-        //check if ID already exists
-        const existingUserID = await User.findOne({ id });
-        
-        if (!existingUserID){
-            isUnique = true;
-        }
-        
-        attempts++
-    }
-
+    const id = generateUniqueId(role)
     console.log('Creating user with ID:', id);
 
+    //Create user Object
     const userData = {
         id,
         firstName,
@@ -107,7 +100,7 @@ async function register(firstName, lastName, username, password, role){
     });
 
     try {
-        const user = await User.create(userData);
+        const user = await User.create(userData); //static func
         console.log('User created successfully:', user.username, user.id);
         return user;
     }
@@ -117,6 +110,9 @@ async function register(firstName, lastName, username, password, role){
         throw createError;
     }
 }
+
+
+
 //static method to update user
 async function updateUserById(id, firstName, lastName, username, password, role){
     console.log('User ID:', id);
