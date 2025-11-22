@@ -1,160 +1,85 @@
-const mongoose = require('mongoose');
+
 const bcrypt = require('bcrypt'); //used to hash passwords and check validation.
+const User = require('../models/userModel');
+//KEEP THE LOGIC BELOW
+// 🚫 formatting
+// 🚫 capitalization
+// 🚫 password length check
+// 🚫 business rule validation
+// 🚫 generating IDs
+// 🚫 console logging
 
 const hasNumber = (str) => {
     const regex = /\d/; //matches any digit
     return regex.test(str);
 }
-
 const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
-
-const userSchema = new mongoose.Schema({
-    id: {
-        type: String, 
-        unique: true,
-        required: true
-    },
-    firstName: {
-        type: String,
-        required: [true, 'Enter the first name']
-    },
-    lastName: {
-        type: String,
-        required: [true, 'Enter the last name']
-    },
-    username: {
-        type: String,
-        required: [true, 'Enter a username'],
-        unique: true
-    },
-    passwordHash: {
-        type: String, 
-        required: [true, 'Enter a password'],
-    },
-    role:{
-        type: String, 
-        required: [true, 'Enter one of the three roles: admin, doctor, patient'],
-        lowercase: true,
-        enum: ['admin', 'doctor', 'patient']
-    },
-    lastLogin: {
-        type: Date
-    },
-    lastPasswordChange: {
-        type: Date
-    },
-});
-
-//static method to login user
-userSchema.statics.login = async function(username, password) {
-    console.log('Attempting login for username:', username);
-    const user = await this.findOne({ username }); //searching db for username
-
-    if (!user) {
-        throw Error('incorrect username') //User not found
-    }
-    console.log('User found:', user.username);
-    console.log('Comparing password for user:', password, user.passwordHash);
-    const auth = await bcrypt.compare(password, user.passwordHash) //for when we hash the password
-
-    if (!auth){
-        throw Error('incorrect password')    
-    }
-
-    timeUpdate = {};
-    timeUpdate.lastLogin = new Date();
-
-    const updatedUser = await this.findByIdAndUpdate(
-        user._id,
-        timeUpdate,
-        {
-            new: true,
-            runValidators: true
+async function generateUniqueId(role){
+    let isUnique = false;
+    let attempts = 0;
+    const maxAttemps = 10;
+    while(!isUnique && attempts < maxAttemps){
+        const randomNum = Math.floor(100000 + Math.random() * 900000);
+        const prefixMap = {
+            'doctor': 'D',
+            'admin': 'A',
+            'patient': 'P'
+        };
+        const prefix = prefixMap[role] || 'U';
+        let id = `${prefix}${randomNum}`;
+        console.log(id);
+        //check if ID already exists
+        const existingUserID = await User.findOne({ id });
+        if (!existingUserID){
+            isUnique = true;
+            return id
         }
-    );
+        attempts++
+    }
+    throw Error("Failed to generate unique ID")
 
-    
-    console.log('User authenticated successfully:', user.username);
-    return user;
+
 }
-
-//static method to register user
-userSchema.statics.register = async function(firstName, lastName, username, password, role){
-
+//Service Method for Register. COMPLETED
+async function registerUser(firstName, lastName, username, password, role){
     if(!firstName || !lastName || !username || !password || !role){
         throw Error('All fields must be filled')
     }
-
     //trim whitespace
     firstName = firstName.trim();
     lastName = lastName.trim();
     username = username.trim();
     role = role.trim().toLowerCase();
 
+
     //checking if there are numbers
     if (hasNumber(firstName) || hasNumber(lastName)){
         throw Error('name has a number')
     }
-
     firstName = capitalize(firstName);
     lastName = capitalize(lastName);
-
     if (hasNumber(role)){
         throw Error('role has a number')
     }
-    
-    const existingUsername = await this.findOne({ username });
-
+    const existingUsername = await User.findOne({ username });  //Static function for User model
     if (existingUsername){
         throw Error('existing username')
     }
-
     if (password.length < 7){
         throw Error('password length')
     }
-
     const validRoles =['doctor', 'admin', 'patient'];
     if (!validRoles.includes(role)){
         throw Error('incorrect role')
     }
-
-
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
-    
-
-    let isUnique = false;
-    let attempts = 0;
-    const maxAttemps = 10;
-    while(!isUnique && attempts < maxAttemps){
-
-        const randomNum = Math.floor(100000 + Math.random() * 900000);
-        
-        const prefixMap = {
-            'doctor': 'D',
-            'admin': 'A',
-            'patient': 'P'
-        };
-
-        const prefix = prefixMap[role] || 'U';
-       
-        id = `${prefix}${randomNum}`;
-        console.log(id);
-        
-        //check if ID already exists
-        const existingUserID = await this.findOne({ id });
-        
-        if (!existingUserID){
-            isUnique = true;
-        }
-        
-        attempts++
-    }
-
+    const id = generateUniqueId(role)
     console.log('Creating user with ID:', id);
 
+    //Create user Object
     const userData = {
         id,
         firstName,
@@ -175,7 +100,7 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
     });
 
     try {
-        const user = await this.create(userData);
+        const user = await User.create(userData); //static func
         console.log('User created successfully:', user.username, user.id);
         return user;
     }
@@ -185,15 +110,18 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
         throw createError;
     }
 }
+
+
+
 //static method to update user
-userSchema.statics.updateUserById = async function(id, firstName, lastName, username, password, role){
+async function updateUserById(id, firstName, lastName, username, password, role){
     console.log('User ID:', id);
     const updateData = { firstName, lastName, username, password, role };
     console.log('Update data:', updateData);
 
     const updates = {};
 
-    const existingUser = await this.findById(id);
+    const existingUser = await User.findById(id);
     if(!existingUser){
         throw Error('User doesn\'t exists');
     }
@@ -236,7 +164,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
             throw Error('Username cannot be empty');
         }
 
-        const checkUsername = await this.findOne({
+        const checkUsername = await User.findOne({
             username: trimmedUsername,
             id: {$ne: id}
         });
@@ -282,7 +210,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 
     //gotta to use mongo _id for findByIdAndUpdate
     //need to make our own findbyIdAndUpdate function that uses id field
-    const updatedUser = await this.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
         id,
         updates,
         {
@@ -295,15 +223,16 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
     return updatedUser;
 }
 
-userSchema.statics.deleteUserById= async function(id){
-    const user = await this.findByIdAndDelete(id);
+async function deleteUserById(id){
+    const user = await User.findByIdAndDelete(id);
     return user;
 }
 
-//update this to retrieve all information for admin dashboard
-userSchema.statics.getAdminDash = async function(){
-    const users  = await this.find();
+//update User to retrieve all information for admin dashboard
+async function getAdminDash(){
+    const users  = await User.find();
     return users
 }
-const User = mongoose.model('user', userSchema); // set model schema for user
-module.exports = User;
+
+
+module.exports = {registerUser, getAdminDash, deleteUserById, updateUserById}

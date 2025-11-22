@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 let db;
 
 connectDB().then(async database => {
-    if (!database) throw new Error("Database connection failed.");
+    if (!database) throw new Error("Database connection failed."); 
     db = database;
     
     //debug code
