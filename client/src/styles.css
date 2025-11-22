@@ -78,7 +78,6 @@ input[type="password"]:focus {
 }
 
 .sign-in-btn {
-    width: 100%;
     padding: 12px;
     background-color: #2c2c2c;
     color: white;
