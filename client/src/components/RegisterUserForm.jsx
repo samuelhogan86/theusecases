@@ -17,7 +17,7 @@ function RegisterUserForm(props) {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:3000/admin/users", {
+            const res = await fetch("http://localhost:3000/api/admin/users", {
                 method: "POST",
                 body: JSON.stringify({ firstName, lastName, username, password, role }),
                 headers: { 

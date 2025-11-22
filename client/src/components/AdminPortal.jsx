@@ -21,7 +21,7 @@ function AdminPortal() {
         const fetchAppointments = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch("http://localhost:3000/admin/dashboard", {
+                const response = await fetch("http://localhost:3000/api/admin/dashboard", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -36,12 +36,13 @@ function AdminPortal() {
         const fetchUsers = async () => {
             try {
                 const token = localStorage.getItem('token');    
-                const response = await fetch("http://localhost:3000/admin/dashboard",  {
+                const response = await fetch("http://localhost:3000/api/admin/dashboard",  {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const data = await response.json();
+                console.log("Got users");
                 setUsers(data.users);
             } catch (err) {
                 console.log("Error fetching users");
