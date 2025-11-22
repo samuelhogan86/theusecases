@@ -41,6 +41,7 @@ const createToken = (user) => {
 
 module.exports.registerUser = async (req, res) => {
     const { firstName, lastName, username, password, role } = req.body;
+    console.log(firstName, lastName, username, password, role);
     try {
         const user = await User.register(firstName, lastName, username, password, role);
         const token = createToken(user);
@@ -50,7 +51,6 @@ module.exports.registerUser = async (req, res) => {
         res.status(201).json({
             message: 'User registered successfully',
             user: userResponse,
-            token: token
         });
     }
     catch (err) {
@@ -64,7 +64,7 @@ module.exports.updateUser = async (req, res) => {
     const { id } = req.params;
     const { firstName, lastName, username, password, role } = req.body;
     try {
-        const user = await User.update(id, firstName, lastName, username, password, role);
+        const user = await User.updateUserById(id, firstName, lastName, username, password, role);
 
         const userResponse = user.toObject();
         delete userResponse.passwordHash;
@@ -98,7 +98,7 @@ module.exports.deleteUser = async (req, res) => {
     }
 }
 
-module.exports.dashboard = async(req, res) =>{
+module.exports.getUsers = async(req, res) =>{
     try{
         const [users, appointments] = await Promise.all([
             User.getAdminDash(),

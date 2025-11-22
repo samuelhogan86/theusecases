@@ -21,9 +21,36 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-connectDB().then(() => {
-    app.use("/auth", authRoute);
-    app.use("/admin", adminRoute);
+let db;
+
+connectDB().then(async database => {
+    if (!database) throw new Error("Database connection failed.");
+    db = database;
+    
+    //debug code
+    app.use((req, res, next) => {
+        console.log(`${req.method} ${req.url}`);
+        console.log('Body: ', req.body);
+        next();
+    })
+
+    //Entry point test
+    app.get('/', (req, res) => {
+      res.send('Server Running');
+    });
+
+    app.use('/api/auth', authRoute);
+    app.use('/api/admin', adminRoute);
+    
+    // app.get("/users", async (req, res) => {
+    //     const users = await db.collection("users").find().toArray();
+    //     res.json(users);
+    // });
+
+    // app.get("/appointments", async (req, res) => {
+    //     const appointments = await db.collection("appointments").find().toArray();
+    //     res.json(appointments);
+    // });
 
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
