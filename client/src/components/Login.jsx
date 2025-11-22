@@ -1,7 +1,7 @@
 import { Container, Card, Form, Button } from "react-bootstrap";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles.css'
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -52,16 +52,16 @@ function Login() {
             className="d-flex justify-content-center align-items-center"
             style={{ minHeight: "100vh"}}
         >
-            <Card className="p-4 shadow-sm" style={{ width: "420px", borderRadius: "14px", border: "2px solid #dcdcdc", background: "#ffffff", padding: "10px 15px 30px" }}>
+            <Card className="p-4 shadow-sm" style={{ width: "420px", borderRadius: "14px", border: "2px solid #dcdcdc", background: "#ffffff" }}>
                 
-                <div className="text-center mb-4">
+                <div className="text-center mb-2">
                     <h3 className="mb-1 text-center">Patient Portal</h3>
                     <p className="text-muted text-center">Sign in to your account</p>
-                </div><br/>
+                </div>
 
                 <Form onSubmit={handleSubmit}>
                     {/* Username */}
-                    <Form.Group className="mb-3" controlId="username">
+                    <Form.Group className="mb-2" controlId="username">
                         <Form.Label>Username</Form.Label>
                         <Form.Control
                             type="text"
@@ -74,7 +74,7 @@ function Login() {
                         <Form.Control.Feedback type="invalid">
                             {errors.username}
                         </Form.Control.Feedback>
-                    </Form.Group><br/>
+                    </Form.Group>
 
                     {/* Password */}
                     <Form.Group className="mb-4" controlId="password">
@@ -90,7 +90,7 @@ function Login() {
                         <Form.Control.Feedback type="invalid">
                             {errors.password}
                         </Form.Control.Feedback>
-                    </Form.Group><br/>
+                    </Form.Group>
 
                     {/* Submit button */}
                     <Button 

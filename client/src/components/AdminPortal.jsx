@@ -1,4 +1,5 @@
 import '../styles.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'antd';
 import RegisterUserForm from './RegisterUserForm';
@@ -89,16 +90,31 @@ function AdminPortal() {
 
     return (
         <>
-            <div className="dashboard-header">
-                <div className="dashboard-header-left">
-                    <h1>Admin Dashboard</h1>
-                    <p>Manage Users and Appointments</p>
-                </div>
-                <div className="dashboard-header-right">
-                    <button className="dashboard-btn dashboard-top-btn" onClick={() => setOpenChangePassword(true)}>Change Password</button>
-                    <button className="dashboard-btn dashboard-top-btn" onClick = {handleLogout}>Logout</button>
-                </div>
+            {/* HEADER */}
+        <div className="container mt-4">
+            <div className="d-flex justify-content-between align-items-start">
+            <div>
+                <h1 className="fw-bold mb-1">Admin Dashboard</h1>
+                <p className="text-muted mb-4">Manage Users and Appointments</p>
             </div>
+
+            <div className="d-flex gap-2">
+                <button
+                className="btn btn-outline-secondary"
+                onClick={() => setOpenChangePassword(true)}
+                >
+                Change Password
+                </button>
+
+            <button
+                className="btn btn-outline-danger"
+                onClick={handleLogout}
+            >
+                Logout
+            </button>
+            </div>
+            </div>
+        </div>
 
             {/* Change Password Modal for logged-in admin */}
             <Modal
@@ -116,23 +132,45 @@ function AdminPortal() {
                 />
             </Modal>
 
-            <div className="dashboard-section">
-                <div className="dashboard-tab-container">
-                    <button
-                        className={`dashboard-tab ${activeTab === 'appointments' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('appointments')}
-                    >
-                        Appointments
-                    </button>
-                    <button
-                        className={`dashboard-tab ${activeTab === 'users' ? 'active' : ''}`}
-                        onClick={() => setActiveTab('users')}
-                    >
-                        Users
-                    </button>
-                </div>
+            {/* TAB NAVIGATION */}
+            <div className="container mt-1 mb-1">
+                <ul className="nav nav-tabs" style={{ borderBottom: "none" }}>
+                    <li className="nav-item">
+                        <button
+                            className="nav-link"
+                            style={{
+                                backgroundColor: activeTab === "appointments" ? "#ffffff" : "#e9ecef",
+                                fontWeight: activeTab === "appointments" ? "600" : "400",
+                                color: "#000000",
+                                border: "1px solid #dee2e6",
+                                borderRadius: "0.25rem"
+                            }}
+                            onClick={() => setActiveTab('appointments')}
+                        >
+                            Appointments
+                        </button>
+                    </li>
+
+                    <li className="nav-item">
+                        <button
+                            className="nav-link"
+                            style={{
+                                backgroundColor: activeTab === "users" ? "#ffffff" : "#e9ecef",
+                                fontWeight: activeTab === "users" ? "600" : "400",
+                                color: "#000000",
+                                border: "1px solid #dee2e6",
+                                borderRadius: "0.25rem"
+                            }}
+                            onClick={() => setActiveTab('users')}
+                        >
+                            Users
+                        </button>
+                    </li>
+                </ul>
+            </div>
 
                 {/* Appointments Tab */}
+            <div className="dashboard-section">
                 <div
                     id="appointments"
                     className={`dashboard-content ${activeTab === 'appointments' ? 'active' : ''}`}

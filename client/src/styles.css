@@ -421,13 +421,3 @@ input[type="password"]:focus {
 .username_error, .password_error {
     color: black;
 }
-
-h3 {
-    color: black;
-    text-align: center;
-}
-
-p {
-    color: grey;
-    text-align: center;
-}
