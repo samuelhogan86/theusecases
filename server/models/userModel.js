@@ -120,13 +120,6 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
         throw Error('incorrect role')
     }
 
-    //debug code
-    // console.log(`
-    // firstName: ${firstName},
-    // lastName: ${lastName},
-    // username: ${username},
-    // password: ${password},
-    // role: ${role}`);
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
@@ -193,7 +186,7 @@ userSchema.statics.register = async function(firstName, lastName, username, pass
     }
 }
 //static method to update user
-userSchema.statics.update = async function update(id, firstName, lastName, username, password, role){
+userSchema.statics.updateUserById = async function(id, firstName, lastName, username, password, role){
     console.log('User ID:', id);
     const updateData = { firstName, lastName, username, password, role };
     console.log('Update data:', updateData);
@@ -208,7 +201,7 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
     if(firstName !== undefined){
         console.log('Updating first name...');
         const trimmedFirstName = firstName.trim();
-
+        console.log('Trimmed first name:', trimmedFirstName);
         if (!trimmedFirstName){
             throw Error('First name cannot be empty');
         }
@@ -287,6 +280,8 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
     console.log('Final updates to be applied:', updates);
 
+    //gotta to use mongo _id for findByIdAndUpdate
+    //need to make our own findbyIdAndUpdate function that uses id field
     const updatedUser = await this.findByIdAndUpdate(
         id,
         updates,
@@ -298,7 +293,6 @@ userSchema.statics.update = async function update(id, firstName, lastName, usern
 
     console.log('User updated successfully:', updatedUser.id);
     return updatedUser;
-
 }
 
 userSchema.statics.deleteUserById= async function(id){
@@ -307,7 +301,7 @@ userSchema.statics.deleteUserById= async function(id){
 }
 
 //update this to retrieve all information for admin dashboard
-userSchema.statics.getAdminDash = async function(){
+userSchema.statics.getAllUsers = async function(){
     const users  = await this.find();
     return users
 }
