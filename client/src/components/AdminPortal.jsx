@@ -91,7 +91,7 @@ function AdminPortal() {
     return (
         <>
             {/* HEADER */}
-        <div className="container mt-4">
+        <div className="container mt-4" style={{ maxWidth: "100%", "--bs-gutter-x": "0" }}>
             <div className="d-flex justify-content-between align-items-start">
             <div>
                 <h1 className="fw-bold mb-1">Admin Dashboard</h1>
@@ -133,7 +133,7 @@ function AdminPortal() {
             </Modal>
 
             {/* TAB NAVIGATION */}
-            <div className="container mt-1 mb-1">
+            <div className="container mt-1 mb-1" style={{ paddingLeft: "0", marginLeft: "0"}}>
                 <ul className="nav nav-tabs" style={{ borderBottom: "none" }}>
                     <li className="nav-item">
                         <button
@@ -143,7 +143,8 @@ function AdminPortal() {
                                 fontWeight: activeTab === "appointments" ? "600" : "400",
                                 color: "#000000",
                                 border: "1px solid #dee2e6",
-                                borderRadius: "0.25rem"
+                                borderRadius: "0.25rem",
+                                marginRight: "0.4vw"
                             }}
                             onClick={() => setActiveTab('appointments')}
                         >
@@ -168,34 +169,35 @@ function AdminPortal() {
                     </li>
                 </ul>
             </div>
-
                 {/* Appointments Tab */}
-            <div className="dashboard-section">
-                <div
-                    id="appointments"
-                    className={`dashboard-content ${activeTab === 'appointments' ? 'active' : ''}`}
-                >
-                    <div className="dashboard-controls-bar">
-                        <input type="text" className="dashboard-search-box" placeholder="Search by name..." />
-                        <div className="dashboard-filter-group">
-                            <select className="dashboard-filter-select">
-                                <option>Search by Patient</option>
-                                <option>Search by Doctor</option>
-                            </select>
-                            <button className="dashboard-btn dashboard-btn-primary">+ New Appointment</button>
-                        </div>
-                    </div>
-
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <input 
+                type="text" 
+                className="form-control" 
+                placeholder="Search by name..." 
+                style={{ maxWidth: '300px', fontSize: '14px' }}
+              />
+              <div className="d-flex gap-2">
+                <select className="form-select" style={{ fontSize: '14px', width: 'auto' }}>
+                  <option>Search by Patient</option>
+                  <option>Search by Doctor</option>
+                </select>
+                <button className="btn btn-dark px-3" style={{ fontSize: '14px', fontWeight: '500', whiteSpace: 'nowrap' }}>
+                  + New Appointment
+                </button>
+              </div>
+            </div>
+            <div className="bg-white border rounded-3 p-4" style={{ minWidth: '90vw' }}>
                     {activeTab === 'appointments' && (
-                        <div className="dashboard-table-container">
-                            <table className="dashboard-table">
-                                <thead>
+                        <div className="table-responsive bg-white rounded">
+                            <table className="table table-hover mb-0">
+                                <thead style={{ backgroundColor: '#f9f9f9' }}>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Start time</th>
-                                        <th>End time</th>
-                                        <th>Doctor</th>
-                                        <th>Patient</th>
+                                        <th className="fw-semibold">Date</th>
+                                        <th className="fw-semibold">Start time</th>
+                                        <th className="fw-semibold">End time</th>
+                                        <th className="fw-semibold">Doctor</th>
+                                        <th className="fw-semibold">Patient</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -227,16 +229,15 @@ function AdminPortal() {
                                 </tbody>
                             </table>
 
-                            <div className="dashboard-pagination">
-                                <button className="dashboard-btn">Prev</button>
-                                <div className="dashboard-page-info">
-                                    Page <input type="number" className="dashboard-page-input" value="1" readOnly min="1" max="3" /> of 3
+                            <div className="d-flex justify-content-between align-items-center p-3 border-top">
+                                <button className="btn btn-outline-secondary">Prev</button>
+                                <div>
+                                    Page <input type="number" className="form-control d-inline-block mx-2" value="1" style={{ width: '60px', textAlign: 'center' }} /> of 3
                                 </div>
-                                <button className="dashboard-btn">Next</button>
+                                <button className="btn btn-outline-secondary">Next</button>
                             </div>
                         </div>
                     )}
-                </div>
 
                 {/* Users Tab */}
                 <div
@@ -292,8 +293,7 @@ function AdminPortal() {
                         </>
                     )}
                 </div>
-            </div>
-
+        </div>
             {/* Popup form for registering new user */}
             <Modal
                 title="Register New User"
