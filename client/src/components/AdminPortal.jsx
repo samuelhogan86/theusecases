@@ -1,4 +1,3 @@
-import '../styles.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'antd';
@@ -170,6 +169,8 @@ function AdminPortal() {
                 </ul>
             </div>
                 {/* Appointments Tab */}
+                {activeTab === 'appointments' && (
+                <> 
             <div className="d-flex justify-content-between align-items-center mb-3">
               <input 
                 type="text" 
@@ -178,17 +179,16 @@ function AdminPortal() {
                 style={{ maxWidth: '300px', fontSize: '14px' }}
               />
               <div className="d-flex gap-2">
-                <select className="form-select" style={{ fontSize: '14px', width: 'auto' }}>
+                <select className="form-select" style={{ width: 'auto' }}>
                   <option>Search by Patient</option>
                   <option>Search by Doctor</option>
                 </select>
-                <button className="btn btn-dark px-3" style={{ fontSize: '14px', fontWeight: '500', whiteSpace: 'nowrap' }}>
+                <button className="btn btn-dark px-3">
                   + New Appointment
                 </button>
               </div>
             </div>
-            <div className="bg-white border rounded-3 p-4" style={{ minWidth: '90vw' }}>
-                    {activeTab === 'appointments' && (
+                    <div className="bg-white border rounded-3 p-4" style={{ minWidth: '90vw' }}>
                         <div className="table-responsive bg-white rounded">
                             <table className="table table-hover mb-0">
                                 <thead style={{ backgroundColor: '#f9f9f9' }}>
@@ -237,29 +237,33 @@ function AdminPortal() {
                                 <button className="btn btn-outline-secondary">Next</button>
                             </div>
                         </div>
+                    </div>
+                    </>
                     )}
-
                 {/* Users Tab */}
-                <div
-                    id="users"
-                    className={`dashboard-content ${activeTab === 'users' ? 'active' : ''}`}
-                >
                     {activeTab === 'users' && (
                         <>
-                            <div className="dashboard-controls-bar">
-                                <input type="text" className="dashboard-search-box" placeholder="Search users..." />
-                                <button className="dashboard-btn dashboard-btn-primary" onClick={handleAdd}>+ Add User</button>
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                placeholder="Search users..." 
+                                style={{ maxWidth: '300px', fontSize: '14px' }}
+                            />
+                            <div className="d-flex gap-2">
+                                <button className="btn btn-dark px-3" onClick={handleAdd}>+ Add User</button>
                             </div>
-
-                            <div className="dashboard-table-container">
-                                <table className="dashboard-table">
-                                    <thead>
+                        </div>
+                <div className="bg-white border rounded-3 p-4" style={{ minWidth: '90vw' }}>
+                            <div className="table-responsive bg-white rounded">
+                                <table className="table table-hover mb-0">
+                                    <thead style={{ backgroundColor: '#f9f9f9' }}>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>Role</th>
-                                            <th>Status</th>
-                                            <th></th>
+                                            <th className="fw-semibold">Name</th>
+                                            <th className="fw-semibold">Username</th>
+                                            <th className="fw-semibold">Role</th>
+                                            <th className="fw-semibold">Status</th>
+                                            <th className="fw-semibold"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -275,25 +279,24 @@ function AdminPortal() {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="4" style={{ textAlign: "center" }}>
+                                                <td colSpan="5" style={{ textAlign: "center" }}>
                                                     No users found.
                                                 </td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </table>
-                                <div className="dashboard-pagination">
-                                    <button className="dashboard-btn">Prev</button>
-                                    <div className="dashboard-page-info">
-                                        Page <input type="number" className="dashboard-page-input" value="1" readOnly min="1" max="1" /> of 1
-                                    </div>
-                                    <button className="dashboard-btn">Next</button>
+                                <div className="d-flex justify-content-between align-items-center p-3 border-top">
+                                <button className="btn btn-outline-secondary">Prev</button>
+                                <div>
+                                    Page <input type="number" className="form-control d-inline-block mx-2" value="1" style={{ width: '60px', textAlign: 'center' }} /> of 1
+                                </div>
+                                <button className="btn btn-outline-secondary">Next</button>
                                 </div>
                             </div>
+                        </div>
                         </>
                     )}
-                </div>
-        </div>
             {/* Popup form for registering new user */}
             <Modal
                 title="Register New User"
