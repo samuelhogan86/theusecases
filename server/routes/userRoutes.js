@@ -10,10 +10,10 @@ const {getUserDash, cancelAppointment} = require("../controllers/userController"
 
 
 //Get user dashboard information, must be associated user
-router.get('/:id/dashboard', tokenValidator, getUserDash);
+router.get('/:UserId/dashboard', tokenValidator, getUserDash);
 
 
 //cancel an appointment, must be patient
-router.delete('/:id', tokenValidator, requireRole('patient'), cancelAppointment);
+router.delete('/:AppointmentId', tokenValidator, requireRole('patient'), cancelAppointment);
 
 //
