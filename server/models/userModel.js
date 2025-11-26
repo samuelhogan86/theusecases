@@ -305,5 +305,7 @@ userSchema.statics.getAdminDash = async function(){
     const users  = await this.find();
     return users
 }
+
+userSchema.statics.getUserById
 const User = mongoose.model('user', userSchema); // set model schema for user
 module.exports = User;

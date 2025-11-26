@@ -10,7 +10,7 @@ const {getUserDash} = require("../controllers/userController");
 
 router.use(tokenValidator)
 //Get user dashboard information, must be associated user
-router.get('/:UserId/dashboard', getUserDash);
+router.get('/me/dashboard', getUserDash);
 
 
 //

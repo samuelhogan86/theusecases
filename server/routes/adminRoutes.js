@@ -11,12 +11,6 @@ router.use(tokenValidator, requireRole('admin'));
 //Dashboard should get, package of info, Patients, Their Appointments, and Doctors associated. 
 router.get('/dashboard', getDash) 
 
-// // get user by ID
-// router.get('/user/:UserId', )
-
-// //get appointment 
-// router.get('/appointments/:AppointmentId') 
-
 //register user
 router.post('/users', registerUser); 
 
@@ -26,6 +20,10 @@ router.put('/users/:UserId', updateUser);
 //delete user by id
 router.delete('/users/:UserId', deleteUser);
 
+// // get user by ID
+// router.get('/user/:UserId', )
 
+// //get appointment 
+// router.get('/appointments/:AppointmentId') 
 
 module.exports = router;
