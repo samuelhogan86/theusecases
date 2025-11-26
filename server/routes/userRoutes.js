@@ -1,19 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { tokenValidator , requireRole} = require("../middleware/authMiddleware");
-const {getUserDash, cancelAppointment} = require("../controllers/userController");
+const { tokenValidator} = require("../middleware/authMiddleware");
+const {getUserDash} = require("../controllers/userController");
 
 
 // Doctors only have 'view' permissions for appointments
 // patients have 'view' and 'cancel'
 // Admins have all permissions
 
-
+router.use(tokenValidator)
 //Get user dashboard information, must be associated user
-router.get('/:UserId/dashboard', tokenValidator, getUserDash);
+router.get('/:UserId/dashboard', getUserDash);
 
-
-//cancel an appointment, must be patient
-router.delete('/:AppointmentId', tokenValidator, requireRole('patient'), cancelAppointment);
 
 //
+module.exports = router;

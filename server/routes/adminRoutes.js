@@ -7,29 +7,24 @@ const { getDash, registerUser, updateUser, deleteUser } = require('../controller
 
 
 //Define routes. 
+router.use(tokenValidator, requireRole('admin'));
 //Dashboard should get, package of info, Patients, Their Appointments, and Doctors associated. 
-router.get('/dashboard',tokenValidator,requireRole('admin'), getDash) 
+router.get('/dashboard', getDash) 
 
-router.get('/user/:UserId', tokenValidator,requireRole('admin')) // get user by ID
+// // get user by ID
+// router.get('/user/:UserId', )
 
-router.get('/appointments/:AppointmentId', tokenValidator,requireRole('admin')) //get appointment 
+// //get appointment 
+// router.get('/appointments/:AppointmentId') 
 
 //register user
-router.post('/users',tokenValidator,requireRole('admin'), registerUser); 
+router.post('/users', registerUser); 
 
 //update user by id
-router.put('/users/:UserId', tokenValidator,requireRole('admin'), updateUser);
+router.put('/users/:UserId', updateUser);
 
 //delete user by id
-router.delete('/users/:UserId', tokenValidator,requireRole('admin'), deleteUser);
-
-//get user by id, returns user appointments by ID
-
-//modify appointment
-
-//create appointment
-
-
+router.delete('/users/:UserId', deleteUser);
 
 
 
