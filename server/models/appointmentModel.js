@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
+  aptId:{ 
+    type: String,
+    required: [true, "ID REQUIRED"]
+  },
   date: {
     type: Date,
     required: [true, 'Appointment date is required']

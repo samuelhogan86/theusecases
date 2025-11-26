@@ -234,5 +234,10 @@ async function getAdminDash(){
     return users
 }
 
+//We need to aggregate Patient, appointments, and doctors.
+// Where appointment.patiendID == userID. gets user's appointments whether doctor or patient
+async function getUserAppointments(){
+    return;
+}
 
 module.exports = {registerUser, getAdminDash, deleteUserById, updateUserById}
