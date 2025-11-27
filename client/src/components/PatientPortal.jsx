@@ -1,14 +1,17 @@
-import '../styles.css'
+import "bootstrap/dist/css/bootstrap.min.css"
 import { useState } from 'react'
 import { Modal } from 'antd'
 import ChangePassword from './ChangePassword'
 
 function PatientPortal() {
+    const [appointments, setAppointments] = useState([]);
+    const [user, setUser] = useState(null);
     const [openChangePassword, setOpenChangePassword] = useState(false);
 
     const handleOpenChange = () => setOpenChangePassword(true);
     const handleCloseChange = () => setOpenChangePassword(false);
 
+// User routes and REST Endpoints needed
 
     const handleLogout = async () => {
         try{
@@ -28,17 +31,19 @@ function PatientPortal() {
 
     return (
         <>
-            <div className="dashboard-header">
-                <div className="dashboard-header-left">
-                    <h1>Patient Dashboard</h1>
-                    <p>Welcome, John Doe</p>
-                </div>
-                <div className="dashboard-header-right">
-                    <button className="dashboard-btn dashboard-top-btn" onClick={handleOpenChange}>Change Password</button>
-                    <button className="dashboard-btn dashboard-top-btn" onClick = {handleLogout}>Logout</button>
+            {/* HEADER */}
+            <div className="container mt-4" style={{ maxWidth: "100%", "--bs-gutter-x": "0" }}>
+                <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                    <h1 className="fw-bold mb-1">Patient Dashboard</h1>
+                    <p className="text-muted mb-4">Welcome, {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</p> {/* Should work once the sent information from database is processed */}
+                    </div>
+                <div className="d-flex gap-2">
+                    <button className="btn btn-outline-secondary" onClick={handleOpenChange}>Change Password</button>
+                    <button className="btn btn-outline-danger" onClick = {handleLogout}>Logout</button>
                 </div>
             </div>
-
+            </div>
             <Modal
                 title="Change Password"
                 open={openChangePassword}
@@ -48,44 +53,51 @@ function PatientPortal() {
             >
                 <ChangePassword userId={localStorage.getItem('userId')} closeModal={handleCloseChange} />
             </Modal>
+            {/* My Appointments */}
+            <div className="container-fluid" style={{ minWidth: "90vw" }}>
+                <div className="card mb-4" style={{ border: "none"}}>
+                {/* Need to redo this section to include appointments and map them to the database */}
+                <div className="border rounded-3 p-3">
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <h2 className="fw-semibold mb-0">My Appointments</h2>
+                        <button className="btn btn-outline-secondary">View History</button>
+                    </div>
+                    <div className="border rounded-3 p-4 mb-3">
+                        {/* Replace raw data with actual data */}
+                        <div className="d-flex justify-content-between">
+                            <h3 className="fs-5 fw-semibold mb-2">1/1/2025 at 09:00</h3>
+                            {/* Need to finish this button */}
+                            <button className="btn btn-outline-danger" onClick={() => handleCancelAppointment(appointment._id)}>Cancel</button>
+                        </div>
+                        <p className="text-secondary mb-1">with Dr. Michael Brown</p>
+                        <p className="text-secondary mb-3">Duration: 09:00-09:30</p>
+                    </div>
+                    {/* Another raw data, can be removed once the appointments are set up */}
+                    <div className="border rounded-3 p-4">
+                        <div className="d-flex justify-content-between">
+                            <h3 className="fs-5 fw-semibold mb-2">3/23/2025 at 10:30</h3>
+                            <button className="btn btn-outline-danger" onClick={() => handleCancelAppointment(appointment._id)}>Cancel</button>
+                        </div>
+                        <p className="text-secondary mb-1">with Dr. Lucy Chen</p>
+                        <p className="text-secondary mb-3">Duration: 10:30-11:00</p>
+                    </div>
+                </div>
+                {/* include a statement with no upcoming appontments */}
 
-            <div className="dashboard-section">
-                <div className="dashboard-section-header">
-                    <h2>My Appointments</h2>
-                    <div className="dashboard-section-controls">
-                        <button className="dashboard-btn">View History</button>
+                {/* ACCOUNT INFORMATION SECTION */}
+                <div className="border rounded-3 p-4 mt-4">
+                    <h2 className="fw-semibold mb-4">Account Information</h2>
+                    <div className="mb-3">
+                        <div className="fw-semibold mb-1">Name</div>
+                        <div className="text-dark">John Doe</div>
                     </div>
-                </div>
-                <div className="appointment-box">
-                    <div className="appointment-card">
-                        <div className="appointment-time">1/1/2025 at 09:00</div>
-                        <div className="appointment-detail">with Dr. Michael Brown</div>
-                        <div className="appointment-detail">Duration: 09:00-09:30</div>
-                        <div className="appointment-cancel">
-                            <button className="dashboard-btn">Cancel</button>
-                        </div>
-                    </div>
-                    <div className="appointment-card">
-                        <div className="appointment-time">3/23/2025 at 10:30</div>
-                        <div className="appointment-detail">with Dr. Lucy Chen</div>
-                        <div className="appointment-detail">Duration: 10:30-11:00</div>
-                        <div className="appointment-cancel">
-                            <button className="dashboard-btn">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-                <div className="dashboard-account-info">
-                    <h2>Account Information</h2>
-                    <div className="dashboard-info-row">
-                        <div className="dashboard-info-label">Name</div>
-                        <div className="dashboard-info-value">John Doe</div>
-                    </div>
-                    <div className="dashboard-info-row">
-                        <div className="dashboard-info-label">Last login</div>
-                        <div className="dashboard-info-value">10/16/2025, 18:39:47</div>
+                    <div className="mb-3">
+                        <div className="fw-semibold mb-1">Last login</div>
+                        <div className="text-dark">10/16/2025, 18:39:47</div>
                     </div>
                 </div>
             </div>
+        </div>
         </>
     )
 }
