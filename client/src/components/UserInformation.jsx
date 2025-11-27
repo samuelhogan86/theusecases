@@ -23,34 +23,34 @@ function UserInformation(props) {
 
     return (
         <>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     Name: {user.firstName} {user.lastName}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     Username: {user.username}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     Role: {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     Last Login: {user.lastLogin ? user.lastLogin : "N/A"}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     Last Password Change: {user.lastPasswordChange ? user.lastPasswordChange : "N/A"}
                 </div>
             </div>
-            <div>
-                <button onClick={handleUpdate}>Update User</button>
-                <button onClick={handleDelete}>Delete User</button>
+            <div className="d-flex gap-2">
+                <button className="btn btn-dark" onClick={handleUpdate}>Update User</button>
+                <button className="btn btn-outline-danger" onClick={handleDelete}>Delete User</button>
             </div>
 
             {/* Popup form for updating existing user */}

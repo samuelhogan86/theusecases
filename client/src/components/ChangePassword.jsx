@@ -47,7 +47,7 @@ function ChangePassword(props) {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="form-group">
+            <div className="mb-3">
                 <label htmlFor="currentPassword">Current Password</label>
                 <input
                     id="currentPassword"
@@ -59,7 +59,7 @@ function ChangePassword(props) {
                 <div className="error">{errors.currentPassword}</div>
             </div>
 
-            <div className="form-group">
+            <div className="mb-3">
                 <label htmlFor="newPassword">New Password</label>
                 <input
                     id="newPassword"
@@ -71,7 +71,7 @@ function ChangePassword(props) {
                 <div className="error">{errors.newPassword}</div>
             </div>
 
-            <div className="form-group">
+            <div className="mb-3">
                 <label htmlFor="confirmPassword">Confirm New Password</label>
                 <input
                     id="confirmPassword"
@@ -83,16 +83,16 @@ function ChangePassword(props) {
                 <div className="error">{errors.confirmPassword}</div>
             </div>
 
-            <div className="form-actions">
-                <button type="submit" className="sign-in-btn" disabled={loading}>
+            <div className="d-flex gap-2">
+                <button type="submit" className="btn btn-dark" disabled={loading}>
                     {loading ? "Changing..." : "Change Password"}
                 </button>
-                <button type="button" className="sign-in-btn" onClick={() => props.closeModal && props.closeModal()} disabled={loading}>
+                <button type="button" className="btn btn-outline-secondary" onClick={() => props.closeModal && props.closeModal()} disabled={loading}>
                     Cancel
                 </button>
             </div>
 
-            {errors.general && <div className="error" style={{ marginTop: 8 }}>{errors.general}</div>}
+            {errors.general && <div className="text-dark" style={{ marginTop: 8 }}>{errors.general}</div>}
         </form>
     )
 }

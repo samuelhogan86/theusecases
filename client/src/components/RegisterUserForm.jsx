@@ -49,7 +49,7 @@ function RegisterUserForm(props) {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="firstName">First Name</label>
                     <input
                         type="text"
@@ -59,10 +59,10 @@ function RegisterUserForm(props) {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                     />
-                    <div className="error">{errors.firstName}</div>
+                    <div className="text-dark">{errors.firstName}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="lastName">Last Name</label>
                     <input
                         type="text"
@@ -72,10 +72,10 @@ function RegisterUserForm(props) {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                     />
-                    <div className="error">{errors.lastName}</div>
+                    <div className="text-dark">{errors.lastName}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="username">Username</label>
                     <input
                         type="text"
@@ -85,10 +85,10 @@ function RegisterUserForm(props) {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
-                    <div className="username error">{errors.username}</div>
+                    <div className="text-dark">{errors.username}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="password">Password</label>
                     <input
                         type="password"
@@ -98,22 +98,23 @@ function RegisterUserForm(props) {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <div className="password error">{errors.password}</div>
+                    <div className="text-dark">{errors.password}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="d-flex gap-2 mb-3">
                     <label htmlFor="role">Role</label>
-                    <select name="role" id ="role" required value ={role} onChange={(e) => setRole(e.target.value)}>
+                    <select className="px-1" name="role" id ="role" required value ={role} onChange={(e) => setRole(e.target.value)}>
                         <option value="patient">Patient</option>
                         <option value="doctor">Doctor</option>
                         <option value="admin">Admin</option>
                     </select>
-                    <div className="password error">{errors.password}</div>
+                    <div className="text-dark">{errors.password}</div>
                 </div>
 
-                <button type="submit" className="sign-in-btn">
-                    Register User
-                </button>
+                <div className="d-flex gap-2">
+                    <button type="submit" className="btn btn-dark">Register User</button>
+                    <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}>Cancel</button>
+                </div>
             </form>
         </>
     )

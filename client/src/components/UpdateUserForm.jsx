@@ -52,7 +52,7 @@ function UpdateUserForm(props) {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="firstName">First Name</label>
                     <input
                         type="text"
@@ -61,10 +61,10 @@ function UpdateUserForm(props) {
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                     />
-                    <div className="error">{errors.firstName}</div>
+                    <div className="text-dark">{errors.firstName}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="lastName">Last Name</label>
                     <input
                         type="text"
@@ -73,10 +73,10 @@ function UpdateUserForm(props) {
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
                     />
-                    <div className="error">{errors.lastName}</div>
+                    <div className="text-dark">{errors.lastName}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="username">Username</label>
                     <input
                         type="text"
@@ -85,10 +85,10 @@ function UpdateUserForm(props) {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                     />
-                    <div className="username error">{errors.username}</div>
+                    <div className="text-dark">{errors.username}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="password">Password</label>
                     <input
                         type="password"
@@ -97,22 +97,23 @@ function UpdateUserForm(props) {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <div className="password error">{errors.password}</div>
+                    <div className="text-dark">{errors.password}</div>
                 </div>
 
-                <div className="form-group">
-                    <label htmlFor="role">Role</label>
+                <div className="mb-3">
+                    <label htmlFor="role" style={{ marginRight: "0.4vw" }}>Role</label>
                     <select name="role" id ="role" value = {role} onChange={(e) => setRole(e.target.value)}>
                         <option value="patient">Patient</option>
                         <option value="doctor">Doctor</option>
                         <option value="admin">Admin</option>
                     </select>
-                    <div className="password error">{errors.password}</div>
+                    <div className="text-dark">{errors.password}</div>
                 </div>
 
-                <button type="submit" className="sign-in-btn">
-                    Update User
-                </button>
+                <div className="d-flex gap-2">
+                    <button type="submit" className="btn btn-dark">Update User</button>
+                    <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}>Cancel</button>
+                </div>
             </form>
         </>
     )

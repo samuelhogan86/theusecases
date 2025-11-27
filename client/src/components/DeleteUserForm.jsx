@@ -29,10 +29,12 @@ function DeleteUserForm(props) {
 
     return (
         <>
-            <div>Are you sure you would like to delete {user.firstName} {user.lastName}?</div>
-            <div>WARNING: This cannot be undone</div>
-            <button onClick={handleSubmit}>Delete User</button>
-            <button onClick={() => props.closeModal()}>Cancel</button>
+            <div className="mb-1">Are you sure you would like to delete {user.firstName} {user.lastName}?</div>
+            <div className="text-danger mb-3">WARNING! This action cannot be undone.</div>
+            <div className="d-flex gap-2">
+                <button className="btn btn-outline-danger" onClick={handleSubmit}>Delete User</button>
+                <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}>Cancel</button>
+            </div>
         </>
     )
 }

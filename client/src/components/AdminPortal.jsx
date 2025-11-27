@@ -99,7 +99,7 @@ function AdminPortal() {
 
             <div className="d-flex gap-2">
                 <button
-                className="btn btn-outline-secondary"
+                className="btn btn-outline-dark"
                 onClick={() => setOpenChangePassword(true)}
                 >
                 Change Password
