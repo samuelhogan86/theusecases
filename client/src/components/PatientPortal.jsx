@@ -35,14 +35,14 @@ function PatientPortal() {
             <div className="container mt-4" style={{ maxWidth: "100%", "--bs-gutter-x": "0" }}>
                 <div className="d-flex justify-content-between align-items-start">
                     <div>
-                    <h1 className="fw-bold mb-1">Patient Dashboard</h1>
-                    <p className="text-muted mb-4">Welcome, {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</p> {/* Should work once the sent information from database is processed */}
+                        <h1 className="fw-bold mb-1">Patient Dashboard</h1>
+                        <p className="text-muted mb-4">Welcome, {user ? `${user.firstName} ${user.lastName}` : 'Loading...'}</p> {/* Should work once the sent information from database is processed */}
                     </div>
-                <div className="d-flex gap-2">
-                    <button className="btn btn-outline-secondary" onClick={handleOpenChange}>Change Password</button>
-                    <button className="btn btn-outline-danger" onClick = {handleLogout}>Logout</button>
+                    <div className="d-flex gap-2">
+                        <button className="btn btn-outline-secondary" onClick={handleOpenChange}>Change Password</button>
+                        <button className="btn btn-outline-danger" onClick = {handleLogout}>Logout</button>
+                    </div>
                 </div>
-            </div>
             </div>
             <Modal
                 title="Change Password"
@@ -54,14 +54,14 @@ function PatientPortal() {
                 <ChangePassword userId={localStorage.getItem('userId')} closeModal={handleCloseChange} />
             </Modal>
             {/* My Appointments */}
-            <div className="container-fluid" style={{ minWidth: "90vw" }}>
-                <div className="card mb-4" style={{ border: "none"}}>
-                {/* Need to redo this section to include appointments and map them to the database */}
+        <div className="container-fluid" style={{ minWidth: "90vw" }}>
+            <div className="card mb-4" style={{ border: "none"}}>
                 <div className="border rounded-3 p-3">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h2 className="fw-semibold mb-0">My Appointments</h2>
                         <button className="btn btn-outline-secondary">View History</button>
                     </div>
+                    {/* Need to redo this section to include appointments and map them to the database */}
                     <div className="border rounded-3 p-4 mb-3">
                         {/* Replace raw data with actual data */}
                         <div className="d-flex justify-content-between">
