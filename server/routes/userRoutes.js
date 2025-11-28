@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { tokenValidator} = require("../middleware/authMiddleware");
+const { tokenValidator, requireRole} = require("../middleware/authMiddleware");
 const {getUserDash} = require("../controllers/userController");
 const {getAdminDash, registerUser, updateUser, deleteUser } = require('../controllers/adminController.js');
 
