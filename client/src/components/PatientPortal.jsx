@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import { useState } from 'react'
 import { Modal } from 'antd'
 import ChangePassword from './ChangePassword'
+import { handleLogout } from '../utils/logout'
 
 function PatientPortal() {
     const [appointments, setAppointments] = useState([]);
@@ -12,22 +13,6 @@ function PatientPortal() {
     const handleCloseChange = () => setOpenChangePassword(false);
 
 // User routes and REST Endpoints needed
-
-    const handleLogout = async () => {
-        try{
-            await fetch("http://localhost:3000/logout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-            });
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("userId");
-
-            window.location.href = "/";
-        } catch (err) {
-            console.log("Logout error", err);
-        }
-    };
 
     return (
         <>
