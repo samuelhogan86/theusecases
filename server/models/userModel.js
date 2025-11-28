@@ -311,6 +311,8 @@ userSchema.statics.getAdminDash = async function(){
 userSchema.statics.getUserById = async function(UserId){
     const user = await this.findOne({id: UserId}).
     select({id:1, firstName:1, lastName:1, username:1, role:1}); //1 for include
+
+    console.log("MODEL, retrieved user: ", user)
     return user
 }
 

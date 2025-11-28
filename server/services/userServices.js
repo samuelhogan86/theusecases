@@ -5,7 +5,7 @@ const Appointment = require('../models/appointmentModel');
 async function userDashService(UserId){
     try{
         //call model for userById
-        const userData = User.getUserById(UserId);
+        const userData = await User.getUserById(UserId);
         const role = userData.role;
         let appointments = null;
         if (role === 'patient') {
@@ -22,7 +22,7 @@ async function userDashService(UserId){
             }, 
             "appointments":appointments
         }
-        console.log("RETURNING PACKAGE FROM SERVICES: ", package);
+        console.log("RETURNING PACKAGE FROM SERVICES: ", payload);
         return payload
 
     }catch(err){
