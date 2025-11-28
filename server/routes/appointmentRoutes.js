@@ -9,6 +9,6 @@ router.delete('/:AppointmentId', tokenValidator, requireRole('patient'), cancelA
 
 
 //Schedule appointment
-
+router.post('/', tokenValidator, requireRole('admin'), scheduleAppointment);  
 
 //modify appointment
