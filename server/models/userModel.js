@@ -280,7 +280,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 
     console.log('Final updates to be applied:', updates);
 
-    //gotta to use mongo _id for findByIdAndUpdate
+    //got to use mongo _id for findByIdAndUpdate
     //need to make our own findbyIdAndUpdate function that uses id field
     const updatedUser = await this.findByIdAndUpdate(
         id,
@@ -302,10 +302,19 @@ userSchema.statics.deleteUserById= async function(id){
 
 //update this to retrieve all information for admin dashboard
 userSchema.statics.getAdminDash = async function(){
-    const users  = await this.find();
-    return users
+    const users  = await this.find().
+    select({id:1, firstName:1, lastName:1, username:1, role:1});
+    return users;
 }
 
-userSchema.statics.getUserById
-const User = mongoose.model('user', userSchema); // set model schema for user
+//get the current user info for dashboard. Never send back password hash
+userSchema.statics.getUserById = async function(UserId){
+    const user = await this.findOne({id: UserId}).
+    select({id:1, firstName:1, lastName:1, username:1, role:1}); //1 for include
+    return user
+}
+
+
+
+const User = mongoose.model('User', userSchema); // set model schema for user
 module.exports = User;

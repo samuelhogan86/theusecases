@@ -4,32 +4,26 @@ const Appointment = require('../models/appointmentModel');
 
 async function userDashService(UserId){
     try{
-        //package schema
-        let data = {
-            "user": {
-                "id":UserId, 
-                "firstName": "your", 
-                "lastName": "mom"
-        },
-            "appointments":[{
-                "appointmentId":123, 
-                "startTime":"today",
-                "endTime":"yesterday",
-                "doctor":"your moms doctor",
-                "patient":"Urself",
-                "lastUpdated":"in-progress"
-                }]
-        };
-
-
         //call model for userById
         const userData = User.getUserById(UserId);
-
-
-        //call model for AppointmentById
-        const appointments = Appointment.getUserAppointment(UserId);
-
+        const role = userData.role;
+        let appointments = null;
+        if (role === 'patient') {
+            appointments = await Appointment.findByPatient(userId);
+        } else if (role === 'doctor') {
+            appointments = await Appointment.findByDoctor(userId);
+        }
         //return package of information containint both user and appointments.
+        const package = {
+            "user":{
+                "UserId": userData.userId,
+                "firstName":userData.firstName,
+                "lastName":userData.lastName
+            }, 
+            "appointments":appointments
+        }
+        console.log("RETURNING PACKAGE FROM SERVICES: ", package);
+        return package
 
     }catch(err){
         console.log(err)
