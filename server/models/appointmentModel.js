@@ -5,19 +5,13 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: [true, "ID REQUIRED"]
   },
-  date: {
-    type: Date,
-    required: [true, 'Appointment date is required']
-  },
   startTime: {
-    type: String,
+    type: Date,
     required: [true, 'Start time is required'],
-    match: [/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid time format (HH:MM)']
   },
   endTime: {
-    type: String,
+    type: Date,
     required: [true, 'End time is required'],
-    match: [/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid time format (HH:MM)']
   },
   doctorId: {
     type: String, //mongoose.Schema.Types.ObjectId,
@@ -28,6 +22,15 @@ const appointmentSchema = new mongoose.Schema({
     type: String, //mongoose.Schema.Types.ObjectId,
     ref: 'User',//foreign object key
     required: [true, 'Patient is required']
+  },
+  status:{
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active', 
+    required: true
+  },
+  lastUpdated: {
+      type: Date
   }
 });
 
