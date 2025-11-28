@@ -6,3 +6,7 @@ const {getUserDash, cancelAppointment} = require("../controllers/appointmentCont
 
 //cancel an appointment, must be patient
 router.delete('/:AppointmentId', tokenValidator, requireRole('patient'), cancelAppointment);
+
+//Schedule appointment
+
+//modify appointment

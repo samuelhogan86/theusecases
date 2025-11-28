@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 
 module.exports.getUserDash =  async(req, res) =>{
     try{
+        //get session user id
         const UserId = req.user.id;
         console.log("CONTROLLER, request from: ", UserId)
         const userData = await userDashService(UserId);
