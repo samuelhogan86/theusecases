@@ -41,7 +41,6 @@ connectDB().then(async database => {
     });
 
     app.use('/api/auth', authRoute);
-    app.use('/api/admin', adminRoute);
     app.use('/api/users', userRoutes);
     
     // app.get("/users", async (req, res) => {
