@@ -10,8 +10,23 @@ const {getUserDash} = require("../controllers/userController");
 
 router.use(tokenValidator)
 //Get user dashboard information, must be associated user
-router.get('/me/dashboard', getUserDash);
+router.get('/user/dashboard', getUserDash);
+
+//Define routes. 
+//Dashboard should get, package of info, Patients, Their Appointments, and Doctors associated. 
+router.get('/admin/dashboard',tokenValidator, requireRole('admin'), getDash) 
+
+//register user
+router.post('/users', tokenValidator, requireRole('admin'), registerUser); 
+
+//update user by id
+router.put('/users/:UserId', tokenValidator, requireRole('admin'),updateUser);
+
+//delete user by id
+router.delete('/users/:UserId',tokenValidator, requireRole('admin'),deleteUser);
 
 
+
+module.exports = router;
 //
 module.exports = router;
