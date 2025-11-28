@@ -14,7 +14,7 @@ async function userDashService(UserId){
             appointments = await Appointment.findByDoctor(userId);
         }
         //return package of information containint both user and appointments.
-        const package = {
+        const payload = {
             "user":{
                 "UserId": userData.userId,
                 "firstName":userData.firstName,
@@ -23,7 +23,7 @@ async function userDashService(UserId){
             "appointments":appointments
         }
         console.log("RETURNING PACKAGE FROM SERVICES: ", package);
-        return package
+        return payload
 
     }catch(err){
         console.log(err)
