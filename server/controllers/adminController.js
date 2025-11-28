@@ -99,7 +99,7 @@ module.exports.deleteUser = async (req, res) => {
     }
 }
 
-module.exports.getDash = async(req, res) =>{
+module.exports.getAdminDash = async(req, res) =>{
     try{
         const [users, appointments] = await Promise.all([
             User.getAdminDash(),

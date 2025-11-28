@@ -1,10 +1,5 @@
 //requires user model. 
-const {userDashService} = require('../services/userServices');
-const Appointment = require('../services/appointmentService');
-
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
+const {userDashService} = require('../services/userService');
 
 module.exports.getUserDash =  async(req, res) =>{
     try{

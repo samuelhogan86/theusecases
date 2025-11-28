@@ -28,6 +28,15 @@ const appointmentSchema = new mongoose.Schema({
     type: String, //mongoose.Schema.Types.ObjectId,
     ref: 'User',//foreign object key
     required: [true, 'Patient is required']
+  },
+  status:{
+    type: String,
+    enum: ['active', 'inactive'],
+    default: 'active', 
+    required: true
+  },
+  lastUpdated: {
+      type: Date
   }
 });
 
