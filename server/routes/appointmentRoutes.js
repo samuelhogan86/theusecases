@@ -5,12 +5,12 @@ const {cancelAppointment, removeAppointment} = require("../controllers/appointme
 
 
 //cancel an appointment, must be patient
-router.patch('/:AppointmentId', tokenValidator, cancelAppointment);
+router.use(tokenValidator)
+router.patch('/:AppointmentId', cancelAppointment);
 
-router.delete('/:AppointmentId', tokenValidator, requireRole('admin'), removeAppointment);
+router.delete('/:AppointmentId', requireRole('admin'), removeAppointment);
+
+router.put('/:AppointmentId', requireRole('admin'), modifyAppointment);
 
 
-//Schedule appointment
-
-
-//modify appointment
+module.exports = router;

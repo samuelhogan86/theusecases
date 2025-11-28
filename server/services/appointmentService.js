@@ -5,25 +5,26 @@ async function getAdminDash() {
   return await Appointment.getAdminDash()
 }
 
-async function cancelService(appointmentId){
+async function cancelService(apptId){
   try{
-    const appointment = findOne({appointmentId: appointmentId})
-
-
+    const appointment = await Appointment.findOne({appointmentId: apptId});
+    appointment.status = 'inactive';
+    appointment.lastUpdated = new Date();
+    await appointment.save();
   }catch(err){
-
+    console.log(err)
   }
-
-
-
-}
-async function deleteService(appointmentId){
-  try{
-
-  }catch(err){
-
-  }
-
 }
 
-module.exports = {getAdminDash}
+
+async function deleteService(apptId){
+  try{
+    const appointment = await Appointment.deleteOne({appointmentId:apptId});
+    return appointment;
+  }catch(err){
+    console.log(err)
+  }
+
+}
+
+module.exports = {cancelService, deleteService}
