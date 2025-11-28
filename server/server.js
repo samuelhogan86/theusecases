@@ -6,7 +6,6 @@ const dotenv = require("dotenv")
 dotenv.config();
 
 const authRoute = require('./routes/authRoutes.js');
-const adminRoute = require('./routes/adminRoutes.js');
 const userRoutes = require('./routes/userRoutes.js')
 const { connectDB } = require("./config/db.js");
 
