@@ -10,11 +10,12 @@ module.exports.getUserDash =  async(req, res) =>{
     try{
         const UserId = req.user.id;
         console.log("CONTROLLER, request from: ", UserId)
-        const userData = userDashService(UserId);
+        const userData = await userDashService(UserId);
+
         res.status(200).json({
             message: "Retrieved Data Successfully", 
-            user: userData
-        })
+            payload: userData
+        });
     }catch(err){
         res.status(400).json({message:err.message})
     }

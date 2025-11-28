@@ -32,18 +32,21 @@ async function userDashService(UserId){
             doctorId: doctorMap[apt.doctorId] || apt.doctorId,  // Replace doctorId
             patientId: patientMap[apt.patientId] || apt.patientId  // Replace patientId
         }));
-        
+
         //return package of information containint both user and appointments.
         const payload = {
             "user":{
                 "UserId": userData.id,
                 "firstName":userData.firstName,
                 "lastName":userData.lastName,
+                "username":userData.username,
                 "role": role
             }, 
             "appointments":appointments
         }
         console.log("SERVICES, returning payload: ", payload);
+
+
         return payload
 
     }catch(err){
