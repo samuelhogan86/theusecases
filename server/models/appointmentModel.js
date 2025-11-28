@@ -20,12 +20,12 @@ const appointmentSchema = new mongoose.Schema({
     match: [/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, 'Invalid time format (HH:MM)']
   },
   doctorId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String, //mongoose.Schema.Types.ObjectId,
     ref: 'User', //mongoose looks up reference internally
     required: [true, 'Doctor is required']
   },
   patientId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String, //mongoose.Schema.Types.ObjectId,
     ref: 'User',//foreign object key
     required: [true, 'Patient is required']
   }
