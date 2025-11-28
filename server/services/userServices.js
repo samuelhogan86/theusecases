@@ -29,3 +29,5 @@ async function userDashService(UserId){
         console.log(err)
     }
 }
+
+module.exports = {userDashService}
