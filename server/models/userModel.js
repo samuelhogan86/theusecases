@@ -302,15 +302,18 @@ userSchema.statics.deleteUserById= async function(id){
 
 //update this to retrieve all information for admin dashboard
 userSchema.statics.getAdminDash = async function(){
-    const users  = await this.find().
-    select({id:1, firstName:1, lastName:1, username:1, role:1});
+    const users  = await this.find()
+    .select({id:1, firstName:1, lastName:1, username:1, role:1})
+    .lean();
     return users;
 }
 
 //get the current user info for dashboard. Never send back password hash
 userSchema.statics.getUserById = async function(UserId){
-    const user = await this.findOne({id: UserId}).
-    select({id:1, firstName:1, lastName:1, username:1, role:1}); //1 for include
+    //1 for include
+    const user = await this.findOne({id: UserId})
+    .select({id:1, firstName:1, lastName:1, username:1, role:1})
+    .lean(); 
 
     console.log("MODEL, retrieved user: ", user)
     return user

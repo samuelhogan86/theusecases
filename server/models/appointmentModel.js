@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const appointmentSchema = new mongoose.Schema({
-  aptId:{ 
+  appointmentId:{ 
     type: String,
     required: [true, "ID REQUIRED"]
   },
@@ -34,8 +34,6 @@ const appointmentSchema = new mongoose.Schema({
 // Static: Get all appointments with populated names
 appointmentSchema.statics.getAdminDash = async function() {
   return await this.find()
-    .populate('doctorId', 'firstName lastName _id id role')
-    .populate('patientId', 'firstName lastName _id id role')
     .lean() //returns plain JS objects instead of documents
     .sort({ date: 1, startTime: 1 });
 };
@@ -47,21 +45,23 @@ appointmentSchema.methods.getAppointments = async function(){
 }
 
 appointmentSchema.statics.findByPatient = async function(UserId){
-  return appointments = await this.find({patientId: UserId})
-  .populate('patientId', 'firstName lastName _id id role')
-  .populate('doctorId', 'firstName lastName _id id role') 
+  const appointments = await this.find({patientId:UserId})
   .lean()
   .sort({ date: 1, startTime: 1 });
   //user reference, joins the object with it's values fName, lName, etc.
+  console.log("MODEL, Retrieving Appointments: ", appointments)
+  return appointments
 }
 
 appointmentSchema.statics.findByDoctor = async function(UserId){
-  return appointments = await this.find({doctorId:UserId})
-  .populate('patientId', 'firstName lastName _id id role')
-  .populate('doctorId', 'firstName lastName _id id role') 
+  const appointments = await this.find({doctorId:UserId})
   .lean()
   .sort({ date: 1, startTime: 1 });
   //sorts by date first then starttime
+  console.log("MODEL, Retrieving Appointments: ", appointments) 
+  return appointments
 }
+
+
 const Appointment = mongoose.model('appointment', appointmentSchema);
 module.exports = Appointment;
