@@ -29,12 +29,14 @@ async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
   let isUnique = false;
   let attempts = 0;
   const maxAttemps = 10;
+  let appointmentId;
+  
   while (!isUnique && attempts < maxAttemps) {
 
     const randomNum = Math.floor(100000 + Math.random() * 900000);
-    const appointmentId = `APPT${randomNum}`;
+    appointmentId = `APPT${randomNum}`;
 
-    const existingAppointment = await Appointment.findOne({ appointmentId });
+    const existingAppointment = await Appointment.findOne({ appointmentId: appointmentId });
     if (!existingAppointment) {
       isUnique = true;
     }
@@ -45,12 +47,17 @@ async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
     throw new Error('Failed to generate a unique appointment ID');
   }
 
+  const status = 'active';
+  const lastUpdated = new Date();
+
   const appointmentData = {
     appointmentId,
     startTime,
     endTime,
     doctorId,
-    patientId
+    patientId,
+    status,
+    lastUpdated
   }
 
   try {

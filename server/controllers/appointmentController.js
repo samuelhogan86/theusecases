@@ -10,10 +10,13 @@ const handleErrors = (err) => {
 
 module.exports.scheduleAppointment = async (req, res) => {
     const { startTime, endTime, doctorId, patientId } = req.body;
+
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
     console.log(startTime, endTime, doctorId, patientId);
     try {
 
-        const appointment = await Appointment.scheduleAppointment(startTime, endTime, doctorId, patientId);
+        const appointment = await Appointment.scheduleAppointment(startDate, endDate, doctorId, patientId);
         const appointmentResponse = appointment.toObject();
 
         res.status(201).json({
