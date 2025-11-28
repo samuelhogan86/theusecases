@@ -27,4 +27,8 @@ async function deleteService(apptId){
 
 }
 
+async function modifyService(){
+  return;
+}
+
 module.exports = {cancelService, deleteService}
