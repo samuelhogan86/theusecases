@@ -1,3 +1,4 @@
+//Importing 
 const express = require('express');
 const router = express.Router();
 const { tokenValidator, requireRole} = require("../middleware/authMiddleware");
@@ -11,7 +12,7 @@ const {getAdminDash, registerUser, updateUser, deleteUser } = require('../contro
 
 router.use(tokenValidator)
 //Get user dashboard information, must be associated user
-router.get('/user/dashboard', getUserDash);
+//router.get('/user/dashboard', getUserDash);
 
 //Define routes. 
 //Dashboard should get, package of info, Patients, Their Appointments, and Doctors associated. 
@@ -28,5 +29,4 @@ router.delete('/:UserId', requireRole('admin'),deleteUser);
 
 
 
-//
 module.exports = router;
