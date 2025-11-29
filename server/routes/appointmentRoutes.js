@@ -6,7 +6,8 @@ const {cancelAppointment, removeAppointment} = require("../controllers/appointme
 
 //cancel an appointment, must be patient
 router.use(tokenValidator)
-router.patch('/:AppointmentId', cancelAppointment);
+
+router.patch('/:AppointmentId', cancelAppointment); //only patch status
 
 router.delete('/:AppointmentId', requireRole('admin'), removeAppointment);
 
