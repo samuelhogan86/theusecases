@@ -5,10 +5,18 @@ const User = require('../models/userModel');
 async function cancelService(apptId){
   try{
     const appointment = await Appointment.findOne({appointmentId: apptId});
+    console.log(appointment)
+    console.log("SERVICE, doctorId type:", typeof appointment.doctorId);
+    console.log("SERVICE, patientId type:", typeof appointment.patientId);
+    if (!appointment){
+      console.log("SERVICE, No appointment found");
+      return null;
+    }
     appointment.status = 'inactive';
     appointment.lastUpdated = new Date();
-    const savedAppointment = await appointment.save();
-    return savedAppointment;
+    console.log("SERVICE, updated appointment: ", appointment)
+    // const savedAppointment = await appointment.save();
+    // return savedAppointment;
   }catch(err){
     console.error("SERVICE, error", err);
     throw err;
@@ -19,7 +27,12 @@ async function cancelService(apptId){
 async function deleteService(apptId){
   try{
     const appointment = await Appointment.deleteOne({appointmentId:apptId});
-    return appointment;
+    if (!appointment){
+      console.log("SERVICE, No appointment found");
+      return null;
+    }
+    console.log("SERVICE, deleted appointment: ", appointment)
+    return appointment
   }catch(err){
     console.error("SERVICE, error", err);
     throw err;

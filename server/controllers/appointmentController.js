@@ -3,8 +3,7 @@ const {cancelService, removeService } = require('../services/appointmentService'
 module.exports.cancelAppointment = async (req, res) =>{
     try{
         const {appointmentId}= req.params;
-        const updates = req.body;
-        const appointment = await cancelService(appointmentId, updates);
+        const appointment = await cancelService(appointmentId);
         res.status(201).json({
             message:"Update appointment status successfully",
             updates: appointment
