@@ -9,7 +9,7 @@ const { getDash, registerUser, updateUser, deleteUser } = require('../controller
 //Define routes. 
 router.use(tokenValidator, requireRole('admin'));
 //Dashboard should get, package of info, Patients, Their Appointments, and Doctors associated. 
-router.get('/dashboard', getDash) 
+router.get('/dashboard', getDash);
 
 //register user
 router.post('/users', registerUser); 

@@ -8,7 +8,7 @@ dotenv.config();
 const authRoute = require('./routes/authRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const appointmentRoutes = require('./routes/appointmentRoutes.js');
-const adminRoutes = require('./routes/appointmentRoutes.js');
+const adminRoutes = require('./routes/adminRoutes.js');
 const { connectDB } = require("./config/db.js");
 
 const app = express();
@@ -44,7 +44,7 @@ connectDB().then(async database => {
     app.use('/api/auth', authRoute);
     app.use('/api/appointments', appointmentRoutes);
     app.use('/api/users', userRoutes);
-    app.use('/api/admin', adminRoutes)
+    app.use('/api/admin', adminRoutes);
     
     // app.get("/users", async (req, res) => {
     //     const users = await db.collection("users").find().toArray();
