@@ -7,7 +7,7 @@ function DeleteUserForm(props) {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:3000/admin/users/${userId}`, {
+            const res = await fetch(`http://localhost:3000/api/admin/users/${userId}`, {
                 method: "DELETE",
                 headers: {
                         'Authorization': `Bearer ${token}`

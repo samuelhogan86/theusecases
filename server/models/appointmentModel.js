@@ -37,7 +37,9 @@ const appointmentSchema = new mongoose.Schema({
 // Static: Get all appointments with populated names
 appointmentSchema.statics.getAdminDash = async function() {
   return await this.find()
-    .lean() //returns plain JS objects instead of documents
+    // .populate('doctorId', 'firstName lastName _id id')
+    // .populate('patientId', 'firstName lastName _id id')
+    .lean()
     .sort({ date: 1, startTime: 1 });
 };
 

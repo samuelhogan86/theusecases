@@ -15,7 +15,7 @@ function PatientPortal() {
         const fetchPatientData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch("http://localhost:3000/user/patient/dashboard", {
+                const response = await fetch("http://localhost:3000/api/user/patient/dashboard", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
