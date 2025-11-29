@@ -44,7 +44,7 @@ connectDB().then(async database => {
     app.use('/api/auth', authRoute);
     app.use('/api/appointments', appointmentRoutes);
     app.use('/api/users', userRoutes);
-    app.use('/api/admin')
+    app.use('/api/admin', adminRoutes)
     
     // app.get("/users", async (req, res) => {
     //     const users = await db.collection("users").find().toArray();
