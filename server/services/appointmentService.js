@@ -125,5 +125,5 @@ async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
   }
 
 }
-module.exports = {cancelService, deleteService, modifyService, getAdminDash, scheduleAppointment}
+module.exports = {cancelService, deleteService, modifyService, scheduleAppointment}
 
