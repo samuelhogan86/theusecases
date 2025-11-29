@@ -20,10 +20,6 @@ router.put('/users/:UserId', updateUser);
 //delete user by id
 router.delete('/users/:UserId', deleteUser);
 
-// // get user by ID
-// router.get('/user/:UserId', )
 
-// //get appointment 
-// router.get('/appointments/:AppointmentId') 
 
 module.exports = router;

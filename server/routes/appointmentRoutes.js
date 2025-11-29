@@ -1,17 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const { tokenValidator , requireRole} = require("../middleware/authMiddleware");
-const { scheduleAppointment } = require("../controllers/appointmentController");
+const {cancelAppointment, removeAppointment, scheduleAppointment, modifyAppointment} = require("../controllers/appointmentController");
 
 
 //cancel an appointment, must be patient
-//router.delete('/:AppointmentId', tokenValidator, requireRole('patient'), cancelAppointment);
+router.use(tokenValidator)
 
-//Delete appointment, must be admin
+router.patch('/:AppointmentId', cancelAppointment); //only patch status
+
+router.delete('/:AppointmentId', requireRole('admin'), removeAppointment);
+
+router.put('/:AppointmentId', requireRole('admin'), modifyAppointment);
 
 //Schedule appointment
-router.post('/', tokenValidator, requireRole('admin'), scheduleAppointment);  
+router.post('/', requireRole('admin'), scheduleAppointment);  
 
 //modify appointment
 
 module.exports = router;
+
