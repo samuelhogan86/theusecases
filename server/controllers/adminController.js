@@ -84,7 +84,7 @@ module.exports.updateUser = async (req, res) => {
 
 module.exports.deleteUser = async (req, res) => {
     try{
-        let { id } = req.params;
+        const { id } = req.params;
         const user = await User.deleteUserById(id);
         if(!user){
             return res.status(404).json({message:"User Not Found"});
