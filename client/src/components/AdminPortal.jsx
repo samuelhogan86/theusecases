@@ -2,6 +2,8 @@ import '../styles.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'antd';
+import { NewAppointmentForm } from './NewAppointmentForm';
+import { AppointmentInformation } from './AppointmentInformation';
 import RegisterUserForm from './RegisterUserForm';
 import UserInformation from './UserInformation';
 import ChangePassword from './ChangePassword';
@@ -11,8 +13,11 @@ function AdminPortal() {
     const [appointments, setAppointments] = useState([]);
     const [users, setUsers] = useState([]);
     const [activeTab, setActiveTab] = useState('appointments');
+    const [openNewAppointment, setOpenNewAppointment] = useState(false);
     const [openAdd, setOpenAdd] = useState(false);
-    const [openviewUserInfo, setOpenviewUserInfo] = useState(false);
+    const [openViewAppointmentInfo, setOpenViewAppointmentInfo] = useState(false);
+    const [openViewUserInfo, setopenViewUserInfo] = useState(false);
+    const [currentAppointment, setCurrentAppointment] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
     const [openChangePassword, setOpenChangePassword] = useState(false);
 
@@ -35,14 +40,13 @@ function AdminPortal() {
 
         const fetchUsers = async () => {
             try {
-                const token = localStorage.getItem('token');    
-                const response = await fetch("http://localhost:3000/api/admin/dashboard",  {
+                const token = localStorage.getItem('token');
+                const response = await fetch("http://localhost:3000/api/admin/dashboard", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const data = await response.json();
-                console.log("Got users");
                 setUsers(data.users);
             } catch (err) {
                 console.log("Error fetching users");
@@ -53,44 +57,55 @@ function AdminPortal() {
         fetchUsers();
     }, []);
 
-    // Handle opening and closing add popup
+    // Handle opening and closing new appointment popup
+    const handleNewAppointment = () => setOpenNewAppointment(true);
+    const handleCloseNewAppointment = () => setOpenNewAppointment(false);
+
+    // Handle opening and closing appointment info popup (entrypoint for update/delete appointment)
+    const handleViewAppointmentInfo = (appointment) => {
+        setCurrentAppointment(appointment);
+        setOpenViewAppointmentInfo(true);
+    }
+    const handleCloseViewAppointmentInfo = () => setOpenViewAppointmentInfo(false);
+
+    // Handle opening and closing add user popup
     const handleAdd = () => setOpenAdd(true);
     const handleCloseAdd = () => setOpenAdd(false);
 
     // Handle opening and closing user info popup (entrypoint for update/delete user)
-    const handleviewUserInfo = (user) => {
+    const handleViewUserInfo = (user) => {
         setCurrentUser(user);
-        setOpenviewUserInfo(true);
+        setopenViewUserInfo(true);
     };
-    const handleCloseviewUserInfo = () => setOpenviewUserInfo(false);
+    const handleCloseviewUserInfo = () => setopenViewUserInfo(false);
 
     return (
         <>
             {/* HEADER */}
-        <div className="container mt-4">
-            <div className="d-flex justify-content-between align-items-start">
-            <div>
-                <h1 className="fw-bold mb-1">Admin Dashboard</h1>
-                <p className="text-muted mb-4">Manage Users and Appointments</p>
-            </div>
+            <div className="container mt-4">
+                <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1 className="fw-bold mb-1">Admin Dashboard</h1>
+                        <p className="text-muted mb-4">Manage Users and Appointments</p>
+                    </div>
 
-            <div className="d-flex gap-2">
-                <button
-                className="btn btn-outline-secondary"
-                onClick={() => setOpenChangePassword(true)}
-                >
-                Change Password
-                </button>
+                    <div className="d-flex gap-2">
+                        <button
+                            className="btn btn-outline-secondary"
+                            onClick={() => setOpenChangePassword(true)}
+                        >
+                            Change Password
+                        </button>
 
-            <button
-                className="btn btn-outline-danger"
-                onClick={handleLogout}
-            >
-                Logout
-            </button>
+                        <button
+                            className="btn btn-outline-danger"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
 
             {/* Change Password Modal for logged-in admin */}
             <Modal
@@ -145,7 +160,7 @@ function AdminPortal() {
                 </ul>
             </div>
 
-                {/* Appointments Tab */}
+            {/* Appointments Tab */}
             <div className="dashboard-section">
                 <div
                     id="appointments"
@@ -158,7 +173,7 @@ function AdminPortal() {
                                 <option>Search by Patient</option>
                                 <option>Search by Doctor</option>
                             </select>
-                            <button className="dashboard-btn dashboard-btn-primary">+ New Appointment</button>
+                            <button className="dashboard-btn dashboard-btn-primary" onClick={handleNewAppointment}>+ New Appointment</button>
                         </div>
                     </div>
 
@@ -172,6 +187,7 @@ function AdminPortal() {
                                         <th>End time</th>
                                         <th>Doctor</th>
                                         <th>Patient</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -183,19 +199,20 @@ function AdminPortal() {
                                                 <td>{appointment.endTime}</td>
                                                 <td>
                                                     {appointment.doctorId
-                                                    ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
-                                                    : "Unknown"}
+                                                        ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
+                                                        : "Unknown"}
                                                 </td>
                                                 <td>
                                                     {appointment.patientId
-                                                    ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
-                                                    : "Unknown"}
+                                                        ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
+                                                        : "Unknown"}
                                                 </td>
+                                                <td><Button type="primary" onClick={() => handleViewAppointmentInfo(appointment)}>View Information</Button></td>
                                             </tr>
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="4" style={{ textAlign: "center" }}>
+                                            <td colSpan="6" style={{ textAlign: "center" }}>
                                                 No appointments found.
                                             </td>
                                         </tr>
@@ -203,13 +220,13 @@ function AdminPortal() {
                                 </tbody>
                             </table>
 
-                            <div className="dashboard-pagination">
+                            {/* <div className="dashboard-pagination">
                                 <button className="dashboard-btn">Prev</button>
                                 <div className="dashboard-page-info">
                                     Page <input type="number" className="dashboard-page-input" value="1" readOnly min="1" max="3" /> of 3
                                 </div>
                                 <button className="dashboard-btn">Next</button>
-                            </div>
+                            </div> */}
                         </div>
                     )}
                 </div>
@@ -245,30 +262,54 @@ function AdminPortal() {
                                                     <td>{user.username}</td>
                                                     <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
                                                     <td>{user.status || "Active"}</td>
-                                                    <td><Button type="primary" onClick={() => handleviewUserInfo(user)}>View Information</Button></td>
+                                                    <td><Button type="primary" onClick={() => handleViewUserInfo(user)}>View Information</Button></td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="4" style={{ textAlign: "center" }}>
+                                                <td colSpan="5" style={{ textAlign: "center" }}>
                                                     No users found.
                                                 </td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </table>
-                                <div className="dashboard-pagination">
+                                {/* <div className="dashboard-pagination">
                                     <button className="dashboard-btn">Prev</button>
                                     <div className="dashboard-page-info">
                                         Page <input type="number" className="dashboard-page-input" value="1" readOnly min="1" max="1" /> of 1
                                     </div>
                                     <button className="dashboard-btn">Next</button>
-                                </div>
+                                </div> */}
                             </div>
                         </>
                     )}
                 </div>
             </div>
+
+            {/* Popup for viewing appointment info */}
+            <Modal
+                title="Appointment Information"
+                open={openViewAppointmentInfo}
+                onCancel={handleCloseViewAppointmentInfo}
+                footer={null}
+                centered
+            >
+                {currentAppointment &&
+                    <AppointmentInformation appointment={currentAppointment} />
+                }
+            </Modal>
+
+            {/* Popup form for adding new appointment */}
+            <Modal
+                title="Schedule New Appointment"
+                open={openNewAppointment}
+                onCancel={handleCloseNewAppointment}
+                footer={null}
+                centered
+            >
+                <NewAppointmentForm closeModal={handleCloseNewAppointment} users={users}/>
+            </Modal>
 
             {/* Popup form for registering new user */}
             <Modal
@@ -284,12 +325,12 @@ function AdminPortal() {
             {/* Popup for viewing user info */}
             <Modal
                 title="User Information"
-                open={openviewUserInfo}
+                open={openViewUserInfo}
                 onCancel={handleCloseviewUserInfo}
                 footer={null}
                 centered
             >
-                {currentUser && 
+                {currentUser &&
                     <UserInformation user={currentUser} />
                 }
             </Modal>
