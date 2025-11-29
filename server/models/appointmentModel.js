@@ -35,27 +35,24 @@ const appointmentSchema = new mongoose.Schema({
 });
 
 // Static: Get all appointments with populated names
-appointmentSchema.statics.getAdminDash = async function() {
-  return await this.find()
-    // .populate('doctorId', 'firstName lastName _id id')
-    // .populate('patientId', 'firstName lastName _id id')
+appointmentSchema.statics.getAppointments = async function() {
+  const appointments = await this.find()
     .lean()
     .sort({ date: 1, startTime: 1 });
+  console.log("MODEL, Retrieving Appointments");
+  return appointments;
 };
 
 
 //The following functions can be cleaned with this schema methods
-appointmentSchema.methods.getAppointments = async function(){
-  return
-}
 
 appointmentSchema.statics.findByPatient = async function(UserId){
   const appointments = await this.find({patientId:UserId})
   .lean()
   .sort({ date: 1, startTime: 1 });
   //user reference, joins the object with it's values fName, lName, etc.
-  console.log("MODEL, Retrieving Appointments: ", appointments)
-  return appointments
+  console.log("MODEL, Retrieving Appointments: ", appointments);
+  return appointments;
 }
 
 appointmentSchema.statics.findByDoctor = async function(UserId){
@@ -63,8 +60,8 @@ appointmentSchema.statics.findByDoctor = async function(UserId){
   .lean()
   .sort({ date: 1, startTime: 1 });
   //sorts by date first then starttime
-  console.log("MODEL, Retrieving Appointments: ", appointments) 
-  return appointments
+  console.log("MODEL, Retrieving Appointments: ", appointments) ;
+  return appointments;
 }
 
 

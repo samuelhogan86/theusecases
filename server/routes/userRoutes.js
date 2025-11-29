@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const { tokenValidator, requireRole} = require("../middleware/authMiddleware");
 const {getUserDash} = require("../controllers/userController");
-const {getDash, registerUser, updateUser, deleteUser } = require('../controllers/adminController.js');
+const {registerUser, updateUser, deleteUser } = require('../controllers/adminController.js');
 
 
 // Doctors only have 'view' permissions for appointments
@@ -12,12 +12,7 @@ const {getDash, registerUser, updateUser, deleteUser } = require('../controllers
 
 router.use(tokenValidator)
 //Get user dashboard information, must be associated user
-//router.get('/user/dashboard', getUserDash);
-
-//Define routes. 
-//Dashboard should get, package of info, Patients, Their Appointments, and Doctors associated. 
-router.get('/admin/dashboard', requireRole('admin'), getDash) 
-
+router.get('/user/dashboard', getUserDash);
 //register user
 router.post('/', requireRole('admin'), registerUser); 
 

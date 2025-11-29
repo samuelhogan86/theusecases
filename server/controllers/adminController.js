@@ -1,7 +1,6 @@
 //requires user model. 
 const User = require('../models/userModel');
-const Appointment = require('../services/appointmentService');
-
+const {userDashService} = require('../services/userService');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -99,16 +98,30 @@ module.exports.deleteUser = async (req, res) => {
     }
 }
 
-module.exports.getDash = async(req, res) =>{
+// module.exports.getDash = async(req, res) =>{
+//     try{
+//         const [users, appointments] = await Promise.all([
+//             User.getAdminDash(),
+//             Appointment.getAdminDash()
+//         ]);
+//         res.status(200).json({
+//             message: "dashboard data sent",
+//             users: users,
+//             appointments: appointments
+//         });
+//     }catch(err){
+//         res.status(500).json({message:err.message});
+//     }   
+// }
+
+
+module.exports.getAdminDash = async(req, res) =>{
     try{
-        const [users, appointments] = await Promise.all([
-            User.getAdminDash(),
-            Appointment.getAdminDash()
-        ]);
+        const UserId = req.user.id;
+        const userData = await userDashService(UserId);
         res.status(200).json({
             message: "dashboard data sent",
-            users: users,
-            appointments: appointments
+            payload: userData
         });
     }catch(err){
         res.status(500).json({message:err.message});

@@ -2,9 +2,6 @@ const Appointment = require('../models/appointmentModel');
 const User = require('../models/userModel');
 
 // Static: Get all appointments with populated names
-async function getAdminDash(){
-  return await Appointment.getAdminDash();
-}
 async function cancelService(apptId){
   try{
     const appointment = await Appointment.findOne({appointmentId: apptId});
@@ -128,5 +125,5 @@ async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
   }
 
 }
-module.exports = {cancelService, deleteService, modifyService, scheduleAppointment, getAdminDash}
+module.exports = {cancelService, deleteService, modifyService, scheduleAppointment}
 
