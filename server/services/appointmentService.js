@@ -61,7 +61,8 @@ async function modifyService(apptId, updates){
 
   }catch(err){
     console.error("SERVICE, error", err);
-
+  }
+}
 async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
 
   if (!startTime || !endTime || !doctorId || !patientId) {
