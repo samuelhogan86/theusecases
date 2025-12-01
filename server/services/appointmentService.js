@@ -4,7 +4,8 @@ const User = require('../models/userModel');
 // Static: Get all appointments with populated names
 async function cancelService(apptId){
   try{
-    const appointment = await Appointment.findOne({appointmentId: apptId});
+    console.log(apptId)
+    const appointment = await Appointment.findOne({apptId});
     console.log(appointment)
     console.log("SERVICE, doctorId type:", typeof appointment.doctorId);
     console.log("SERVICE, patientId type:", typeof appointment.patientId);
@@ -26,7 +27,7 @@ async function cancelService(apptId){
 
 async function deleteService(apptId){
   try{
-    const appointment = await Appointment.deleteOne({appointmentId:apptId});
+    const appointment = await Appointment.deleteOne({apptId});
     if (!appointment){
       console.log("SERVICE, No appointment found");
       return null;
@@ -41,7 +42,7 @@ async function deleteService(apptId){
 
 async function modifyService(apptId, updates){
   try{
-    const appointment = await Appointment.findOne({appointmentId:apptId})
+    const appointment = await Appointment.findOne({apptId})
     if (!appointment){
       console.log("SERVICE, No appointment found");
       return null;
