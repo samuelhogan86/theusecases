@@ -1,64 +1,64 @@
 import { useState } from "react";
+import { DatePicker, TimePicker, Select } from "antd";
+import dayjs from "dayjs";
 
 // Same as scheduling new appointment, except fields are not required and status can be updated
 function UpdateAppointmentForm(props) {
-    const appointmentId = props.appointment._id;
-    const [date, setDate] = useState(null);
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
-    const [doctorId, setDoctorId] = useState(props.appointment.doctorId || "doctor");
-    const [patientId, setPatientId] = useState(props.appointment.patientId || "patient");
-    const [errors, setErrors] = useState(
-        { date: "", startTime: "", endTime: "", doctorId: "", patientId: "" }
-    );
-    const users = props.users;
+    const appointment = props.appointment;
+    const appointmentId = appointment._id;
+
+    // Extract initial values from the appointment DateTime objects
+    const initialStartDateTime = new Date(appointment.startTime);
+    const initialEndDateTime = new Date(appointment.endTime);
+
+    // Format date for input (YYYY-MM-DD)
+    const formatDateForInput = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    // Format time for input (HH:MM)
+    const formatTimeForInput = (date) => {
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    };
+
+    const [date, setDate] = useState(formatDateForInput(initialStartDateTime));
+    const [startTime, setStartTime] = useState(formatTimeForInput(initialStartDateTime));
+    const [endTime, setEndTime] = useState(formatTimeForInput(initialEndDateTime));
+    const [doctorId, setDoctorId] = useState(appointment.doctorId?._id || appointment.doctorId || "");
+    const [patientId, setPatientId] = useState(appointment.patientId?._id || appointment.patientId || "");
+    const [errors, setErrors] = useState({
+        date: "",
+        startTime: "",
+        endTime: "",
+        doctorId: "",
+        patientId: ""
+    });
+
+    const users = props.users || [];
     const doctors = users.filter(user => user.role === "doctor");
     const patients = users.filter(user => user.role === "patient");
-
-    // Generate time options in 15-minute intervals from 8 AM to 6 PM
-    const generateTimeOptions = () => {
-        const options = [];
-        for (let hour = 8; hour <= 18; hour++) {
-            for (let minute = 0; minute < 60; minute += 15) {
-                if (hour === 18 && minute > 0) break; // Stop at 6 PM
-                const time = dayjs().hour(hour).minute(minute).second(0);
-                options.push({
-                    label: time.format('h:mm A'),
-                    value: time.format('HH:mm')
-                });
-            }
-        }
-        return options;
-    }
-
-    const timeOptions = generateTimeOptions();
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({ date: "", startTime: "", endTime: "", doctorId: "", patientId: "" });
 
-        // Combine date and time to create DateTime objects
-        const [startHour, startMinute] = startTime.split(':');
-        const [endHour, endMinute] = endTime.split(':');
-        const startDateTime = dayjs(date)
-            .hour(parseInt(startHour))
-            .minute(parseInt(startMinute))
-            .second(0)
-            .toISOString();
-        const endDateTime = dayjs(date)
-            .hour(parseInt(endHour))
-            .minute(parseInt(endMinute))
-            .second(0)
-            .toISOString();
-
         try {
+            // Combine date and time into DateTime objects
+            const startDateTime = new Date(`${date}T${startTime}`);
+            const endDateTime = new Date(`${date}T${endTime}`);
+
             const token = localStorage.getItem("token");
             const res = await fetch(`http://localhost:3000/api/appointments/${appointmentId}`, {
                 method: "PUT",
                 body: JSON.stringify({
-                    startTime: startDateTime,
-                    endTime: endDateTime,
+                    startTime: startDateTime.toISOString(),
+                    endTime: endDateTime.toISOString(),
                     doctorId,
                     patientId
                 }),
@@ -72,6 +72,7 @@ function UpdateAppointmentForm(props) {
 
             if (res.ok) {
                 console.log("Appointment successfully updated!");
+                window.location.reload();
                 // Close modal
                 if (props.closeModal) props.closeModal();
             } else {
@@ -86,7 +87,7 @@ function UpdateAppointmentForm(props) {
         } catch (err) {
             console.log("Update appointment error", err);
         }
-    }
+    };
 
     return (
         <>
@@ -170,7 +171,7 @@ function UpdateAppointmentForm(props) {
                 </button>
             </form>
         </>
-    )
+    );
 }
 
 export default UpdateAppointmentForm;

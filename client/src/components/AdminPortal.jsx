@@ -192,24 +192,52 @@ function AdminPortal() {
                                 </thead>
                                 <tbody>
                                     {appointments && appointments.length > 0 ? (
-                                        appointments.map((appointment) => (
-                                            <tr key={appointment._id}>
-                                                <td>{new Date(appointment.date).toLocaleDateString()}</td>
-                                                <td>{appointment.startTime}</td>
-                                                <td>{appointment.endTime}</td>
-                                                <td>
-                                                    {appointment.doctorId
-                                                        ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
-                                                        : "Unknown"}
-                                                </td>
-                                                <td>
-                                                    {appointment.patientId
-                                                        ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
-                                                        : "Unknown"}
-                                                </td>
-                                                <td><Button type="primary" onClick={() => handleViewAppointmentInfo(appointment)}>View Information</Button></td>
-                                            </tr>
-                                        ))
+                                        appointments.map((appointment) => {
+                                            // Extract date and time from DateTime objects
+                                            const startDateTime = new Date(appointment.startTime);
+                                            const endDateTime = new Date(appointment.endTime);
+
+                                            // Format date (MM/DD/YYYY)
+                                            const dateStr = startDateTime.toLocaleDateString();
+
+                                            // Format times (HH:MM AM/PM)
+                                            const startTimeStr = startDateTime.toLocaleTimeString('en-US', {
+                                                hour: 'numeric',
+                                                minute: '2-digit',
+                                                hour12: true
+                                            });
+                                            const endTimeStr = endDateTime.toLocaleTimeString('en-US', {
+                                                hour: 'numeric',
+                                                minute: '2-digit',
+                                                hour12: true
+                                            });
+
+                                            return (
+                                                <tr key={appointment._id}>
+                                                    <td>{dateStr}</td>
+                                                    <td>{startTimeStr}</td>
+                                                    <td>{endTimeStr}</td>
+                                                    <td>
+                                                        {appointment.doctorId
+                                                            ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
+                                                            : "Unknown"}
+                                                    </td>
+                                                    <td>
+                                                        {appointment.patientId
+                                                            ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
+                                                            : "Unknown"}
+                                                    </td>
+                                                    <td>
+                                                        <Button
+                                                            type="primary"
+                                                            onClick={() => handleViewAppointmentInfo(appointment)}
+                                                        >
+                                                            View Information
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })
                                     ) : (
                                         <tr>
                                             <td colSpan="6" style={{ textAlign: "center" }}>
@@ -296,7 +324,7 @@ function AdminPortal() {
                 centered
             >
                 {currentAppointment &&
-                    <AppointmentInformation appointment={currentAppointment} />
+                    <AppointmentInformation appointment={currentAppointment} users={users} />
                 }
             </Modal>
 
@@ -308,7 +336,7 @@ function AdminPortal() {
                 footer={null}
                 centered
             >
-                <NewAppointmentForm closeModal={handleCloseNewAppointment} users={users}/>
+                <NewAppointmentForm closeModal={handleCloseNewAppointment} users={users} />
             </Modal>
 
             {/* Popup form for registering new user */}

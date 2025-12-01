@@ -7,7 +7,7 @@ function NewAppointmentForm(props) {
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
     const [doctorId, setDoctorId] = useState("");
-    const [patientId, setPatientId] = useState("patient");
+    const [patientId, setPatientId] = useState("");
     const [errors, setErrors] = useState(
         { date: "", startTime: "", endTime: "", doctorId: "", patientId: "" }
     );
@@ -37,6 +37,19 @@ function NewAppointmentForm(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setErrors({ date: "", startTime: "", endTime: "", doctorId: "", patientId: "" });
+
+        // Handle errors and stop submission if necessary
+        const newErrors = {};
+        if (!date) newErrors.date = "Date is required";
+        if (!startTime) newErrors.startTime = "Start time is required";
+        if (!endTime) newErrors.endTime = "End time is required";
+        if (!doctorId) newErrors.doctorId = "Doctor is required";
+        if (!patientId) newErrors.patientId = "Patient is required";
+        // If any errors exist, stop submission
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
 
         // Combine date and time to create DateTime objects
         const [startHour, startMinute] = startTime.split(':');
@@ -139,7 +152,7 @@ function NewAppointmentForm(props) {
                         style={{ width: '100%' }}
                     >
                         {doctors.map(doctor => (
-                            <Select.Option key={doctor._id} value={doctor.id}>
+                            <Select.Option key={doctor.id} value={doctor.id}>
                                 {doctor.firstName} {doctor.lastName}
                             </Select.Option>
                         ))}
@@ -157,7 +170,7 @@ function NewAppointmentForm(props) {
                         style={{ width: '100%' }}
                     >
                         {patients.map(patient => (
-                            <Select.Option key={patient._id} value={patient.id}>
+                            <Select.Option key={patient.id} value={patient.id}>
                                 {patient.firstName} {patient.lastName}
                             </Select.Option>
                         ))}
