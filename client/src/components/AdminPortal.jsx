@@ -21,6 +21,13 @@ function AdminPortal() {
     const [currentUser, setCurrentUser] = useState(null);
     const [openChangePassword, setOpenChangePassword] = useState(false);
 
+    // Search states for appointments
+    const [appointmentSearchTerm, setAppointmentSearchTerm] = useState('');
+    const [appointmentSearchBy, setAppointmentSearchBy] = useState('patient'); // 'patient' or 'doctor'
+
+    // Search state for users
+    const [userSearchTerm, setUserSearchTerm] = useState('');
+
     // Retrieve all appointments and users from database
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -56,6 +63,43 @@ function AdminPortal() {
         fetchAppointments();
         fetchUsers();
     }, []);
+
+    // Filter appointments based on search
+    const filteredAppointments = appointments.filter(appointment => {
+        if (!appointmentSearchTerm) return true;
+
+        const searchLower = appointmentSearchTerm.toLowerCase();
+
+        if (appointmentSearchBy === 'patient') {
+            const patientName = appointment.patientId
+                ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`.toLowerCase()
+                : '';
+            return patientName.includes(searchLower);
+        } else if (appointmentSearchBy === 'doctor') {
+            const doctorName = appointment.doctorId
+                ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`.toLowerCase()
+                : '';
+            return doctorName.includes(searchLower);
+        }
+
+        return true;
+    });
+
+    // Filter users based on search (search across all fields)
+    const filteredUsers = users.filter(user => {
+        if (!userSearchTerm) return true;
+
+        const searchLower = userSearchTerm.toLowerCase();
+        const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
+        const username = user.username.toLowerCase();
+        const role = user.role.toLowerCase();
+        const status = (user.status || "Active").toLowerCase();
+
+        return fullName.includes(searchLower) ||
+            username.includes(searchLower) ||
+            role.includes(searchLower) ||
+            status.includes(searchLower);
+    });
 
     // Handle opening and closing new appointment popup
     const handleNewAppointment = () => setOpenNewAppointment(true);
@@ -167,11 +211,24 @@ function AdminPortal() {
                     className={`dashboard-content ${activeTab === 'appointments' ? 'active' : ''}`}
                 >
                     <div className="dashboard-controls-bar">
-                        <input type="text" className="dashboard-search-box" placeholder="Search by name..." />
+                        <input
+                            type="text"
+                            className="dashboard-search-box"
+                            placeholder={`Search by ${appointmentSearchBy} name...`}
+                            value={appointmentSearchTerm}
+                            onChange={(e) => setAppointmentSearchTerm(e.target.value)}
+                        />
                         <div className="dashboard-filter-group">
-                            <select className="dashboard-filter-select">
-                                <option>Search by Patient</option>
-                                <option>Search by Doctor</option>
+                            <select
+                                className="dashboard-filter-select"
+                                value={appointmentSearchBy}
+                                onChange={(e) => {
+                                    setAppointmentSearchBy(e.target.value);
+                                    setAppointmentSearchTerm(''); // Clear search when switching
+                                }}
+                            >
+                                <option value="patient">Search by Patient</option>
+                                <option value="doctor">Search by Doctor</option>
                             </select>
                             <button className="dashboard-btn dashboard-btn-primary" onClick={handleNewAppointment}>+ New Appointment</button>
                         </div>
@@ -191,8 +248,8 @@ function AdminPortal() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {appointments && appointments.length > 0 ? (
-                                        appointments.map((appointment) => {
+                                    {filteredAppointments && filteredAppointments.length > 0 ? (
+                                        filteredAppointments.map((appointment) => {
                                             // Extract date and time from DateTime objects
                                             const startDateTime = new Date(appointment.startTime);
                                             const endDateTime = new Date(appointment.endTime);
@@ -241,20 +298,14 @@ function AdminPortal() {
                                     ) : (
                                         <tr>
                                             <td colSpan="6" style={{ textAlign: "center" }}>
-                                                No appointments found.
+                                                {appointmentSearchTerm
+                                                    ? `No appointments found matching "${appointmentSearchTerm}"`
+                                                    : "No appointments found."}
                                             </td>
                                         </tr>
                                     )}
                                 </tbody>
                             </table>
-
-                            {/* <div className="dashboard-pagination">
-                                <button className="dashboard-btn">Prev</button>
-                                <div className="dashboard-page-info">
-                                    Page <input type="number" className="dashboard-page-input" value="1" readOnly min="1" max="3" /> of 3
-                                </div>
-                                <button className="dashboard-btn">Next</button>
-                            </div> */}
                         </div>
                     )}
                 </div>
@@ -267,7 +318,13 @@ function AdminPortal() {
                     {activeTab === 'users' && (
                         <>
                             <div className="dashboard-controls-bar">
-                                <input type="text" className="dashboard-search-box" placeholder="Search users..." />
+                                <input
+                                    type="text"
+                                    className="dashboard-search-box"
+                                    placeholder="Search by name, username, role, or status..."
+                                    value={userSearchTerm}
+                                    onChange={(e) => setUserSearchTerm(e.target.value)}
+                                />
                                 <button className="dashboard-btn dashboard-btn-primary" onClick={handleAdd}>+ Add User</button>
                             </div>
 
@@ -283,32 +340,34 @@ function AdminPortal() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {users && users.length > 0 ? (
-                                            users.map((user) => (
+                                        {filteredUsers && filteredUsers.length > 0 ? (
+                                            filteredUsers.map((user) => (
                                                 <tr key={user._id || user.username}>
                                                     <td>{user.firstName} {user.lastName}</td>
                                                     <td>{user.username}</td>
                                                     <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
                                                     <td>{user.status || "Active"}</td>
-                                                    <td><Button type="primary" onClick={() => handleViewUserInfo(user)}>View Information</Button></td>
+                                                    <td>
+                                                        <Button
+                                                            type="primary"
+                                                            onClick={() => handleViewUserInfo(user)}
+                                                        >
+                                                            View Information
+                                                        </Button>
+                                                    </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
                                                 <td colSpan="5" style={{ textAlign: "center" }}>
-                                                    No users found.
+                                                    {userSearchTerm
+                                                        ? `No users found matching "${userSearchTerm}"`
+                                                        : "No users found."}
                                                 </td>
                                             </tr>
                                         )}
                                     </tbody>
                                 </table>
-                                {/* <div className="dashboard-pagination">
-                                    <button className="dashboard-btn">Prev</button>
-                                    <div className="dashboard-page-info">
-                                        Page <input type="number" className="dashboard-page-input" value="1" readOnly min="1" max="1" /> of 1
-                                    </div>
-                                    <button className="dashboard-btn">Next</button>
-                                </div> */}
                             </div>
                         </>
                     )}

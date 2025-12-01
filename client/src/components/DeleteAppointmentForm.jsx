@@ -1,6 +1,6 @@
 function DeleteAppointmentForm(props) {
     const appointment = props.appointment;
-    const appointmentId = appointment._id;
+    const appointmentId = appointment.appointmentId;
     // Handle delete
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -27,6 +27,14 @@ function DeleteAppointmentForm(props) {
         }
     }
 
+    return (
+        <>
+            <div>Are you sure you would like to delete this appointment?</div>
+            <div>WARNING: This cannot be undone</div>
+            <button onClick={handleSubmit}>Delete Appointment</button>
+            <button onClick={() => props.closeModal()}>Cancel</button>
+        </>
+    )
 }
 
 export default DeleteAppointmentForm;
