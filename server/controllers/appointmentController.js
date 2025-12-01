@@ -1,4 +1,5 @@
 const {cancelService, removeService } = require('../services/appointmentService');
+const Appointment = require('../services/appointmentService')
 
 module.exports.cancelAppointment = async (req, res) =>{
     try{

@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react"
-import { DatePicker, TimePicker, Select } from "antd";
-import dayjs from "dayjs";
+import { useState } from "react";
 
-function NewAppointmentForm(props) {
+// Same as scheduling new appointment, except fields are not required and status can be updated
+function UpdateAppointmentForm(props) {
+    const appointmentId = props.appointment._id;
     const [date, setDate] = useState(null);
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
-    const [doctorId, setDoctorId] = useState("");
-    const [patientId, setPatientId] = useState("patient");
+    const [doctorId, setDoctorId] = useState(props.appointment.doctorId || "doctor");
+    const [patientId, setPatientId] = useState(props.appointment.patientId || "patient");
     const [errors, setErrors] = useState(
         { date: "", startTime: "", endTime: "", doctorId: "", patientId: "" }
     );
@@ -54,8 +54,8 @@ function NewAppointmentForm(props) {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:3000/api/appointments", {
-                method: "POST",
+            const res = await fetch(`http://localhost:3000/api/appointments/${appointmentId}`, {
+                method: "PUT",
                 body: JSON.stringify({
                     startTime: startDateTime,
                     endTime: endDateTime,
@@ -71,7 +71,7 @@ function NewAppointmentForm(props) {
             const data = await res.json();
 
             if (res.ok) {
-                console.log("Appointment successfully scheduled!");
+                console.log("Appointment successfully updated!");
                 // Close modal
                 if (props.closeModal) props.closeModal();
             } else {
@@ -84,7 +84,7 @@ function NewAppointmentForm(props) {
                 });
             }
         } catch (err) {
-            console.log("Schedule appointment error", err);
+            console.log("Update appointment error", err);
         }
     }
 
@@ -166,11 +166,11 @@ function NewAppointmentForm(props) {
                 </div>
 
                 <button type="submit" className="sign-in-btn">
-                    Schedule Appointment
+                    Update Appointment
                 </button>
             </form>
         </>
     )
 }
 
-export default NewAppointmentForm;
+export default UpdateAppointmentForm;
