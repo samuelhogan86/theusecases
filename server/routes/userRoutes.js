@@ -12,7 +12,7 @@ const {registerUser, updateUser, deleteUser } = require('../controllers/adminCon
 
 router.use(tokenValidator)
 //Get user dashboard information, must be associated user
-router.get('/user/dashboard', getUserDash);
+router.get('/dashboard', getUserDash);
 //register user
 router.post('/', requireRole('admin'), registerUser); 
 
