@@ -28,6 +28,9 @@ function AdminPortal() {
     // Search state for users
     const [userSearchTerm, setUserSearchTerm] = useState('');
 
+    // For viewing upcoming appointments
+    const [showUpcomingOnly, setShowUpcomingOnly] = useState(false);
+
     // Retrieve all appointments and users from database
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -83,6 +86,13 @@ function AdminPortal() {
         }
 
         return true;
+    });
+
+    const now = new Date();
+
+    // Filter upcoming appointments
+    const upcomingAppointments = filteredAppointments.filter(appt => {
+        return new Date(appt.startTime) >= now;
     });
 
     // Filter users based on search (search across all fields)
@@ -234,6 +244,22 @@ function AdminPortal() {
                         </div>
                     </div>
 
+                    <div className="mb-3">
+                        <button
+                            className={`dashboard-btn ${!showUpcomingOnly ? "dashboard-btn-primary" : ""}`}
+                            onClick={() => setShowUpcomingOnly(false)}
+                        >
+                            All Appointments
+                        </button>
+
+                        <button
+                            className={`dashboard-btn ${showUpcomingOnly ? "dashboard-btn-primary" : ""} ms-2`}
+                            onClick={() => setShowUpcomingOnly(true)}
+                        >
+                            Upcoming
+                        </button>
+                    </div>
+
                     {activeTab === 'appointments' && (
                         <div className="dashboard-table-container">
                             <table className="dashboard-table">
@@ -249,7 +275,7 @@ function AdminPortal() {
                                 </thead>
                                 <tbody>
                                     {filteredAppointments && filteredAppointments.length > 0 ? (
-                                        filteredAppointments.map((appointment) => {
+                                        (showUpcomingOnly ? upcomingAppointments : filteredAppointments).map((appointment) => {
                                             // Extract date and time from DateTime objects
                                             const startDateTime = new Date(appointment.startTime);
                                             const endDateTime = new Date(appointment.endTime);
