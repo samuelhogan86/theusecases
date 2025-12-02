@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const Appointment = require('../models/appointmentModel');
 
 
+
 async function userDashService(UserId){
     try{
         //call model for userById
@@ -15,19 +16,26 @@ async function userDashService(UserId){
             appointments = await Appointment.findByPatient(UserId);
         } else if (role === 'doctor') {
             appointments = await Appointment.findByDoctor(UserId);
+        }else if (role === 'admin'){
+            appointments = await Appointment.getAppointments();
         }
 
-
-        const doctorId = appointments.doctorId;
-        const patientId = appointments.patientId;
+        //efficient searching, set to array, remove dupes
+        const doctorIds = [...new Set(appointments.map(apt => apt.doctorId))];
+        const patientIds = [...new Set(appointments.map(apt => apt.patientId))];
         //parallel query, get patient and doctor users.
         const [doctors, patients] = await Promise.all([
-            User.getUserById(doctorId), 
-            User.getUserById(patientId)
-        ])
+            Promise.all(doctorIds.map(id => User.getUserById(id))),
+            Promise.all(patientIds.map(id => User.getUserById(id)))
+        ]);
+        console.log("SERVICE, mapped all users");
+        console.log(`Found appointment users: ${doctors.length}, ${patients.length}`)
 
-        console.log(`Found appointment users: ${doctors}, ${patients}`)
-        appointments.map(apt => ({  // Transform each appointment
+        const doctorMap = Object.fromEntries(doctors.filter(doc => doc !== null).map(doc => [doc.id, doc]));
+        const patientMap = Object.fromEntries(patients.filter(pat => pat !== null).map(pat => [pat.id, pat]));
+        
+
+        const joinedAppointments = appointments.map(apt => ({  // Transform each appointment
             ...apt,                   // Copy all existing fields
             doctorId: doctorMap[apt.doctorId] || apt.doctorId,  // Replace doctorId
             patientId: patientMap[apt.patientId] || apt.patientId  // Replace patientId
@@ -42,7 +50,7 @@ async function userDashService(UserId){
                 "username":userData.username,
                 "role": role
             }, 
-            "appointments":appointments
+            "appointments":joinedAppointments
         }
         console.log("SERVICES, returning payload: ", payload);
 

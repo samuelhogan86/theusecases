@@ -300,8 +300,8 @@ userSchema.statics.deleteUserById= async function(id){
     return user;
 }
 
-//update this to retrieve all information for admin dashboard
-userSchema.statics.getAdminDash = async function(){
+//update this to retrieve all information for admin dashboard, ALL users function
+userSchema.statics.getUsers = async function(){
     const users  = await this.find()
     .select({id:1, firstName:1, lastName:1, username:1, role:1})
     .lean();

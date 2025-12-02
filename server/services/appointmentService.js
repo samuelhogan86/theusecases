@@ -2,16 +2,22 @@ const Appointment = require('../models/appointmentModel');
 const User = require('../models/userModel');
 
 // Static: Get all appointments with populated names
-async function getAdminDash(){
-  return await Appointment.getAdminDash();
-}
 async function cancelService(apptId){
   try{
-    const appointment = await Appointment.findOne({appointmentId: apptId});
+    console.log(apptId)
+    const appointment = await Appointment.findOne({apptId});
+    console.log(appointment)
+    console.log("SERVICE, doctorId type:", typeof appointment.doctorId);
+    console.log("SERVICE, patientId type:", typeof appointment.patientId);
+    if (!appointment){
+      console.log("SERVICE, No appointment found");
+      return null;
+    }
     appointment.status = 'inactive';
     appointment.lastUpdated = new Date();
-    const savedAppointment = await appointment.save();
-    return savedAppointment;
+    console.log("SERVICE, updated appointment: ", appointment)
+    // const savedAppointment = await appointment.save();
+    // return savedAppointment;
   }catch(err){
     console.error("SERVICE, error", err);
     throw err;
@@ -21,8 +27,13 @@ async function cancelService(apptId){
 
 async function deleteService(apptId){
   try{
-    const appointment = await Appointment.deleteOne({appointmentId:apptId});
-    return appointment;
+    const appointment = await Appointment.deleteOne({apptId});
+    if (!appointment){
+      console.log("SERVICE, No appointment found");
+      return null;
+    }
+    console.log("SERVICE, deleted appointment: ", appointment)
+    return appointment
   }catch(err){
     console.error("SERVICE, error", err);
     throw err;
@@ -31,7 +42,7 @@ async function deleteService(apptId){
 
 async function modifyService(apptId, updates){
   try{
-    const appointment = await Appointment.findOne({appointmentId:apptId})
+    const appointment = await Appointment.findOne({apptId})
     if (!appointment){
       console.log("SERVICE, No appointment found");
       return null;
@@ -128,5 +139,5 @@ async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
   }
 
 }
-module.exports = {cancelService, deleteService, modifyService, scheduleAppointment, getAdminDash}
+module.exports = {cancelService, deleteService, modifyService, scheduleAppointment}
 
