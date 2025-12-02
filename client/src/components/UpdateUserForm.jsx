@@ -19,7 +19,7 @@ function UpdateUserForm(props) {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await fetch(`http://localhost:3000/api/admin/users/${userId}`, {
+            const res = await fetch(`http://localhost:3000/api/users/${userId}`, {
                 method: "PUT",
                 body: JSON.stringify({ firstName, lastName, username, password, role }),
                 headers: { 

@@ -10,6 +10,7 @@ async function userDashService(UserId){
         const userData = await User.getUserById(UserId);
         const role = userData.role;
         let appointments = null;
+        let users = null;
 
         //are we getting appointmetns for patients or doctors?
         if (role === 'patient') {
@@ -18,6 +19,7 @@ async function userDashService(UserId){
             appointments = await Appointment.findByDoctor(UserId);
         }else if (role === 'admin'){
             appointments = await Appointment.getAppointments();
+            users = await User.getUsers();
         }
 
         //efficient searching, set to array, remove dupes
@@ -50,7 +52,8 @@ async function userDashService(UserId){
                 "username":userData.username,
                 "role": role
             }, 
-            "appointments":joinedAppointments
+            "appointments":joinedAppointments,
+            "users": users
         }
         console.log("SERVICES, returning payload: ", payload);
 

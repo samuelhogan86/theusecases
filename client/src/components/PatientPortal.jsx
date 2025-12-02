@@ -15,14 +15,16 @@ function PatientPortal() {
         const fetchPatientData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch("http://localhost:3000/api/user/patient/dashboard", {
+                const response = await fetch("http://localhost:3000/api/users/dashboard", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const data = await response.json();
-                setAppointments(data.appointments);
-                setUser(data.user);
+                if (data.payload) {
+                    setUser(data.payload.user);
+                    setAppointments(data.payload.appointments || []);
+                }
             } catch (err) {
                 console.log("Error fetching patient data:", err);
             }

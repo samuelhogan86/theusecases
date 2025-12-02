@@ -33,38 +33,25 @@ function AdminPortal() {
 
     // Retrieve all appointments and users from database
     useEffect(() => {
-        const fetchAppointments = async () => {
+        const fetchAdminData = async () => {
             try {
                 const token = localStorage.getItem('token');
-                const response = await fetch("http://localhost:3000/api/admin/dashboard", {
+                const response = await fetch("http://localhost:3000/api/users/dashboard", {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 const data = await response.json();
-                setAppointments(data.appointments);
+                if (data.payload) {
+                    setAppointments(data.payload.appointments || []);
+                    setUsers(data.payload.users || []);
+                }
             } catch (err) {
-                console.log("Error fetching appointments");
+                console.log("Error fetching admin data:", err);
             }
         }
 
-        const fetchUsers = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const response = await fetch("http://localhost:3000/api/admin/dashboard", {
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-                const data = await response.json();
-                setUsers(data.users);
-            } catch (err) {
-                console.log("Error fetching users");
-            }
-        }
-
-        fetchAppointments();
-        fetchUsers();
+        fetchAdminData();
     }, []);
 
     // Filter appointments based on search
@@ -92,7 +79,7 @@ function AdminPortal() {
 
     // Filter upcoming appointments
     const upcomingAppointments = filteredAppointments.filter(appt => {
-        return new Date(appt.startTime) >= now;
+        return new Date(appt.endTime) >= now;
     });
 
     // Filter users based on search (search across all fields)
