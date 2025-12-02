@@ -27,6 +27,7 @@
     "mongodb": "^6.20.0",
     "mongoose": "^8.19.1",
     "node": "^25.0.0",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "react-datepicker": "^8.10.0"
   }
 }
