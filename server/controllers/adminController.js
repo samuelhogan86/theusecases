@@ -98,22 +98,6 @@ module.exports.deleteUser = async (req, res) => {
     }
 }
 
-// module.exports.getDash = async(req, res) =>{
-//     try{
-//         const [users, appointments] = await Promise.all([
-//             User.getAdminDash(),
-//             Appointment.getAdminDash()
-//         ]);
-//         res.status(200).json({
-//             message: "dashboard data sent",
-//             users: users,
-//             appointments: appointments
-//         });
-//     }catch(err){
-//         res.status(500).json({message:err.message});
-//     }   
-// }
-
 
 module.exports.getAdminDash = async(req, res) =>{
     try{
