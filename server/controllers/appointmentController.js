@@ -87,7 +87,8 @@ module.exports.modifyAppointment = async(req, res)=>{
             updates:appointment
         });
     }catch(err){
-        res.status(400).json({message:err.message})
+        const errors = handleErrors(err);
+        res.status(400).json({ errors });
     }
 }
 
