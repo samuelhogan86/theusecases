@@ -62,10 +62,10 @@ async function modifyService(apptId, updates){
     console.log(updates);
     let {startTime,endTime,doctorId,patientId,status} = updates;
     if(startTime){
-      if (CheckTimeConflict(appointment.doctorId, startTime, 'doctor')) {
+      if (await CheckTimeConflict(appointment.doctorId, startTime, 'doctor', appointment.appointmentId)) {
         throw new Error('Doctor has a conflicting appointment at the new time');
       }
-      if (CheckTimeConflict(appointment.patientId, startTime, 'patient')) {
+      if (await CheckTimeConflict(appointment.patientId, startTime, 'patient', appointment.appointmentId)) {
         throw new Error('Patient has a conflicting appointment at the new time');
       }
       appointment.startTime = startTime;
@@ -78,7 +78,7 @@ async function modifyService(apptId, updates){
       if ( !checkDoctorId ) {
         throw new Error('Invalid doctor ID');
       }
-      if (CheckTimeConflict(doctorId, appointment.startTime, 'doctor')) {
+      if (await CheckTimeConflict(doctorId, appointment.startTime, 'doctor', appointment.appointmentId)) {
         throw new Error('Doctor has a conflicting appointment at the new time');
       }
       appointment.doctorId = doctorId;
@@ -88,7 +88,7 @@ async function modifyService(apptId, updates){
       if ( !checkPatientId ) {
         throw new Error('Invalid patient ID');
       }
-      if (CheckTimeConflict(patientId, appointment.startTime, 'patient')) {
+      if (await CheckTimeConflict(patientId, appointment.startTime, 'patient', appointment.appointmentId)) {
         throw new Error('Patient has a conflicting appointment at the new time');
       }
       appointment.patientId = patientId;
@@ -135,11 +135,11 @@ async function scheduleAppointment(startTime, doctorId, patientId) {
       throw new Error('Start time must be before end time');
     }
 
-    if (CheckTimeConflict(doctorId, startTime, 'doctor')) {
+    if (await CheckTimeConflict(doctorId, startTime, 'doctor')) {
       throw new Error('Doctor has a conflicting appointment');
     }
 
-    if (CheckTimeConflict(patientId, startTime, 'patient')) {
+    if (await CheckTimeConflict(patientId, startTime, 'patient')) {
       throw new Error('Patient has a conflicting appointment');
     }
 
@@ -188,12 +188,33 @@ async function scheduleAppointment(startTime, doctorId, patientId) {
 
 }
 
-  async function CheckTimeConflict(userId, startTime, role) {
-    const query = role === 'doctor' ? { doctorId: userId, startTime: startTime, status: 'active' } : { patientId: userId, startTime: startTime, status: 'active' };
+  async function CheckTimeConflict(userId, startTime, role, excludeAppointmentId = null) {
+    const newStartTime = new Date(startTime);
+    const newEndTime = new Date(newStartTime);
+    newEndTime.setMinutes(newEndTime.getMinutes() + 30);
 
-    const conflictingAppointment = await Appointment.findOne(query);
+    const query = role === 'doctor' 
+      ? { doctorId: userId, status: 'active' } 
+      : { patientId: userId, status: 'active' };
+
+    // Exclude the current appointment being modified
+    if (excludeAppointmentId) {
+      query.appointmentId = { $ne: excludeAppointmentId };
+    }
+
+    // Find all active appointments for this user
+    const appointments = await Appointment.find(query);
     
-    return !!conflictingAppointment;
+    // Check if any existing appointment overlaps with the new time
+    const hasConflict = appointments.some(apt => {
+      const existingStart = new Date(apt.startTime);
+      const existingEnd = new Date(apt.endTime);
+      
+      // Check for overlap: new start is before existing end AND new end is after existing start
+      return newStartTime < existingEnd && newEndTime > existingStart;
+    });
+    
+    return hasConflict;
   }
 
 

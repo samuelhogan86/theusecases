@@ -102,29 +102,38 @@ return (
 
                     <div className="border rounded-3 p-4">
                         {filteredAppointments && filteredAppointments.length > 0 ? (
-                            filteredAppointments.map((appointment, index) => (
-                                <div 
-                                    key={appointment._id} 
-                                    className={`${index !== filteredAppointments.length - 1 ? 'border-bottom pb-4 mb-4' : ''}`}
-                                >
-                                    <div className="d-flex justify-content-between align-items-start mb-2">
-                                        <h3 className="fs-5 fw-semibold mb-0">
-                                            {new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}
-                                        </h3>
-                                        <button className="btn btn-outline-danger btn-sm">
-                                            Cancel
-                                        </button>
+                            filteredAppointments.map((appointment, index) => {
+                                // Declare variables inside the callback function
+                                const startDate = new Date(appointment.startTime);
+                                const endDate = new Date(appointment.endTime);
+                                const dateString = startDate.toLocaleDateString();
+                                const startTimeString = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                const endTimeString = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                                
+                                return (
+                                    <div 
+                                        key={appointment._id} 
+                                        className={index !== filteredAppointments.length - 1 ? 'border-bottom pb-4 mb-4' : ''}
+                                    >
+                                        <div className="d-flex justify-content-between align-items-start mb-2">
+                                            <h3 className="fs-5 fw-semibold mb-0">
+                                                {dateString} at {startTimeString}
+                                            </h3>
+                                            <button className="btn btn-outline-danger btn-sm">
+                                                Cancel
+                                            </button>
+                                        </div>
+                                        <p className="text-secondary mb-1">
+                                            with {appointment.doctorId
+                                                ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
+                                                : "Unknown Doctor"}
+                                        </p>
+                                        <p className="text-secondary mb-0">
+                                            Duration: {startTimeString} - {endTimeString}
+                                        </p>
                                     </div>
-                                    <p className="text-secondary mb-1">
-                                        with {appointment.doctorId
-                                            ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
-                                            : "Unknown Doctor"}
-                                    </p>
-                                    <p className="text-secondary mb-0">
-                                        Duration: {appointment.startTime} - {appointment.endTime}
-                                    </p>
-                                </div>
-                            ))
+                                );
+                            })
                         ) : (
                             <div className="text-center text-muted py-4">
                                 No appointments found.
@@ -136,7 +145,7 @@ return (
             {user && <AccountInformation user={user} />}
         </div>
     </>
-    )
+)
 }
 
 export default PatientPortal
