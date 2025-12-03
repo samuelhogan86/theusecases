@@ -181,7 +181,7 @@ return (
                                             <h3 className="fs-5 fw-semibold mb-0">
                                                 {dateString} at {startTimeString}
                                             </h3>
-                                            <button className="btn btn-outline-danger btn-sm">
+                                            <button className="btn btn-outline-danger btn-sm" onClick={() => handleCancelAppointment(appointment.appointmentId)}>
                                                 Cancel
                                             </button>
                                         </div>
