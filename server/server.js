@@ -15,7 +15,7 @@ const app = express();
 // app.use(express.static("../client/public"));
 app.use(cors({
   origin: "http://localhost:5173",
-  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
   credentials: true
 }));
 
