@@ -26,6 +26,18 @@ const handleErrors = (err) => {
     if (err.message === 'Failed to generate a unique appointment ID') {
         errors.general = 'Unable to create appointment. Please try again';
     }
+    if (err.message === 'Appointment is already inactive') {
+        errors.general = 'Appointment is already inactive';
+    }
+    if (err.message === 'Invalid status value') {
+        errors.status = 'Status must be either active or inactive';
+    }
+    if (err.message === 'Doctor has a conflicting appointment at the new time') {
+        errors.doctorId = 'This doctor already has an appointment at the new time';
+    }
+    if (err.message === 'Patient has a conflicting appointment at the new time') {
+        errors.patientId = 'This patient already has an appointment at the new time';
+    }   
     
     return errors;
 }

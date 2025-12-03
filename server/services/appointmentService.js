@@ -14,6 +14,11 @@ async function cancelService(apptId){
       console.log("SERVICE, No appointment found");
       return null;
     }
+
+    if (appointment.status === 'inactive') {
+      throw new Error('Appointment is already inactive');
+    }
+
     appointment.status = 'inactive';
     appointment.lastUpdated = new Date();
     console.log("SERVICE, updated appointment: ", appointment)
@@ -68,12 +73,32 @@ async function modifyService(apptId, updates){
       appointment.endTime = endTime;
     }
     if(doctorId){
+      checkDoctorId = await User.findOne({ id: doctorId, role: 'doctor' });
+      if ( !checkDoctorId ) {
+        throw new Error('Invalid doctor ID');
+      }
+      if (CheckTimeConflict(doctorId, appointment.startTime, 'doctor')) {
+        throw new Error('Doctor has a conflicting appointment at the new time');
+      }
       appointment.doctorId = doctorId;
     }
     if(patientId){
+      checkPatientId = await User.findOne({ id: patientId, role: 'patient' });
+      if ( !checkPatientId ) {
+        throw new Error('Invalid patient ID');
+      }
+      if (CheckTimeConflict(patientId, appointment.startTime, 'patient')) {
+        throw new Error('Patient has a conflicting appointment at the new time');
+      }
       appointment.patientId = patientId;
     }
     if(status){
+      if (status === 'inactive' && appointment.status === 'inactive') {
+        throw new Error('Appointment is already inactive');
+      }
+      if (status !== 'active' && status !== 'inactive') {
+        throw new Error('Invalid status value');
+      }
       appointment.status = status;
     }
     appointment.lastUpdated = new Date();
