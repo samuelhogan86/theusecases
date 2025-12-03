@@ -5,7 +5,6 @@ import dayjs from "dayjs";
 function NewAppointmentForm(props) {
     const [date, setDate] = useState(null);
     const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
     const [doctorId, setDoctorId] = useState("");
     const [patientId, setPatientId] = useState("");
     const [errors, setErrors] = useState(
@@ -15,11 +14,11 @@ function NewAppointmentForm(props) {
     const doctors = users.filter(user => user.role === "doctor");
     const patients = users.filter(user => user.role === "patient");
 
-    // Generate time options in 15-minute intervals from 8 AM to 6 PM
+    // Generate time options in 30-minute intervals from 8 AM to 6 PM
     const generateTimeOptions = () => {
         const options = [];
         for (let hour = 8; hour <= 18; hour++) {
-            for (let minute = 0; minute < 60; minute += 15) {
+            for (let minute = 0; minute < 60; minute += 30) {
                 if (hour === 18 && minute > 0) break; // Stop at 6 PM
                 const time = dayjs().hour(hour).minute(minute).second(0);
                 options.push({
@@ -36,15 +35,15 @@ function NewAppointmentForm(props) {
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors({ date: "", startTime: "", endTime: "", doctorId: "", patientId: "" });
+        setErrors({ date: "", startTime: "", doctorId: "", patientId: "" });
 
         // Handle errors and stop submission if necessary
         const newErrors = {};
         if (!date) newErrors.date = "Date is required";
         if (!startTime) newErrors.startTime = "Start time is required";
-        if (!endTime) newErrors.endTime = "End time is required";
         if (!doctorId) newErrors.doctorId = "Doctor is required";
         if (!patientId) newErrors.patientId = "Patient is required";
+
         // If any errors exist, stop submission
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
@@ -53,15 +52,9 @@ function NewAppointmentForm(props) {
 
         // Combine date and time to create DateTime objects
         const [startHour, startMinute] = startTime.split(':');
-        const [endHour, endMinute] = endTime.split(':');
         const startDateTime = dayjs(date)
             .hour(parseInt(startHour))
             .minute(parseInt(startMinute))
-            .second(0)
-            .toISOString();
-        const endDateTime = dayjs(date)
-            .hour(parseInt(endHour))
-            .minute(parseInt(endMinute))
             .second(0)
             .toISOString();
 
@@ -71,7 +64,6 @@ function NewAppointmentForm(props) {
                 method: "POST",
                 body: JSON.stringify({
                     startTime: startDateTime,
-                    endTime: endDateTime,
                     doctorId,
                     patientId
                 }),
@@ -91,7 +83,6 @@ function NewAppointmentForm(props) {
                 setErrors({
                     date: data.errors?.date || "",
                     startTime: data.errors?.startTime || "",
-                    endTime: data.errors?.endTime || "",
                     doctorId: data.errors?.doctorId || "",
                     patientId: data.errors?.patientId || ""
                 });
@@ -127,19 +118,6 @@ function NewAppointmentForm(props) {
                         style={{ width: '100%' }}
                     />
                     <div className="error">{errors.startTime}</div>
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="endTime">End Time</label>
-                    <Select
-                        id="endTime"
-                        value={endTime}
-                        onChange={(value) => setEndTime(value)}
-                        options={timeOptions}
-                        placeholder="Select end time"
-                        style={{ width: '100%' }}
-                    />
-                    <div className="error">{errors.endTime}</div>
                 </div>
 
                 <div className="form-group">
