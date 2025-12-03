@@ -4,8 +4,9 @@ const {cancelService, deleteService, modifyService , scheduleAppointment} = requ
 
 module.exports.cancelAppointment = async (req, res) =>{
     try{
-        const {appointmentId}= req.params;
-        const appointment = await cancelService(appointmentId);
+        const {AppointmentId}= req.params;
+        console.log("CONTROLLER, Recieved: ", AppointmentId)
+        const appointment = await cancelService(AppointmentId);
         res.status(201).json({
             message:"Update appointment status successfully",
             updates: appointment
@@ -18,8 +19,9 @@ module.exports.cancelAppointment = async (req, res) =>{
 module.exports.removeAppointment = async (req, res) =>{
 
     try{
-        const {appointmentId} = req.params;
-        const appointment = await deleteService(appointmentId);
+        const {AppointmentId} = req.params;
+        console.log("CONTROLLER, Recieved: ", AppointmentId)
+        const appointment = await deleteService(AppointmentId);
         res.status(201).json({
             message:"removed appointment successfully",
             updates:appointment
@@ -32,9 +34,10 @@ module.exports.removeAppointment = async (req, res) =>{
 
 module.exports.modifyAppointment = async(req, res)=>{
         try{
-        const {appointmentId} = req.params;
+        const {AppointmentId} = req.params;
+        console.log("CONTROLLER, Recieved: ", AppointmentId)
         const updates = req.body
-        const appointment = await modifyService(appointmentId, updates);
+        const appointment = await modifyService(AppointmentId, updates);
         res.status(201).json({
             message:"modified appointment successfully",
             updates:appointment
