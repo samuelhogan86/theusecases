@@ -78,6 +78,7 @@ function NewAppointmentForm(props) {
 
             if (res.ok) {
                 console.log("Appointment successfully scheduled!");
+                window.location.reload();
                 // Close modal
                 if (props.closeModal) props.closeModal();
             } else {
@@ -105,7 +106,7 @@ function NewAppointmentForm(props) {
                         format="YYYY-MM-DD"
                         style={{ width: '100%' }}
                     />
-                    <div className="error">{errors.date}</div>
+                    <div className="text-dark">{errors.date}</div>
                 </div>
 
                 <div className="mb-3">
@@ -118,7 +119,7 @@ function NewAppointmentForm(props) {
                         placeholder="Select start time"
                         style={{ width: '100%' }}
                     />
-                    <div className="error">{errors.startTime}</div>
+                    <div className="text-dark">{errors.startTime}</div>
                 </div>
 
                 <div className="mb-3">
@@ -136,7 +137,7 @@ function NewAppointmentForm(props) {
                             </Select.Option>
                         ))}
                     </Select>
-                    <div className="error">{errors.doctorId}</div>
+                    <div className="text-dark">{errors.doctorId}</div>
                 </div>
 
                 <div className="mb-3">
@@ -154,7 +155,7 @@ function NewAppointmentForm(props) {
                             </Select.Option>
                         ))}
                     </Select>
-                    <div className="error">{errors.patientId}</div>
+                    <div className="text-dark">{errors.patientId}</div>
                 </div>
 
                 <button type="submit" className="btn btn-success">

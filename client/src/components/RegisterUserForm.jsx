@@ -31,6 +31,7 @@ function RegisterUserForm(props) {
 
             if (res.ok) {
                 console.log("User successfully registered!");
+                window.location.reload();
                 // Close modal
                 if (props.closeModal) props.closeModal();
             } else {

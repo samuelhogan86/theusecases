@@ -15,12 +15,6 @@ export function AccountInformation({ user }) {
                     {user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "Unknown"}
                 </div>
             </div>
-            <div className="mb-3">
-                <div className="fw-semibold mb-1">Last Password Change</div>
-                <div className="text-dark">
-                    {user?.lastPasswordChange ? user.lastPasswordChange : "Unknown"}
-                </div>
-            </div>
         </div>
     );
 }

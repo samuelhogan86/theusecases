@@ -44,11 +44,11 @@ function UpdateAppointmentForm(props) {
         setPatientId(getIdFromUser(appointment.patientId));
     }, [appointment]);
 
-    // Generate time options in 15-minute intervals from 8 AM to 6 PM
+    // Generate time options in 30-minute intervals from 8 AM to 6 PM
     const generateTimeOptions = () => {
         const options = [];
         for (let hour = 8; hour <= 18; hour++) {
-            for (let minute = 0; minute < 60; minute += 15) {
+            for (let minute = 0; minute < 60; minute += 30) {
                 if (hour === 18 && minute > 0) break; // Stop at 6 PM
                 const time = dayjs().hour(hour).minute(minute).second(0);
                 options.push({
@@ -122,7 +122,7 @@ function UpdateAppointmentForm(props) {
                         format="YYYY-MM-DD"
                         style={{ width: '100%' }}
                     />
-                    <div className="error">{errors.date}</div>
+                    <div className="text-dark">{errors.date}</div>
                 </div>
 
                 <div className="mb-3">
@@ -135,7 +135,7 @@ function UpdateAppointmentForm(props) {
                         placeholder="Select start time"
                         style={{ width: '100%' }}
                     />
-                    <div className="error">{errors.startTime}</div>
+                    <div className="text-dark">{errors.startTime}</div>
                 </div>
 
                 <div className="mb-3">
@@ -151,7 +151,7 @@ function UpdateAppointmentForm(props) {
                             value: doctor.id
                         }))}
                     />
-                    <div className="error">{errors.doctorId}</div>
+                    <div className="text-dark">{errors.doctorId}</div>
                 </div>
 
                 <div className="mb-3">
@@ -167,7 +167,7 @@ function UpdateAppointmentForm(props) {
                             value: patient.id
                         }))}
                     />
-                    <div className="error">{errors.patientId}</div>
+                    <div className="text-dark">{errors.patientId}</div>
                 </div>
 
                 <div className="d-flex gap-2">

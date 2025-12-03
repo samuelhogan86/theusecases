@@ -123,12 +123,12 @@ function AdminPortal() {
     return (
         <>
             {/* HEADER */}
-        <div className="container mt-4" style={{ maxWidth: "100%", "--bs-gutter-x": "0" }}>
-            <div className="d-flex justify-content-between align-items-start">
-            <div>
-                <h1 className="fw-bold mb-1">Admin Dashboard</h1>
-                <p className="text-muted mb-4">Manage Users and Appointments</p>
-            </div>
+            <div className="container mt-4" style={{ maxWidth: "100%", "--bs-gutter-x": "0" }}>
+                <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1 className="fw-bold mb-1">Admin Dashboard</h1>
+                        <p className="text-muted mb-4">Manage Users and Appointments</p>
+                    </div>
 
             <div className="d-flex gap-2">
                 <button
@@ -165,7 +165,7 @@ function AdminPortal() {
             </Modal>
 
             {/* TAB NAVIGATION */}
-            <div className="container mt-1 mb-1" style={{ paddingLeft: "0", marginLeft: "0"}}>
+            <div className="container mt-1 mb-1" style={{ paddingLeft: "0", marginLeft: "0" }}>
                 <ul className="nav nav-tabs" style={{ borderBottom: "none" }}>
                     <li className="nav-item">
                         <button
@@ -202,8 +202,8 @@ function AdminPortal() {
                 </ul>
             </div>
             {/* Appointments Tab */}
-                {activeTab === 'appointments' && (
-                <> 
+            {activeTab === 'appointments' && (
+                <>
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <input
                             type="text"
@@ -396,8 +396,8 @@ function AdminPortal() {
                                 </div>
                             </div>
                         </div>
-                        </>
-                    )}
+                </>
+            )}
             {/* Popup form for registering new user */}
             <Modal
                 title="Register New User"
