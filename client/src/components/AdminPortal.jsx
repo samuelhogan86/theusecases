@@ -238,7 +238,7 @@ function AdminPortal() {
                         </button>
 
                         <button
-                            className={`btn btn-outline-secondary ${showUpcomingOnly ? "btn btn-primary text-white" : ""} ms-2`}
+                            className={`btn btn-outline-secondary ${showUpcomingOnly ? "btn btn-secondary text-white" : ""} ms-2`}
                             onClick={() => setShowUpcomingOnly(true)}
                         >
                             Upcoming
