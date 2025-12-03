@@ -61,10 +61,10 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.updateUser = async (req, res) => {
-    const { id } = req.params;
+    const { UserId } = req.params;
     const { firstName, lastName, username, password, role } = req.body;
     try {
-        const user = await User.updateUserById(id, firstName, lastName, username, password, role);
+        const user = await User.updateUserById(UserId, firstName, lastName, username, password, role);
 
         const userResponse = user.toObject();
         delete userResponse.passwordHash;
@@ -83,8 +83,8 @@ module.exports.updateUser = async (req, res) => {
 
 module.exports.deleteUser = async (req, res) => {
     try{
-        const { id } = req.params;
-        const user = await User.deleteUserById(id);
+        const { UserId } = req.params;
+        const user = await User.deleteUserById(UserId);
         if(!user){
             return res.status(404).json({message:"User Not Found"});
         }

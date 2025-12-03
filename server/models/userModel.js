@@ -296,7 +296,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 }
 
 userSchema.statics.deleteUserById= async function(id){
-    const user = await this.findByIdAndDelete(id);
+    const user = await this.deleteOne({id:id});
     return user;
 }
 
