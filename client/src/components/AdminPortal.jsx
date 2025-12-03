@@ -337,7 +337,7 @@ function AdminPortal() {
                                 type="text" 
                                 className="form-control" 
                                 placeholder="Search by name, username, role, or status..." 
-                                style={{ maxWidth: '300px', fontSize: '14px' }}
+                                style={{ maxWidth: '25vw' }}
                                 value={userSearchTerm}
                                 onChange={(e) => setUserSearchTerm(e.target.value)}
                             />
@@ -418,6 +418,18 @@ function AdminPortal() {
             >
                 {currentUser &&
                     <UserInformation user={currentUser} />
+                }
+            </Modal>
+            {/* Popup for viewing appointment info */}
+            <Modal
+                title="Appointment Information"
+                open={openViewAppointmentInfo}
+                onCancel={handleCloseViewAppointmentInfo}
+                footer={null}
+                centered
+            >
+                {currentAppointment &&
+                    <AppointmentInformation appointment={currentAppointment} users={users} />
                 }
             </Modal>
             {/* Popup form for adding new appointment */}

@@ -112,7 +112,7 @@ function UpdateAppointmentForm(props) {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="date">Date</label>
                     <DatePicker
                         value={date}
@@ -124,7 +124,7 @@ function UpdateAppointmentForm(props) {
                     <div className="error">{errors.date}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="startTime">Start Time</label>
                     <Select
                         id="startTime"
@@ -137,7 +137,7 @@ function UpdateAppointmentForm(props) {
                     <div className="error">{errors.startTime}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="doctorId">Doctor</label>
                     <Select
                         id="doctorId"
@@ -153,7 +153,7 @@ function UpdateAppointmentForm(props) {
                     <div className="error">{errors.doctorId}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="patientId">Patient</label>
                     <Select
                         id="patientId"
@@ -169,7 +169,7 @@ function UpdateAppointmentForm(props) {
                     <div className="error">{errors.patientId}</div>
                 </div>
 
-                <button type="submit" className="sign-in-btn">
+                <button type="submit" className="btn btn-outline-secondary">
                     Update Appointment
                 </button>
             </form>

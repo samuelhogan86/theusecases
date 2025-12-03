@@ -47,40 +47,40 @@ function AppointmentInformation(props) {
 
     return (
         <>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     <strong>Date:</strong> {dateStr}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     <strong>Time:</strong> {startTimeStr} - {endTimeStr}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     <strong>Doctor:</strong> {appointment.doctorId
                         ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
                         : "Unknown"}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     <strong>Patient:</strong> {appointment.patientId
                         ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
                         : "Unknown"}
                 </div>
             </div>
-            <div className="dashboard-info-row">
+            <div className="mb-3">
                 <div>
                     <strong>Status:</strong> {appointment.status 
                         ? appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)
                         : "Unknown"}
                 </div>
             </div>
-            <div>
-                <button onClick={handleUpdate}>Update Appointment</button>
-                <button onClick={handleDelete}>Delete Appointment</button>
+            <div className="d-flex gap-2">
+                <button className="btn btn-dark" onClick={handleUpdate}>Update Appointment</button>
+                <button className="btn btn-outline-danger" onClick={handleDelete}>Delete Appointment</button>
             </div>
 
             {/* Popup form for updating appointment */}

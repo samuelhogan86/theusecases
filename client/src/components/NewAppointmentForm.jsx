@@ -95,7 +95,7 @@ function NewAppointmentForm(props) {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="date">Date</label>
                     <DatePicker
                         value={date}
@@ -107,7 +107,7 @@ function NewAppointmentForm(props) {
                     <div className="error">{errors.date}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="startTime">Start Time</label>
                     <Select
                         id="startTime"
@@ -120,7 +120,7 @@ function NewAppointmentForm(props) {
                     <div className="error">{errors.startTime}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="doctorId">Doctor</label>
                     <Select
                         id="doctorId"
@@ -138,7 +138,7 @@ function NewAppointmentForm(props) {
                     <div className="error">{errors.doctorId}</div>
                 </div>
 
-                <div className="form-group">
+                <div className="mb-3">
                     <label htmlFor="patientId">Patient</label>
                     <Select
                         id="patientId"
@@ -156,7 +156,7 @@ function NewAppointmentForm(props) {
                     <div className="error">{errors.patientId}</div>
                 </div>
 
-                <button type="submit" className="sign-in-btn">
+                <button type="submit" className="btn btn-success">
                     Schedule Appointment
                 </button>
             </form>
