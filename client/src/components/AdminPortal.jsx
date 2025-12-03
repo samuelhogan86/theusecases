@@ -207,6 +207,7 @@ function AdminPortal() {
                         <input
                             type="text"
                             className="form-control"
+                            style={{ maxWidth: '25vw' }}
                             placeholder={`Search by ${appointmentSearchBy} name...`}
                             value={appointmentSearchTerm}
                             onChange={(e) => setAppointmentSearchTerm(e.target.value)}
@@ -230,14 +231,14 @@ function AdminPortal() {
 
                     <div className="mb-3">
                         <button
-                            className={`btn btn-dark ${!showUpcomingOnly ? "btn btn-primary" : ""}`}
+                            className={`btn btn-outline-primary ${!showUpcomingOnly ? "btn btn-primary text-white" : ""}`}
                             onClick={() => setShowUpcomingOnly(false)}
                         >
                             All Appointments
                         </button>
 
                         <button
-                            className={`btn btn-dark ${showUpcomingOnly ? "btn btn-primary" : ""} ms-2`}
+                            className={`btn btn-outline-secondary ${showUpcomingOnly ? "btn btn-primary text-white" : ""} ms-2`}
                             onClick={() => setShowUpcomingOnly(true)}
                         >
                             Upcoming

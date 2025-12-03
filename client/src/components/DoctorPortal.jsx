@@ -104,42 +104,16 @@ function DoctorPortal() {
                 <ChangePassword userId={localStorage.getItem('userId')} closeModal={handleCloseChange} />
             </Modal>
             {/* Doctor Appointments */}
-        <div className="container-fluid" style={{ minWidth: "90vw" }}>
-            <div className="card mb-4" style={{ border: "none"}}>
+        <div className="container-fluid px-4" style={{ minWidth: "90vw" }}>
+            <div className="card mb-4 border-0">
                 <div className="border rounded-3 p-3">
                     <div className="d-flex justify-content-between align-items-center mb-4">
                         <h2 className="fw-semibold mb-0">My Appointments</h2>
                         <div className="d-flex gap-2">
-                            <select className="form-select" style={{ width: 'auto' }}>
-                                <option>Today</option>
-                                <option>This Week</option>
-                                <option>This Month</option>
-                            </select>
-                            <button className="btn btn-outline-secondary">View History</button>
-                        </div>
-                    </div>
-                
-                    {/* Need to redo this section to include appointments and map them to the database */}
-                    <div className="border rounded-3 p-4 mb-3">
-                        <h3 className="fs-5 fw-semibold mb-2">10/31/2025</h3>
-                        <p className="text-secondary mb-1">Patient: Jane Smith</p>
-                        <p className="text-secondary mb-3">Duration: 09:00-09:30</p>
-                    </div>
-                    <div className="border rounded-3 p-4">
-                        <h3 className="fs-5 fw-semibold mb-2">11/1/2025</h3>
-                        <p className="text-secondary mb-1">Patient: John Adams</p>
-                        <p className="text-secondary mb-3">Duration: 12:00-12:00</p>
-                    </div>
-                </div>
-                {/* include a statement with no upcoming appontments */}
-
-            <div className="container-fluid" style={{ minWidth: "90vw" }}>
-                <div className="dashboard-section-header">
-                    <h2 className="fw-semibold mb-0">My Appointments</h2>
-                    <div className="dashboard-section-controls">
-                        {!viewPastAppointments && (
+                            {!viewPastAppointments && (
                             <select
-                                className="dashboard-dropdown"
+                                className="form-select"
+                                style={{ width: 'auto'}}
                                 value={appointmentView}
                                 onChange={(e) => setAppointmentView(e.target.value)}
                             >
@@ -147,43 +121,51 @@ function DoctorPortal() {
                                 <option value="This Week">This Week</option>
                                 <option value="This Month">This Month</option>
                             </select>
-                        )}
+                            )}
                         <button
-                            className="dashboard-btn"
+                            className="btn btn-outline-secondary"
                             onClick={() => setViewPastAppointments(!viewPastAppointments)}
                         >
-                            {viewPastAppointments === false
-                                ? "View History"
-                                : "View Upcoming"}
+                            {viewPastAppointments ? "View Upcoming" : "View History"}
                         </button>
+                        </div>
+                    </div>
+
+                    <div className="border rounded-3 p-4">
+                        {filteredAppointments && filteredAppointments.length > 0 ? (
+                            filteredAppointments.map((appointment, index) => (
+                                <div 
+                                    key={appointment._id} 
+                                    className={`${index !== filteredAppointments.length - 1 ? 'border-bottom pb-4 mb-4' : ''}`}
+                                >
+                                    <div className="d-flex justify-content-between align-items-start mb-2">
+                                        <h3 className="fs-5 fw-semibold mb-0">
+                                            {new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}
+                                        </h3>
+                                        <button className="btn btn-outline-danger btn-sm">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                    <p className="text-secondary mb-1">
+                                        with {appointment.doctorId
+                                            ? `${appointment.doctorId.firstName} ${appointment.doctorId.lastName}`
+                                            : "Unknown Doctor"}
+                                    </p>
+                                    <p className="text-secondary mb-0">
+                                        Duration: {appointment.startTime} - {appointment.endTime}
+                                    </p>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-center text-muted py-4">
+                                No appointments found.
+                            </div>
+                        )}
                     </div>
                 </div>
-                <div className="border rounded-3 p-4 mb-3">
-                    {filteredAppointments && filteredAppointments.length > 0 ? (
-                        filteredAppointments.map((appointment) => (
-                            <div className="appointment-card" key={appointment._id}>
-                                <div className="appointment-time">{new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}</div>
-                                <div className="appointment-detail">
-                                    with {appointment.patientId
-                                        ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
-                                        : "Unknown"}
-                                </div>
-                                <div className="appointment-detail">Duration: {appointment.startTime}-{appointment.endTime}</div>
-                                <div className="appointment-cancel">
-                                    <button className="btn btn-danger">Cancel</button>
-                                </div>
-                            </div>
-                        ))
-                    ) : (
-                        <div colSpan="4" style={{ textAlign: "center" }}>
-                            No appointments found.
-                        </div>
-                    )}
-                </div>
-                {user && <AccountInformation user={user} />}
+            {user && <AccountInformation user={user} />}
             </div>
         </div>
-    </div>
         </>
     )
 }
