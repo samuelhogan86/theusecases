@@ -43,11 +43,11 @@ function UpdateAppointmentForm(props) {
         setPatientId(getIdFromUser(appointment.patientId));
     }, [appointment]);
 
-    // Generate time options in 15-minute intervals from 8 AM to 6 PM
+    // Generate time options in 30-minute intervals from 8 AM to 6 PM
     const generateTimeOptions = () => {
         const options = [];
         for (let hour = 8; hour <= 18; hour++) {
-            for (let minute = 0; minute < 60; minute += 15) {
+            for (let minute = 0; minute < 60; minute += 30) {
                 if (hour === 18 && minute > 0) break; // Stop at 6 PM
                 const time = dayjs().hour(hour).minute(minute).second(0);
                 options.push({
