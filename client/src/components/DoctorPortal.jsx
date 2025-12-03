@@ -10,6 +10,10 @@ function DoctorPortal() {
     const [appointments, setAppointments] = useState([]);
     const [user, setUser] = useState([]);
 
+    // Search state for appointments
+    const [viewPastAppointments, setViewPastAppointments] = useState(false);
+    const [appointmentView, setAppointmentView] = useState('Today'); // 'Today' or 'This Week' or 'This Month'
+
     // Fetch doctor appointment data for dashboard
     useEffect(() => {
         const fetchDoctorData = async () => {
@@ -32,6 +36,44 @@ function DoctorPortal() {
 
         fetchDoctorData();
     }, []);
+
+    const filteredAppointments = appointments.filter(appointment => {
+        const apptDate = new Date(appointment.startTime);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const apptDay = new Date(apptDate);
+        apptDay.setHours(0, 0, 0, 0);
+
+        if (viewPastAppointments) {
+            return apptDay.getTime() < today.getTime();
+        }
+
+        if (appointmentView === "Today") {
+            return apptDay.getTime() === today.getTime();
+        }
+
+        if (appointmentView === "This Week") {
+            // Start of this week (Sunday)
+            const startOfWeek = new Date(today);
+            startOfWeek.setDate(today.getDate() - today.getDay());
+            startOfWeek.setHours(0, 0, 0, 0);
+
+            // End of this week (Saturday)
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+            endOfWeek.setHours(23, 59, 59, 999);
+
+            return apptDate >= startOfWeek && apptDate <= endOfWeek;
+        }
+
+        if (appointmentView === "This Month") {
+            const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+            const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59, 999);
+
+            return apptDate >= startOfMonth && apptDate <= endOfMonth;
+        }
+    });
 
     const handleOpenChange = () => setOpenChangePassword(true);
     const handleCloseChange = () => setOpenChangePassword(false);
@@ -63,17 +105,30 @@ function DoctorPortal() {
                 <div className="dashboard-section-header">
                     <h2>My Appointments</h2>
                     <div className="dashboard-section-controls">
-                        <select className="dashboard-dropdown">
-                            <option>Today</option>
-                            <option>This Week</option>
-                            <option>This Month</option>
-                        </select>
-                        <button className="dashboard-btn">View History</button>
+                        {!viewPastAppointments && (
+                            <select
+                                className="dashboard-dropdown"
+                                value={appointmentView}
+                                onChange={(e) => setAppointmentView(e.target.value)}
+                            >
+                                <option value="Today">Today</option>
+                                <option value="This Week">This Week</option>
+                                <option value="This Month">This Month</option>
+                            </select>
+                        )}
+                        <button
+                            className="dashboard-btn"
+                            onClick={() => setViewPastAppointments(!viewPastAppointments)}
+                        >
+                            {viewPastAppointments === false
+                                ? "View History"
+                                : "View Upcoming"}
+                        </button>
                     </div>
                 </div>
                 <div className="appointment-box">
-                    {appointments && appointments.length > 0 ? (
-                        appointments.map((appointment) => (
+                    {filteredAppointments && filteredAppointments.length > 0 ? (
+                        filteredAppointments.map((appointment) => (
                             <div className="appointment-card" key={appointment._id}>
                                 <div className="appointment-time">{new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}</div>
                                 <div className="appointment-detail">
