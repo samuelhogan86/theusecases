@@ -10,6 +10,9 @@ function PatientPortal() {
     const [appointments, setAppointments] = useState([]);
     const [user, setUser] = useState([]);
 
+    // Search state for appointments
+    const [viewPastAppointments, setViewPastAppointments] = useState(false);
+
     // Fetch patient appointment data for dashboard
     useEffect(() => {
         const fetchPatientData = async () => {
@@ -32,6 +35,21 @@ function PatientPortal() {
 
         fetchPatientData();
     }, []);
+
+    const filteredAppointments = appointments.filter(appointment => {
+        const apptDate = new Date(appointment.startTime);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const apptDay = new Date(apptDate);
+        apptDay.setHours(0, 0, 0, 0);
+
+        if (viewPastAppointments) {
+            return apptDay.getTime() < today.getTime();
+        } else {
+            return apptDay.getTime() >= today.getTime();
+        }
+    });
 
     const handleOpenChange = () => setOpenChangePassword(true);
     const handleCloseChange = () => setOpenChangePassword(false);
@@ -63,12 +81,19 @@ function PatientPortal() {
                 <div className="dashboard-section-header">
                     <h2>My Appointments</h2>
                     <div className="dashboard-section-controls">
-                        <button className="dashboard-btn">View History</button>
+                        <button
+                            className="dashboard-btn"
+                            onClick={() => setViewPastAppointments(!viewPastAppointments)}
+                        >
+                            {viewPastAppointments === false
+                                ? "View History"
+                                : "View Upcoming"}
+                        </button>
                     </div>
                 </div>
                 <div className="appointment-box">
-                    {appointments && appointments.length > 0 ? (
-                        appointments.map((appointment) => (
+                    {filteredAppointments && filteredAppointments.length > 0 ? (
+                        filteredAppointments.map((appointment) => (
                             <div className="appointment-card" key={appointment._id}>
                                 <div className="appointment-time">{new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}</div>
                                 <div className="appointment-detail">
