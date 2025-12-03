@@ -1,3 +1,4 @@
+const { stat } = require('fs');
 const Appointment = require('../models/appointmentModel');
 const User = require('../models/userModel');
 
@@ -188,13 +189,11 @@ async function scheduleAppointment(startTime, doctorId, patientId) {
 }
 
   async function CheckTimeConflict(userId, startTime, role) {
-    const query = role === 'doctor' ? { doctorId: userId } : { patientId: userId };
-    query.startTime = startTime;
-    const conflictingAppointment = await Appointment.findOne({ query });
-    if (conflictingAppointment) {
-      return true;
-    }
-    return false;
+    const query = role === 'doctor' ? { doctorId: userId, startTime: startTime, status: 'active' } : { patientId: userId, startTime: startTime, status: 'active' };
+
+    const conflictingAppointment = await Appointment.findOne(query);
+    
+    return !!conflictingAppointment;
   }
 
 
