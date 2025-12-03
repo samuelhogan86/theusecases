@@ -420,6 +420,40 @@ function AdminPortal() {
                     <UserInformation user={currentUser} />
                 }
             </Modal>
+            {/* Popup form for adding new appointment */}
+            <Modal
+                title="Schedule New Appointment"
+                open={openNewAppointment}
+                onCancel={handleCloseNewAppointment}
+                footer={null}
+                centered
+            >
+                <NewAppointmentForm closeModal={handleCloseNewAppointment} users={users} />
+            </Modal>
+
+            {/* Popup form for registering new user */}
+            <Modal
+                title="Register New User"
+                open={openAdd}
+                onCancel={handleCloseAdd}
+                footer={null}
+                centered
+            >
+                <RegisterUserForm closeModal={handleCloseAdd} />
+            </Modal>
+
+            {/* Popup for viewing user info */}
+            <Modal
+                title="User Information"
+                open={openViewUserInfo}
+                onCancel={handleCloseviewUserInfo}
+                footer={null}
+                centered
+            >
+                {currentUser &&
+                    <UserInformation user={currentUser} />
+                }
+            </Modal>
         </>
     );
 }
