@@ -4,3 +4,4 @@ design/
 client/node_modules/*
 client/.vite/
 node_modules/
+.env

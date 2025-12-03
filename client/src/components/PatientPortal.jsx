@@ -6,8 +6,30 @@ import { handleLogout } from '../utils/logout'
 
 function PatientPortal() {
     const [appointments, setAppointments] = useState([]);
-    const [user, setUser] = useState(null);
-    const [openChangePassword, setOpenChangePassword] = useState(false);
+    const [user, setUser] = useState([]);
+
+    // Fetch patient appointment data for dashboard
+    useEffect(() => {
+        const fetchPatientData = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                const response = await fetch("http://localhost:3000/api/users/dashboard", {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const data = await response.json();
+                if (data.payload) {
+                    setUser(data.payload.user);
+                    setAppointments(data.payload.appointments || []);
+                }
+            } catch (err) {
+                console.log("Error fetching patient data:", err);
+            }
+        };
+
+        fetchPatientData();
+    }, []);
 
     const handleOpenChange = () => setOpenChangePassword(true);
     const handleCloseChange = () => setOpenChangePassword(false);

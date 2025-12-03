@@ -1,7 +1,7 @@
 export async function changePasswordRequest(userId, currentPassword, newPassword) {
     if (!userId) throw new Error('Missing userId');
 
-    const res = await fetch(`http://localhost:3000/auth/users/${userId}/change-password`, {
+    const res = await fetch(`http://localhost:3000/api/auth/users/${userId}/change-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ currentPassword, newPassword }),

@@ -1,6 +1,6 @@
 //requires user model. 
 const User = require('../models/userModel');
-const Appointment = require('../models/appointmentModel');
+const {userDashService} = require('../services/userService');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
@@ -41,6 +41,7 @@ const createToken = (user) => {
 
 module.exports.registerUser = async (req, res) => {
     const { firstName, lastName, username, password, role } = req.body;
+    console.log(firstName, lastName, username, password, role);
     try {
         const user = await User.register(firstName, lastName, username, password, role);
         const token = createToken(user);
@@ -50,7 +51,6 @@ module.exports.registerUser = async (req, res) => {
         res.status(201).json({
             message: 'User registered successfully',
             user: userResponse,
-            token: token
         });
     }
     catch (err) {
@@ -61,10 +61,10 @@ module.exports.registerUser = async (req, res) => {
 }
 
 module.exports.updateUser = async (req, res) => {
-    const { id } = req.params;
+    const { UserId } = req.params;
     const { firstName, lastName, username, password, role } = req.body;
     try {
-        const user = await User.update(id, firstName, lastName, username, password, role);
+        const user = await User.updateUserById(UserId, firstName, lastName, username, password, role);
 
         const userResponse = user.toObject();
         delete userResponse.passwordHash;
@@ -83,8 +83,8 @@ module.exports.updateUser = async (req, res) => {
 
 module.exports.deleteUser = async (req, res) => {
     try{
-        let { id } = req.params;
-        const user = await User.deleteUserById(id);
+        const { UserId } = req.params;
+        const user = await User.deleteUserById(UserId);
         if(!user){
             return res.status(404).json({message:"User Not Found"});
         }
@@ -98,16 +98,14 @@ module.exports.deleteUser = async (req, res) => {
     }
 }
 
-module.exports.dashboard = async(req, res) =>{
+
+module.exports.getAdminDash = async(req, res) =>{
     try{
-        const [users, appointments] = await Promise.all([
-            User.getAdminDash(),
-            Appointment.getAdminDash()
-        ]);
+        const UserId = req.user.id;
+        const userData = await userDashService(UserId);
         res.status(200).json({
             message: "dashboard data sent",
-            users: users,
-            appointments: appointments
+            payload: userData
         });
     }catch(err){
         res.status(500).json({message:err.message});

@@ -17,7 +17,7 @@ function RegisterUserForm(props) {
 
         try {
             const token = localStorage.getItem("token");
-            const res = await fetch("http://localhost:3000/admin/users", {
+            const res = await fetch("http://localhost:3000/api/users", {
                 method: "POST",
                 body: JSON.stringify({ firstName, lastName, username, password, role }),
                 headers: { 
@@ -29,7 +29,7 @@ function RegisterUserForm(props) {
             const data = await res.json();
 
             if (res.ok) {
-                console.log("User successfully updated!");
+                console.log("User successfully registered!");
                 // Close modal
                 if (props.closeModal) props.closeModal();
             } else {
@@ -42,7 +42,7 @@ function RegisterUserForm(props) {
                 });
             }
         } catch (err) {
-            console.log("Update user error", err);
+            console.log("Register user error", err);
         }
     }
 

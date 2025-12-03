@@ -14,7 +14,7 @@ function Login() {
         setErrors({ username: "", password: "" });
 
         try {
-            const res = await fetch("http://localhost:3000/auth/login", {
+            const res = await fetch("http://localhost:3000/api/auth/login", {
                 method: "POST",
                 body: JSON.stringify({ username, password }),
                 headers: { "Content-Type": "application/json" },
