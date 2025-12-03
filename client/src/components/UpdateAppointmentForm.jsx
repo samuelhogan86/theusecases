@@ -121,7 +121,7 @@ function UpdateAppointmentForm(props) {
                         format="YYYY-MM-DD"
                         style={{ width: '100%' }}
                     />
-                    <div className="error">{errors.date}</div>
+                    <div className="text-dark">{errors.date}</div>
                 </div>
 
                 <div className="mb-3">
@@ -134,7 +134,7 @@ function UpdateAppointmentForm(props) {
                         placeholder="Select start time"
                         style={{ width: '100%' }}
                     />
-                    <div className="error">{errors.startTime}</div>
+                    <div className="text-dark">{errors.startTime}</div>
                 </div>
 
                 <div className="mb-3">
@@ -150,7 +150,7 @@ function UpdateAppointmentForm(props) {
                             value: doctor.id
                         }))}
                     />
-                    <div className="error">{errors.doctorId}</div>
+                    <div className="text-dark">{errors.doctorId}</div>
                 </div>
 
                 <div className="mb-3">
@@ -166,7 +166,7 @@ function UpdateAppointmentForm(props) {
                             value: patient.id
                         }))}
                     />
-                    <div className="error">{errors.patientId}</div>
+                    <div className="text-dark">{errors.patientId}</div>
                 </div>
 
                 <button type="submit" className="btn btn-outline-secondary">
