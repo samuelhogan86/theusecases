@@ -1,6 +1,46 @@
 
 const {cancelService, deleteService, modifyService , scheduleAppointment} = require('../services/appointmentService');
 
+const handleErrors = (err) => {
+    console.log('Error:', err.message);
+    let errors = {};
+    
+    if (err.message === 'All fields are required to schedule an appointment') {
+        errors.general = 'All fields are required to schedule an appointment';
+    }
+    if (err.message === 'Invalid doctor ID') {
+        errors.doctorId = 'The selected doctor does not exist';
+    }
+    if (err.message === 'Invalid patient ID') {
+        errors.patientId = 'The selected patient does not exist';
+    }
+    if (err.message === 'Start time must be before end time') {
+        errors.startTime = 'Start time must be before end time';
+    }
+    if (err.message === 'Doctor has a conflicting appointment') {
+        errors.doctorId = 'This doctor already has an appointment at this time';
+    }
+    if (err.message === 'Patient has a conflicting appointment') {
+        errors.patientId = 'This patient already has an appointment at this time';
+    }
+    if (err.message === 'Failed to generate a unique appointment ID') {
+        errors.general = 'Unable to create appointment. Please try again';
+    }
+    if (err.message === 'Appointment is already inactive') {
+        errors.general = 'Appointment is already inactive';
+    }
+    if (err.message === 'Invalid status value') {
+        errors.status = 'Status must be either active or inactive';
+    }
+    if (err.message === 'Doctor has a conflicting appointment at the new time') {
+        errors.doctorId = 'This doctor already has an appointment at the new time';
+    }
+    if (err.message === 'Patient has a conflicting appointment at the new time') {
+        errors.patientId = 'This patient already has an appointment at the new time';
+    }   
+    
+    return errors;
+}
 
 module.exports.cancelAppointment = async (req, res) =>{
     try{
@@ -47,24 +87,15 @@ module.exports.modifyAppointment = async(req, res)=>{
     }
 }
 
-
-const handleErrors = (err) => {
-    console.log('Error:', err.message);
-    let errors = {};
-
-
-    return errors;
-}
-
 module.exports.scheduleAppointment = async (req, res) => {
-    const { startTime, endTime, doctorId, patientId } = req.body;
+    const { startTime, doctorId, patientId } = req.body;
 
     const startDate = new Date(startTime);
-    const endDate = new Date(endTime);
-    console.log(startTime, endTime, doctorId, patientId);
+    
+    console.log(startTime, doctorId, patientId);
     try {
 
-        const appointment = await scheduleAppointment(startDate, endDate, doctorId, patientId);
+        const appointment = await scheduleAppointment(startDate, doctorId, patientId);
         const appointmentResponse = appointment.toObject();
 
         res.status(201).json({

@@ -2,11 +2,11 @@ import { useState } from "react";
 
 // Same as register, but fields are not required
 function UpdateUserForm(props) {
-    const userId = props.user._id;
-    const [firstName, setFirstName] = useState(props.user.firstName || "");
-    const [lastName, setLastName] = useState(props.user.lastName || "");
-    const [username, setUsername] = useState(props.user.username || "");
-    const [password, setPassword] = useState("");
+    const userId = props.user.id;
+    const [firstName, setFirstName] = useState(props.user.firstName || undefined);
+    const [lastName, setLastName] = useState(props.user.lastName || undefined);
+    const [username, setUsername] = useState(props.user.username || undefined);
+    const [password, setPassword] = useState(undefined);
     const [role, setRole] = useState(props.user.role || "patient");
     const [errors, setErrors] = useState(
         { firstName: "", lastName: "", username: "", password: "", role: "" }

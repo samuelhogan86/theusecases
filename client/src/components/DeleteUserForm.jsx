@@ -1,6 +1,6 @@
 function DeleteUserForm(props) {
     const user = props.user;
-    const userId = user._id;
+    const userId = user.id;
     // Handle delete
     const handleSubmit = async (e) => {
         e.preventDefault();

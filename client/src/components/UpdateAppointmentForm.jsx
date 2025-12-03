@@ -7,19 +7,23 @@ function UpdateAppointmentForm(props) {
     const appointment = props.appointment;
     const appointmentId = appointment.appointmentId;
 
-    // Extract initial values from the appointment DateTime objects
+    // Extract initial value from the appointment DateTime object
     const initialStartDateTime = dayjs(appointment.startTime);
-    const initialEndDateTime = dayjs(appointment.endTime);
+
+    // Extract ID from appointment doctor/patient (could be full object or just ID string)
+    const getIdFromUser = (user) => {
+        if (!user) return "";
+        if (typeof user === 'string') return user;
+        return user.id || user._id || "";
+    };
 
     const [date, setDate] = useState(initialStartDateTime.startOf("day"));
     const [startTime, setStartTime] = useState(initialStartDateTime.format('HH:mm'));
-    const [endTime, setEndTime] = useState(initialEndDateTime.format('HH:mm'));
-    const [doctorId, setDoctorId] = useState(appointment.doctorId?._id || appointment.doctorId?.id || appointment.doctorId || "");
-    const [patientId, setPatientId] = useState(appointment.patientId?._id || appointment.patientId?.id || appointment.patientId || "");
+    const [doctorId, setDoctorId] = useState(getIdFromUser(appointment.doctorId));
+    const [patientId, setPatientId] = useState(getIdFromUser(appointment.patientId));
     const [errors, setErrors] = useState({
         date: "",
         startTime: "",
-        endTime: "",
         doctorId: "",
         patientId: ""
     });
@@ -35,9 +39,8 @@ function UpdateAppointmentForm(props) {
 
         setDate(start.startOf("day"));
         setStartTime(start.format("HH:mm"));
-        setEndTime(end.format("HH:mm"));
-        setDoctorId(appointment.doctorId?._id || appointment.doctorId?.id || appointment.doctorId || "");
-        setPatientId(appointment.patientId?._id || appointment.patientId?.id || appointment.patientId || "");
+        setDoctorId(getIdFromUser(appointment.doctorId));
+        setPatientId(getIdFromUser(appointment.patientId));
     }, [appointment]);
 
     // Generate time options in 15-minute intervals from 8 AM to 6 PM
@@ -65,17 +68,10 @@ function UpdateAppointmentForm(props) {
 
         try {
             const [startHour, startMinute] = startTime.split(':');
-            const [endHour, endMinute] = endTime.split(':');
 
             const startDateTime = dayjs(date)
                 .hour(parseInt(startHour))
                 .minute(parseInt(startMinute))
-                .second(0)
-                .toISOString();
-
-            const endDateTime = dayjs(date)
-                .hour(parseInt(endHour))
-                .minute(parseInt(endMinute))
                 .second(0)
                 .toISOString();
 
@@ -84,7 +80,6 @@ function UpdateAppointmentForm(props) {
                 method: "PUT",
                 body: JSON.stringify({
                     startTime: startDateTime,
-                    endTime: endDateTime,
                     doctorId,
                     patientId
                 }),
@@ -105,7 +100,6 @@ function UpdateAppointmentForm(props) {
                 setErrors({
                     date: data.errors?.date || "",
                     startTime: data.errors?.startTime || "",
-                    endTime: data.errors?.endTime || "",
                     doctorId: data.errors?.doctorId || "",
                     patientId: data.errors?.patientId || ""
                 });
@@ -144,19 +138,6 @@ function UpdateAppointmentForm(props) {
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="endTime">End Time</label>
-                    <Select
-                        id="endTime"
-                        value={endTime}
-                        onChange={(value) => setEndTime(value)}
-                        options={timeOptions}
-                        placeholder="Select end time"
-                        style={{ width: '100%' }}
-                    />
-                    <div className="error">{errors.endTime}</div>
-                </div>
-
-                <div className="form-group">
                     <label htmlFor="doctorId">Doctor</label>
                     <Select
                         id="doctorId"
@@ -164,13 +145,11 @@ function UpdateAppointmentForm(props) {
                         onChange={(value) => setDoctorId(value)}
                         placeholder="Select doctor"
                         style={{ width: '100%' }}
-                    >
-                        {doctors.map(doctor => (
-                            <Select.Option key={doctor._id} value={doctor.id}>
-                                {doctor.firstName} {doctor.lastName}
-                            </Select.Option>
-                        ))}
-                    </Select>
+                        options={doctors.map(doctor => ({
+                            label: `${doctor.firstName} ${doctor.lastName}`,
+                            value: doctor.id
+                        }))}
+                    />
                     <div className="error">{errors.doctorId}</div>
                 </div>
 
@@ -182,13 +161,11 @@ function UpdateAppointmentForm(props) {
                         onChange={(value) => setPatientId(value)}
                         placeholder="Select patient"
                         style={{ width: '100%' }}
-                    >
-                        {patients.map(patient => (
-                            <Select.Option key={patient._id} value={patient.id}>
-                                {patient.firstName} {patient.lastName}
-                            </Select.Option>
-                        ))}
-                    </Select>
+                        options={patients.map(patient => ({
+                            label: `${patient.firstName} ${patient.lastName}`,
+                            value: patient.id
+                        }))}
+                    />
                     <div className="error">{errors.patientId}</div>
                 </div>
 

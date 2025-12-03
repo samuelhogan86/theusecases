@@ -1,3 +1,4 @@
+const { stat } = require('fs');
 const Appointment = require('../models/appointmentModel');
 const User = require('../models/userModel');
 
@@ -14,6 +15,11 @@ async function cancelService(apptId){
       console.log("SERVICE, No appointment found");
       return null;
     }
+
+    if (appointment.status === 'inactive') {
+      throw new Error('Appointment is already inactive');
+    }
+
     appointment.status = 'inactive';
     appointment.lastUpdated = new Date();
     console.log("SERVICE, updated appointment: ", appointment)
@@ -56,18 +62,44 @@ async function modifyService(apptId, updates){
     console.log(updates);
     let {startTime,endTime,doctorId,patientId,status} = updates;
     if(startTime){
+      if (CheckTimeConflict(appointment.doctorId, startTime, 'doctor')) {
+        throw new Error('Doctor has a conflicting appointment at the new time');
+      }
+      if (CheckTimeConflict(appointment.patientId, startTime, 'patient')) {
+        throw new Error('Patient has a conflicting appointment at the new time');
+      }
       appointment.startTime = startTime;
-    }
-    if(endTime){
+      endTime = new Date(startTime);
+      endTime.setMinutes(endTime.getMinutes() + 30);
       appointment.endTime = endTime;
     }
     if(doctorId){
+      checkDoctorId = await User.findOne({ id: doctorId, role: 'doctor' });
+      if ( !checkDoctorId ) {
+        throw new Error('Invalid doctor ID');
+      }
+      if (CheckTimeConflict(doctorId, appointment.startTime, 'doctor')) {
+        throw new Error('Doctor has a conflicting appointment at the new time');
+      }
       appointment.doctorId = doctorId;
     }
     if(patientId){
+      checkPatientId = await User.findOne({ id: patientId, role: 'patient' });
+      if ( !checkPatientId ) {
+        throw new Error('Invalid patient ID');
+      }
+      if (CheckTimeConflict(patientId, appointment.startTime, 'patient')) {
+        throw new Error('Patient has a conflicting appointment at the new time');
+      }
       appointment.patientId = patientId;
     }
     if(status){
+      if (status === 'inactive' && appointment.status === 'inactive') {
+        throw new Error('Appointment is already inactive');
+      }
+      if (status !== 'active' && status !== 'inactive') {
+        throw new Error('Invalid status value');
+      }
       appointment.status = status;
     }
     appointment.lastUpdated = new Date();
@@ -77,11 +109,12 @@ async function modifyService(apptId, updates){
 
   }catch(err){
     console.error("SERVICE, error", err);
+    throw err;
   }
 }
-async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
+async function scheduleAppointment(startTime, doctorId, patientId) {
 
-  if (!startTime || !endTime || !doctorId || !patientId) {
+  if (!startTime ||  !doctorId || !patientId) {
     throw new Error('All fields are required to schedule an appointment');
   }
 
@@ -95,45 +128,55 @@ async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
     throw new Error('Invalid patient ID');
   }
 
-  if (new Date(startTime) >= new Date(endTime)) {
-    throw new Error('Start time must be before end time');
-  }
-
-  let isUnique = false;
-  let attempts = 0;
-  const maxAttemps = 10;
-  let appointmentId;
-  
-  while (!isUnique && attempts < maxAttemps) {
-
-    const randomNum = Math.floor(100000 + Math.random() * 900000);
-    appointmentId = `APPT${randomNum}`;
-
-    const existingAppointment = await Appointment.findOne({ appointmentId: appointmentId });
-    if (!existingAppointment) {
-      isUnique = true;
+  endTime = new Date(startTime);
+  endTime.setMinutes(endTime.getMinutes() + 30); // Default appointment duration is 30 minutes
+  try{
+    if (new Date(startTime) >= new Date(endTime)) {
+      throw new Error('Start time must be before end time');
     }
-    attempts++;
-  }
 
-  if (!isUnique) {
-    throw new Error('Failed to generate a unique appointment ID');
-  }
+    if (CheckTimeConflict(doctorId, startTime, 'doctor')) {
+      throw new Error('Doctor has a conflicting appointment');
+    }
 
-  const status = 'active';
-  const lastUpdated = new Date();
+    if (CheckTimeConflict(patientId, startTime, 'patient')) {
+      throw new Error('Patient has a conflicting appointment');
+    }
 
-  const appointmentData = {
-    appointmentId,
-    startTime,
-    endTime,
-    doctorId,
-    patientId,
-    status,
-    lastUpdated
-  }
+    let isUnique = false;
+    let attempts = 0;
+    const maxAttempts = 10;
+    let appointmentId;
+    
+    while (!isUnique && attempts < maxAttempts) {
 
-  try {
+      const randomNum = Math.floor(100000 + Math.random() * 900000);
+      appointmentId = `APPT${randomNum}`;
+
+      const existingAppointment = await Appointment.findOne({ appointmentId: appointmentId });
+      if (!existingAppointment) {
+        isUnique = true;
+      }
+      attempts++;
+    }
+
+    if (!isUnique) {
+      throw new Error('Failed to generate a unique appointment ID');
+    }
+
+    const status = 'active';
+    const lastUpdated = new Date();
+
+    const appointmentData = {
+      appointmentId,
+      startTime,
+      endTime,
+      doctorId,
+      patientId,
+      status,
+      lastUpdated
+    }
+
     const appointment = await Appointment.create(appointmentData);
     console.log('Appointment scheduled successfully:', appointment);
     return appointment;
@@ -144,5 +187,14 @@ async function scheduleAppointment(startTime, endTime, doctorId, patientId) {
   }
 
 }
-module.exports = {cancelService, deleteService, modifyService, scheduleAppointment}
 
+  async function CheckTimeConflict(userId, startTime, role) {
+    const query = role === 'doctor' ? { doctorId: userId, startTime: startTime, status: 'active' } : { patientId: userId, startTime: startTime, status: 'active' };
+
+    const conflictingAppointment = await Appointment.findOne(query);
+    
+    return !!conflictingAppointment;
+  }
+
+
+module.exports = {cancelService, deleteService, modifyService, scheduleAppointment}
