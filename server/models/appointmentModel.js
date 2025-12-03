@@ -47,7 +47,7 @@ appointmentSchema.statics.getAppointments = async function() {
 //The following functions can be cleaned with this schema methods
 
 appointmentSchema.statics.findByPatient = async function(UserId){
-  const appointments = await this.find({patientId:UserId})
+  const appointments = await this.find({patientId:UserId, status:'active'})
   .lean()
   .sort({ date: 1, startTime: 1 });
   //user reference, joins the object with it's values fName, lName, etc.
@@ -56,7 +56,7 @@ appointmentSchema.statics.findByPatient = async function(UserId){
 }
 
 appointmentSchema.statics.findByDoctor = async function(UserId){
-  const appointments = await this.find({doctorId:UserId})
+  const appointments = await this.find({doctorId:UserId, status:'active'})
   .lean()
   .sort({ date: 1, startTime: 1 });
   //sorts by date first then starttime

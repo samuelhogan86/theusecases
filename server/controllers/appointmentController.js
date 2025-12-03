@@ -45,8 +45,12 @@ const handleErrors = (err) => {
 module.exports.cancelAppointment = async (req, res) =>{
     try{
         const {AppointmentId}= req.params;
-        console.log("CONTROLLER, Recieved: ", AppointmentId)
-        const appointment = await cancelService(AppointmentId);
+        const userId = req.user.id;
+
+        console.log("CONTROLLER, Recieved: ", {AppointmentId, userId});
+
+        const appointment = await cancelService(AppointmentId, userId);
+        
         res.status(201).json({
             message:"Update appointment status successfully",
             updates: appointment

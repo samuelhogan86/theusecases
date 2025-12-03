@@ -54,8 +54,31 @@ function PatientPortal() {
     const handleOpenChange = () => setOpenChangePassword(true);
     const handleCloseChange = () => setOpenChangePassword(false);
 
-// User routes and REST Endpoints needed
+        const handleCancelAppointment = async (appointmentId) => {
+        if(!window.confirm('Are you sure you want to cancel this appointment?')) 
+            return;
+        try {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:3000/api/appointments/${appointmentId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
 
+            if(response.ok) {
+                setAppointments(appointments.filter(app => app.appointmentId !== appointmentId));
+                alert('Appointment cancelled successfully.');
+            } else {
+                const data = await response.json();
+                alert(`Failed to cancel appointment: ${data.message || 'Unknown error'}`);
+            }
+        } catch (err) {
+            console.error("Error cancelling appointment:", err);
+            alert('An error occurred while cancelling the appointment.');
+        }
+    };
 return (
     <>
         {/* HEADER */}
