@@ -122,20 +122,20 @@ function AdminPortal() {
     return (
         <>
             {/* HEADER */}
-        <div className="container mt-4" style={{ maxWidth: "100%", "--bs-gutter-x": "0" }}>
-            <div className="d-flex justify-content-between align-items-start">
-            <div>
-                <h1 className="fw-bold mb-1">Admin Dashboard</h1>
-                <p className="text-muted mb-4">Manage Users and Appointments</p>
-            </div>
+            <div className="container mt-4" style={{ maxWidth: "100%", "--bs-gutter-x": "0" }}>
+                <div className="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h1 className="fw-bold mb-1">Admin Dashboard</h1>
+                        <p className="text-muted mb-4">Manage Users and Appointments</p>
+                    </div>
 
-            <div className="d-flex gap-2">
-                <button
-                className="btn btn-outline-dark"
-                onClick={() => setOpenChangePassword(true)}
-                >
-                Change Password
-                </button>
+                    <div className="d-flex gap-2">
+                        <button
+                            className="btn btn-outline-dark"
+                            onClick={() => setOpenChangePassword(true)}
+                        >
+                            Change Password
+                        </button>
 
                         <button
                             className="btn btn-outline-danger"
@@ -164,7 +164,7 @@ function AdminPortal() {
             </Modal>
 
             {/* TAB NAVIGATION */}
-            <div className="container mt-1 mb-1" style={{ paddingLeft: "0", marginLeft: "0"}}>
+            <div className="container mt-1 mb-1" style={{ paddingLeft: "0", marginLeft: "0" }}>
                 <ul className="nav nav-tabs" style={{ borderBottom: "none" }}>
                     <li className="nav-item">
                         <button
@@ -201,8 +201,8 @@ function AdminPortal() {
                 </ul>
             </div>
             {/* Appointments Tab */}
-                {activeTab === 'appointments' && (
-                <> 
+            {activeTab === 'appointments' && (
+                <>
                     <div className="d-flex justify-content-between align-items-center mb-3">
                         <input
                             type="text"
@@ -317,86 +317,71 @@ function AdminPortal() {
                                     )}
                                 </tbody>
                             </table>
-
-                            <div className="d-flex justify-content-between align-items-center p-3 border-top">
-                                <button className="btn btn-outline-secondary">Prev</button>
-                                <div>
-                                    Page <input type="number" className="form-control d-inline-block mx-2" value="1" style={{ width: '60px', textAlign: 'center' }} /> of 3
-                                </div>
-                                <button className="btn btn-outline-secondary">Next</button>
-                            </div>
                         </div>
                     </div>
-                    </>
-                    )}
-                {/* Users Tab */}
-                    {activeTab === 'users' && (
-                        <>
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                placeholder="Search by name, username, role, or status..." 
-                                style={{ maxWidth: '25vw' }}
-                                value={userSearchTerm}
-                                onChange={(e) => setUserSearchTerm(e.target.value)}
-                            />
-                            <div className="d-flex gap-2">
-                                <button className="btn btn-dark px-3" onClick={handleAdd}>+ Add User</button>
-                            </div>
+                </>
+            )}
+            {/* Users Tab */}
+            {activeTab === 'users' && (
+                <>
+                    <div className="d-flex justify-content-between align-items-center mb-3">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search by name, username, role, or status..."
+                            style={{ maxWidth: '25vw' }}
+                            value={userSearchTerm}
+                            onChange={(e) => setUserSearchTerm(e.target.value)}
+                        />
+                        <div className="d-flex gap-2">
+                            <button className="btn btn-dark px-3" onClick={handleAdd}>+ Add User</button>
                         </div>
-                <div className="bg-white border rounded-3 p-4" style={{ minWidth: '90vw' }}>
-                            <div className="table-responsive bg-white rounded">
-                                <table className="table table-hover mb-0">
-                                    <thead style={{ backgroundColor: '#f9f9f9' }}>
-                                        <tr>
-                                            <th className="fw-semibold">Name</th>
-                                            <th className="fw-semibold">Username</th>
-                                            <th className="fw-semibold">Role</th>
-                                            <th className="fw-semibold">Status</th>
-                                            <th className="fw-semibold"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filteredUsers && filteredUsers.length > 0 ? (
-                                            filteredUsers.map((user) => (
-                                                <tr key={user._id || user.username}>
-                                                    <td>{user.firstName} {user.lastName}</td>
-                                                    <td>{user.username}</td>
-                                                    <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
-                                                    <td>{user.status || "Active"}</td>
-                                                    <td>
-                                                        <Button
-                                                            type="primary"
-                                                            onClick={() => handleViewUserInfo(user)}
-                                                        >
-                                                            View Information
-                                                        </Button>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="5" style={{ textAlign: "center" }}>
-                                                    {userSearchTerm
-                                                        ? `No users found matching "${userSearchTerm}"`
-                                                        : "No users found."}
+                    </div>
+                    <div className="bg-white border rounded-3 p-4" style={{ minWidth: '90vw' }}>
+                        <div className="table-responsive bg-white rounded">
+                            <table className="table table-hover mb-0">
+                                <thead style={{ backgroundColor: '#f9f9f9' }}>
+                                    <tr>
+                                        <th className="fw-semibold">Name</th>
+                                        <th className="fw-semibold">Username</th>
+                                        <th className="fw-semibold">Role</th>
+                                        <th className="fw-semibold">Status</th>
+                                        <th className="fw-semibold"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filteredUsers && filteredUsers.length > 0 ? (
+                                        filteredUsers.map((user) => (
+                                            <tr key={user._id || user.username}>
+                                                <td>{user.firstName} {user.lastName}</td>
+                                                <td>{user.username}</td>
+                                                <td>{user.role.charAt(0).toUpperCase() + user.role.slice(1)}</td>
+                                                <td>{user.status || "Active"}</td>
+                                                <td>
+                                                    <Button
+                                                        type="primary"
+                                                        onClick={() => handleViewUserInfo(user)}
+                                                    >
+                                                        View Information
+                                                    </Button>
                                                 </td>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                                <div className="d-flex justify-content-between align-items-center p-3 border-top">
-                                <button className="btn btn-outline-secondary">Prev</button>
-                                <div>
-                                    Page <input type="number" className="form-control d-inline-block mx-2" value="1" style={{ width: '60px', textAlign: 'center' }} /> of 1
-                                </div>
-                                <button className="btn btn-outline-secondary">Next</button>
-                                </div>
-                            </div>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                                {userSearchTerm
+                                                    ? `No users found matching "${userSearchTerm}"`
+                                                    : "No users found."}
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
                         </div>
-                        </>
-                    )}
+                    </div>
+                </>
+            )}
             {/* Popup form for registering new user */}
             <Modal
                 title="Register New User"
