@@ -4,6 +4,7 @@ import { Modal } from 'antd'
 import ChangePassword from './ChangePassword'
 import { handleLogout } from '../utils/logout'
 import AccountInformation from './AccountInformation'
+import { BoxArrowRight, ArrowClockwise, X } from 'react-bootstrap-icons'
 
 function PatientPortal() {
     const [openChangePassword, setOpenChangePassword] = useState(false);
@@ -90,10 +91,10 @@ return (
                 </div>
                 <div className="d-flex gap-2">
                     <button className="btn btn-outline-secondary" onClick={handleOpenChange}>
-                        Change Password
+                        <ArrowClockwise /> Change Password
                     </button>
                     <button className="btn btn-outline-danger" onClick={handleLogout}>
-                        Logout
+                        Logout <BoxArrowRight />
                     </button>
                 </div>
             </div>
@@ -143,7 +144,7 @@ return (
                                                 {dateString} at {startTimeString}
                                             </h3>
                                             <button className="btn btn-outline-danger btn-sm" onClick={() => handleCancelAppointment(appointment.appointmentId)}>
-                                                Cancel
+                                                Cancel <X />
                                             </button>
                                         </div>
                                         <p className="text-secondary mb-1">

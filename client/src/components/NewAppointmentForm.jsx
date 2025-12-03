@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { DatePicker, TimePicker, Select } from "antd";
 import dayjs from "dayjs";
+import { PlusLg } from 'react-bootstrap-icons';
 
 function NewAppointmentForm(props) {
     const [date, setDate] = useState(null);
@@ -157,7 +158,7 @@ function NewAppointmentForm(props) {
                 </div>
 
                 <button type="submit" className="btn btn-success">
-                    Schedule Appointment
+                    <PlusLg /> Schedule Appointment
                 </button>
             </form>
         </>

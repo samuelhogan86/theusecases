@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PlusLg, X } from 'react-bootstrap-icons';
 
 function RegisterUserForm(props) {
     const [firstName, setFirstName] = useState("");
@@ -112,8 +113,8 @@ function RegisterUserForm(props) {
                 </div>
 
                 <div className="d-flex gap-2">
-                    <button type="submit" className="btn btn-success">Register User</button>
-                    <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}>Cancel</button>
+                    <button type="submit" className="btn btn-success"><PlusLg /> Register User</button>
+                    <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}><X />Cancel</button>
                 </div>
             </form>
         </>

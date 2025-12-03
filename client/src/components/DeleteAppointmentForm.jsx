@@ -1,3 +1,5 @@
+import { Trash, X } from 'react-bootstrap-icons';
+
 function DeleteAppointmentForm(props) {
     const appointment = props.appointment;
     const appointmentId = appointment.appointmentId;
@@ -32,8 +34,8 @@ function DeleteAppointmentForm(props) {
             <div className="mb-1">Are you sure you would like to delete this appointment?</div>
             <div className="text-danger mb-3">WARNING: This cannot be undone</div>
             <div className="d-flex gap-2">
-                <button className="btn btn-outline-danger" onClick={handleSubmit}>Delete Appointment</button>
-                <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}>Cancel</button>
+                <button className="btn btn-outline-danger" onClick={handleSubmit}><Trash /> Delete Appointment</button>
+                <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}><X /> Cancel</button>
             </div>
         </>
     )

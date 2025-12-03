@@ -1,3 +1,5 @@
+import { Trash, X } from 'react-bootstrap-icons';
+
 function DeleteUserForm(props) {
     const user = props.user;
     const userId = user.id;
@@ -32,8 +34,8 @@ function DeleteUserForm(props) {
             <div className="mb-1">Are you sure you would like to delete {user.firstName} {user.lastName}?</div>
             <div className="text-danger mb-3">WARNING! This action cannot be undone.</div>
             <div className="d-flex gap-2">
-                <button className="btn btn-outline-danger" onClick={handleSubmit}>Delete User</button>
-                <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}>Cancel</button>
+                <button className="btn btn-outline-danger" onClick={handleSubmit}><Trash />Delete User</button>
+                <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}><X />Cancel</button>
             </div>
         </>
     )

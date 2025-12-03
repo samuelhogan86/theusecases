@@ -1,4 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
+import { PlusLg, BoxArrowRight, PeopleFill, CalendarFill, CheckAll, ClockFill, ArrowClockwise, InfoCircleFill } from 'react-bootstrap-icons';
 import { useState, useEffect } from 'react';
 import { Modal, Button } from 'antd';
 import NewAppointmentForm from './NewAppointmentForm';
@@ -134,14 +135,14 @@ function AdminPortal() {
                 className="btn btn-outline-dark"
                 onClick={() => setOpenChangePassword(true)}
                 >
-                Change Password
+                <ArrowClockwise /> Change Password
                 </button>
 
                         <button
                             className="btn btn-outline-danger"
                             onClick={handleLogout}
                         >
-                            Logout
+                            Logout <BoxArrowRight />
                         </button>
                     </div>
                 </div>
@@ -179,7 +180,7 @@ function AdminPortal() {
                             }}
                             onClick={() => setActiveTab('appointments')}
                         >
-                            Appointments
+                            <CalendarFill /> Appointments
                         </button>
                     </li>
 
@@ -195,7 +196,7 @@ function AdminPortal() {
                             }}
                             onClick={() => setActiveTab('users')}
                         >
-                            Users
+                            <PeopleFill /> Users
                         </button>
                     </li>
                 </ul>
@@ -225,7 +226,7 @@ function AdminPortal() {
                                 <option value="patient">Search by Patient</option>
                                 <option value="doctor">Search by Doctor</option>
                             </select>
-                            <button className="btn btn-dark px-3" onClick={handleNewAppointment}>+ New Appointment</button>
+                            <button className="btn btn-dark px-3" onClick={handleNewAppointment}><PlusLg /> New Appointment</button>
                         </div>
                     </div>
 
@@ -234,14 +235,14 @@ function AdminPortal() {
                             className={`btn btn-outline-primary ${!showUpcomingOnly ? "btn btn-primary text-white" : ""}`}
                             onClick={() => setShowUpcomingOnly(false)}
                         >
-                            All Appointments
+                            <CheckAll /> All Appointments
                         </button>
 
                         <button
                             className={`btn btn-outline-secondary ${showUpcomingOnly ? "btn btn-secondary text-white" : ""} ms-2`}
                             onClick={() => setShowUpcomingOnly(true)}
                         >
-                            Upcoming
+                            <ClockFill /> Upcoming
                         </button>
                     </div>
 
@@ -300,7 +301,7 @@ function AdminPortal() {
                                                             type="primary"
                                                             onClick={() => handleViewAppointmentInfo(appointment)}
                                                         >
-                                                            View Information
+                                                            <InfoCircleFill /> View Information
                                                         </Button>
                                                     </td>
                                                 </tr>
@@ -319,11 +320,11 @@ function AdminPortal() {
                             </table>
 
                             <div className="d-flex justify-content-between align-items-center p-3 border-top">
-                                <button className="btn btn-outline-secondary">Prev</button>
+                                <button className="btn btn-outline-secondary" disabled>Prev</button>
                                 <div>
                                     Page <input type="number" className="form-control d-inline-block mx-2" value="1" style={{ width: '60px', textAlign: 'center' }} /> of 3
                                 </div>
-                                <button className="btn btn-outline-secondary">Next</button>
+                                <button className="btn btn-outline-secondary" disabled>Next</button>
                             </div>
                         </div>
                     </div>
@@ -342,7 +343,7 @@ function AdminPortal() {
                                 onChange={(e) => setUserSearchTerm(e.target.value)}
                             />
                             <div className="d-flex gap-2">
-                                <button className="btn btn-dark px-3" onClick={handleAdd}>+ Add User</button>
+                                <button className="btn btn-dark px-3" onClick={handleAdd}><PlusLg /> Add User</button>
                             </div>
                         </div>
                 <div className="bg-white border rounded-3 p-4" style={{ minWidth: '90vw' }}>
@@ -370,7 +371,7 @@ function AdminPortal() {
                                                             type="primary"
                                                             onClick={() => handleViewUserInfo(user)}
                                                         >
-                                                            View Information
+                                                            <InfoCircleFill /> View Information
                                                         </Button>
                                                     </td>
                                                 </tr>
@@ -387,11 +388,11 @@ function AdminPortal() {
                                     </tbody>
                                 </table>
                                 <div className="d-flex justify-content-between align-items-center p-3 border-top">
-                                <button className="btn btn-outline-secondary">Prev</button>
+                                <button className="btn btn-outline-secondary" disabled>Prev</button>
                                 <div>
                                     Page <input type="number" className="form-control d-inline-block mx-2" value="1" style={{ width: '60px', textAlign: 'center' }} /> of 1
                                 </div>
-                                <button className="btn btn-outline-secondary">Next</button>
+                                <button className="btn btn-outline-secondary" disabled>Next</button>
                                 </div>
                             </div>
                         </div>

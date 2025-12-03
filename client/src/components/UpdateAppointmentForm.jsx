@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { DatePicker, TimePicker, Select } from "antd";
 import dayjs from "dayjs";
+import { ArrowClockwise, X } from 'react-bootstrap-icons';
 
 // Same as scheduling new appointment, except fields are not required and status can be updated
 function UpdateAppointmentForm(props) {
@@ -169,9 +170,10 @@ function UpdateAppointmentForm(props) {
                     <div className="error">{errors.patientId}</div>
                 </div>
 
-                <button type="submit" className="btn btn-outline-secondary">
-                    Update Appointment
-                </button>
+                <div className="d-flex gap-2">
+                    <button type="submit" className="btn btn-dark"><ArrowClockwise /> Update Appointment</button>
+                    <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}><X />Cancel</button>
+                </div>
             </form>
         </>
     );

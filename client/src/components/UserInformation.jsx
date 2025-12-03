@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 import UpdateUserForm from "./UpdateUserForm";
 import DeleteUserForm from "./DeleteUserForm";
+import { ArrowClockwise, Trash } from 'react-bootstrap-icons';
 
 function UserInformation(props) {
     const user = props.user;
@@ -49,8 +50,8 @@ function UserInformation(props) {
                 </div>
             </div>
             <div className="d-flex gap-2">
-                <button className="btn btn-dark" onClick={handleUpdate}>Update User</button>
-                <button className="btn btn-outline-danger" onClick={handleDelete}>Delete User</button>
+                <button className="btn btn-dark" onClick={handleUpdate}><ArrowClockwise />Update User</button>
+                <button className="btn btn-outline-danger" onClick={handleDelete}><Trash /> Delete User</button>
             </div>
 
             {/* Popup form for updating existing user */}

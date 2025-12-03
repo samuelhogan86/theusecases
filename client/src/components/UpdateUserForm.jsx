@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ArrowClockwise, X } from 'react-bootstrap-icons';
 
 // Same as register, but fields are not required
 function UpdateUserForm(props) {
@@ -111,8 +112,8 @@ function UpdateUserForm(props) {
                 </div>
 
                 <div className="d-flex gap-2">
-                    <button type="submit" className="btn btn-dark">Update User</button>
-                    <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}>Cancel</button>
+                    <button type="submit" className="btn btn-dark"><ArrowClockwise /> Update User</button>
+                    <button className="btn btn-outline-secondary" onClick={() => props.closeModal()}><X />Cancel</button>
                 </div>
             </form>
         </>

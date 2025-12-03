@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { changePasswordRequest } from "../utils/passwordApi";
+import { X } from 'react-bootstrap-icons';
 
 function ChangePassword(props) {
     const user = props.user;
@@ -88,7 +89,7 @@ function ChangePassword(props) {
                     {loading ? "Changing..." : "Change Password"}
                 </button>
                 <button type="button" className="btn btn-outline-secondary" onClick={() => props.closeModal && props.closeModal()} disabled={loading}>
-                    Cancel
+                    <X />Cancel
                 </button>
             </div>
 

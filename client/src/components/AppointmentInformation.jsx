@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Modal } from "antd";
 import UpdateAppointmentForm from "./UpdateAppointmentForm";
 import DeleteAppointmentForm from "./DeleteAppointmentForm";
+import { Trash, ArrowClockwise } from 'react-bootstrap-icons';
 
 function AppointmentInformation(props) {
     const appointment = props.appointment;
@@ -79,8 +80,8 @@ function AppointmentInformation(props) {
                 </div>
             </div>
             <div className="d-flex gap-2">
-                <button className="btn btn-dark" onClick={handleUpdate}>Update Appointment</button>
-                <button className="btn btn-outline-danger" onClick={handleDelete}>Delete Appointment</button>
+                <button className="btn btn-dark" onClick={handleUpdate}><ArrowClockwise /> Update Appointment</button>
+                <button className="btn btn-outline-danger" onClick={handleDelete}><Trash /> Delete Appointment</button>
             </div>
 
             {/* Popup form for updating appointment */}
