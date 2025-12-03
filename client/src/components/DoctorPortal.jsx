@@ -83,7 +83,7 @@ function DoctorPortal() {
             <div className="dashboard-header">
                 <div className="dashboard-header-left">
                     <h1>Doctor Dashboard</h1>
-                    <p>Welcome, {user ? `${user.firstName} ${user.lastName}` : "Patient"}</p>
+                    <p>Welcome, Dr. {user ? `${user.firstName} ${user.lastName}` : "Patient"}</p>
                 </div>
                 <div className="dashboard-header-right">
                     <button className="dashboard-btn dashboard-top-btn" onClick={handleOpenChange}>Change Password</button>
@@ -128,20 +128,28 @@ function DoctorPortal() {
                 </div>
                 <div className="appointment-box">
                     {filteredAppointments && filteredAppointments.length > 0 ? (
-                        filteredAppointments.map((appointment) => (
-                            <div className="appointment-card" key={appointment._id}>
-                                <div className="appointment-time">{new Date(appointment.date).toLocaleDateString()} at {appointment.startTime}</div>
-                                <div className="appointment-detail">
-                                    with {appointment.patientId
-                                        ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
-                                        : "Unknown"}
+                        filteredAppointments.map((appointment) => {
+                            const startDate = new Date(appointment.startTime);
+                            const endDate = new Date(appointment.endTime);
+                            const dateString = startDate.toLocaleDateString();
+                            const startTimeString = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                            const endTimeString = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                            return (
+                                <div className="appointment-card" key={appointment._id}>
+                                    <div className="appointment-time">{dateString} at {startTimeString}</div>
+                                    <div className="appointment-detail">
+                                        with {appointment.patientId
+                                            ? `${appointment.patientId.firstName} ${appointment.patientId.lastName}`
+                                            : "Unknown"}
+                                    </div>
+                                    <div className="appointment-detail">Duration: {startTimeString}-{endTimeString}</div>
+                                    <div className="appointment-cancel">
+                                        <button className="dashboard-btn">Cancel</button>
+                                    </div>
                                 </div>
-                                <div className="appointment-detail">Duration: {appointment.startTime}-{appointment.endTime}</div>
-                                <div className="appointment-cancel">
-                                    <button className="dashboard-btn">Cancel</button>
-                                </div>
-                            </div>
-                        ))
+                            );
+                        })
                     ) : (
                         <div colSpan="4" style={{ textAlign: "center" }}>
                             No appointments found.
