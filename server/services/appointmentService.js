@@ -2,17 +2,25 @@ const Appointment = require('../models/appointmentModel');
 const User = require('../models/userModel');
 
 // Static: Get all appointments with populated names
-async function cancelService(apptId){
+async function cancelService(apptId, userId){
   try{
-    console.log("SERVICE, Searching for: ",apptId)
-    apptId = apptId.trim()
+    console.log(`SERVICE, Searching for: ${apptId} by user: ${userId}`);
+    apptId = apptId.trim();
     const appointment = await Appointment.findOne({appointmentId: apptId});
-    console.log(appointment)
+    console.log(appointment);
     console.log("SERVICE, doctorId type:", typeof appointment.doctorId);
     console.log("SERVICE, patientId type:", typeof appointment.patientId);
     if (!appointment){
       console.log("SERVICE, No appointment found");
       return null;
+    }
+    if(appointment.patientId !== userId){
+      console.log("SERVICE, Unauthorized cancellation attempt by user:", userId);
+      throw new Error('Not authorized to cancel this appointment');
+    }
+    if(appointment.status === 'inactive' || appointment.status === 'cancelled'){
+      console.log("SERVICE, Appointment already inactive or cancelled");
+      throw new Error('Appointment is already inactive or cancelled');
     }
     appointment.status = 'inactive';
     appointment.lastUpdated = new Date();

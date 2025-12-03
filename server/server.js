@@ -8,7 +8,6 @@ dotenv.config();
 const authRoute = require('./routes/authRoutes.js');
 const userRoutes = require('./routes/userRoutes.js');
 const appointmentRoutes = require('./routes/appointmentRoutes.js');
-const adminRoutes = require('./routes/adminRoutes.js');
 const { connectDB } = require("./config/db.js");
 
 const app = express();
@@ -16,7 +15,7 @@ const app = express();
 // app.use(express.static("../client/public"));
 app.use(cors({
   origin: "http://localhost:5173",
-  methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH'],
   credentials: true
 }));
 
