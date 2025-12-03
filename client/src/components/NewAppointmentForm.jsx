@@ -77,6 +77,7 @@ function NewAppointmentForm(props) {
 
             if (res.ok) {
                 console.log("Appointment successfully scheduled!");
+                window.location.reload();
                 // Close modal
                 if (props.closeModal) props.closeModal();
             } else {
