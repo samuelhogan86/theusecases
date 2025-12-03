@@ -193,7 +193,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 
     const updates = {};
 
-    const existingUser = await this.findById(id);
+    const existingUser = await this.findOne({id:id});
     if(!existingUser){
         throw Error('User doesn\'t exists');
     }
@@ -282,8 +282,8 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 
     //got to use mongo _id for findByIdAndUpdate
     //need to make our own findbyIdAndUpdate function that uses id field
-    const updatedUser = await this.findByIdAndUpdate(
-        id,
+    const updatedUser = await this.findOneAndUpdate(
+        {id:id},
         updates,
         {
             new: true,
@@ -296,7 +296,7 @@ userSchema.statics.updateUserById = async function(id, firstName, lastName, user
 }
 
 userSchema.statics.deleteUserById= async function(id){
-    const user = await this.findByIdAndDelete(id);
+    const user = await this.deleteOne({id:id});
     return user;
 }
 
