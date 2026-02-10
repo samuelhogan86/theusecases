@@ -1,4 +1,4 @@
-#Medical Dashboard
+# Medical Dashboard
 
 ## Login Page:
 <img width="1280" height="1080" alt="login" src="https://github.com/user-attachments/assets/83149540-482f-4e64-a19e-51cea7c7045f" />
@@ -41,4 +41,5 @@ http://localhost:3000
 It should display the contents of theusecases/public (*as of 10/2/25 this would just display "test"*)
 
 Web App Project outline and actual use cases can be viewed [here](https://docs.google.com/document/d/12n-wbhgxbTd-zQcf2BppNiYwLAMOZbBj_MP1yKvByp8/edit?tab=t.0#heading=h.a8ke35vie2a8)
+
 
